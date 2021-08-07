@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 
+import 'package:watched_it_getx/app/modules/MainPageView/bindings/main_page_view_binding.dart';
+import 'package:watched_it_getx/app/modules/MainPageView/views/main_page_view_view.dart';
+import 'package:watched_it_getx/app/modules/UserPage/bindings/user_page_binding.dart';
+import 'package:watched_it_getx/app/modules/UserPage/views/user_page_view.dart';
 import 'package:watched_it_getx/app/modules/home/bindings/home_binding.dart';
 import 'package:watched_it_getx/app/modules/home/views/home_view.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/bindings/splash_screen_binding.dart';
@@ -22,6 +26,16 @@ class AppPages {
       name: _Paths.SPLASH_SCREEN,
       page: () => SplashScreenView(),
       binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAIN_PAGE_VIEW,
+      page: () => MainPageViewView(),
+      binding: MainPageViewBinding(),
+    ),
+    GetPage(
+      name: _Paths.USER_PAGE,
+      page: () => UserPageView(),
+      binding: UserPageBinding(),
     ),
   ];
 }

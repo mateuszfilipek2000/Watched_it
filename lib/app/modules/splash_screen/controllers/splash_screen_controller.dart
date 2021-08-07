@@ -73,7 +73,7 @@ class SplashScreenController extends GetxController
     if (sessionID != null) {
       print("key exists in secure storage");
       Get.find<UserController>().updateSessionID(sessionID);
-      Get.offAllNamed(Routes.HOME, arguments: sessionID);
+      Get.offAllNamed(Routes.MAIN_PAGE_VIEW, arguments: sessionID);
     }
     return false;
   }

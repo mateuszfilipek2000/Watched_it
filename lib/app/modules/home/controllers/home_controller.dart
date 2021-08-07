@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
@@ -7,11 +6,7 @@ class HomeController extends GetxController {
   final RxList<MinimalMedia> nowPlayingMovies = RxList<MinimalMedia>();
   final RxList<MinimalMedia> popularTvShows = RxList<MinimalMedia>();
   final RxList<MinimalMedia> popularPeople = RxList<MinimalMedia>();
-  final Rx<PageController> pageController = Rx<PageController>(
-    PageController(
-      initialPage: 0,
-    ),
-  );
+
   @override
   void onInit() async {
     getTrendingMovies();

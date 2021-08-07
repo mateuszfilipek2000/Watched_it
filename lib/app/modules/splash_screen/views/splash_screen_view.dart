@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/views/animated_login_button_view.dart';
 
 import '../controllers/splash_screen_controller.dart';
+
+//TODO: ADD LOGIN BUTTON MOVE LOGIC TO CONTROLLER
 
 class SplashScreenView extends GetView<SplashScreenController> {
   @override
@@ -39,9 +40,6 @@ class SplashScreenView extends GetView<SplashScreenController> {
                   return Container();
               }
             },
-          ),
-          Center(
-            child: AnimatedLoginButtonView(),
           ),
         ],
       ),

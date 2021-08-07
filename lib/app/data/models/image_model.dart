@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class ImageUrl {
   static String baseImagePath = "https://image.tmdb.org/t/p/";
+  static String _gravatarPath = "https://www.gravatar.com/avatar/";
 
   static String getBackdropImageUrl(
           {BackdropSizes size = BackdropSizes.w300, required String url}) =>
@@ -18,6 +19,9 @@ class ImageUrl {
   static String getProfileImageUrl(
           {ProfileSizes size = ProfileSizes.w185, required String url}) =>
       "${baseImagePath}${describeEnum(size)}${url}";
+
+  static String getGravatarUrl({required String hash, String size = "300"}) =>
+      "${_gravatarPath}${hash}?s=${size}";
 }
 
 enum BackdropSizes {

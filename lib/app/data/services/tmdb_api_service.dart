@@ -96,13 +96,13 @@ class TMDBApiService {
     return await "";
   }
 
-  static Future<User?> getUserDetails(String sessionID) async {
+  static Future<AppUser?> getUserDetails(String sessionID) async {
     http.Response response = await client.get(
       Uri.parse(
         "https://api.themoviedb.org/3/account?api_key=$apiKeyV3&session_id=$sessionID",
       ),
     );
-
+    //print(response.body);
     if (response.statusCode == 200)
       return userFromJson(response.body);
     else

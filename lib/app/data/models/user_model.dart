@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-User userFromJson(String str) => User.fromJson(json.decode(str));
+AppUser userFromJson(String str) => AppUser.fromJson(json.decode(str));
 
-class User {
-  User({
+class AppUser {
+  AppUser({
     required this.avatar,
     required this.id,
     required this.iso6391,
@@ -11,6 +11,7 @@ class User {
     required this.name,
     required this.includeAdult,
     required this.username,
+    required this.avatar_Path,
   });
 
   Avatar avatar;
@@ -20,8 +21,9 @@ class User {
   String name;
   bool includeAdult;
   String username;
+  String? avatar_Path;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory AppUser.fromJson(Map<String, dynamic> json) => AppUser(
         avatar: Avatar.fromJson(json["avatar"]),
         id: json["id"],
         iso6391: json["iso_639_1"],
@@ -29,6 +31,7 @@ class User {
         name: json["name"],
         includeAdult: json["include_adult"],
         username: json["username"],
+        avatar_Path: json["avatar"]?["tmdb"]?["avatar_path"],
       );
 }
 
