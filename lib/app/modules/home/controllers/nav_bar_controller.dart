@@ -13,7 +13,7 @@ class NavBarController extends GetxController {
     Icons.home_rounded,
     Icons.favorite_rounded,
     Icons.search_rounded,
-    Icons.assistant_navigation,
+    Icons.explore_rounded,
     Icons.account_box_rounded,
   ];
 

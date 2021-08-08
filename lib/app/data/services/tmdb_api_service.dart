@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:watched_it_getx/app/data/api_keys.dart';
+import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_options.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
+import 'package:watched_it_getx/app/data/enums/time_window.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/media_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
+import 'package:watched_it_getx/app/modules/UserPage/controllers/user_page_controller.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
@@ -118,6 +122,7 @@ class TMDBApiService {
       for (dynamic i in json.decode(response.body)['results'])
         results.add(
           MinimalMedia(
+            mediaType: MediaType.movie,
             id: i['id'],
             posterPath: i?['poster_path'],
             title: i['original_title'],
@@ -150,6 +155,7 @@ class TMDBApiService {
       for (dynamic i in json.decode(response.body)['results'])
         results.add(
           MinimalMedia(
+            mediaType: MediaType.tv,
             id: i['id'],
             posterPath: i?['poster_path'],
             title: i['name'],
@@ -181,6 +187,7 @@ class TMDBApiService {
         if (i['media_type'] == 'movie')
           results.add(
             MinimalMedia(
+              mediaType: mediaType,
               id: i['id'],
               title: i['title'],
               posterPath: i?['poster_path'],
@@ -193,6 +200,7 @@ class TMDBApiService {
         else if (i['media_type'] == 'tv')
           results.add(
             MinimalMedia(
+              mediaType: mediaType,
               id: i['id'],
               title: i['name'],
               posterPath: i?['poster_path'],
@@ -204,7 +212,10 @@ class TMDBApiService {
           );
         else if (i['media_type'] == 'person')
           results.add(MinimalMedia(
-              id: i['id'], title: i['name'], posterPath: i?['profile_path']));
+              mediaType: mediaType,
+              id: i['id'],
+              title: i['name'],
+              posterPath: i?['profile_path']));
       }
       if (numberOfResults != null && numberOfResults < results.length)
         results.removeRange(numberOfResults, results.length);
@@ -212,16 +223,123 @@ class TMDBApiService {
     } else
       return null;
   }
-}
 
-enum MediaType {
-  all,
-  movie,
-  tv,
-  person,
-}
+  static Future<List<MinimalMedia>?> getWatchlist(
+      MediaType mediaType,
+      AvailableWatchListSortingOptions sortingOption,
+      String sessionID,
+      String accountID,
+      [String language = "en-US",
+      int page = 1]) async {
+    late String sorting;
+    List<MinimalMedia> results = [];
+    if (sortingOption == AvailableWatchListSortingOptions.CreatedAtAsc)
+      sorting = "created_at.asc";
+    else
+      sorting = "created_at.desc";
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/account/$accountID/watchlist/${mediaType == MediaType.movie ? describeEnum(mediaType) + 's' : describeEnum(mediaType)}?api_key=$apiKeyV3&language=$language&session_id=$sessionID&sort_by=$sorting&page=$page",
+      ),
+    );
 
-enum TimeWindow {
-  day,
-  week,
+    if (response.statusCode == 200) {
+      print(
+        "https://api.themoviedb.org/3/account/$accountID/watchlist/${mediaType == MediaType.movie ? describeEnum(mediaType) + 's' : describeEnum(mediaType)}?api_key=$apiKeyV3&language=$language&session_id=$sessionID&sort_by=$sorting&page=$page",
+      );
+      //print(response.body);
+      for (dynamic i in json.decode(response.body)["results"]) {
+        //print(i);
+        if (mediaType == MediaType.movie)
+          results.add(
+            MinimalMedia(
+              mediaType: mediaType,
+              id: i['id'],
+              title: i['title'],
+              posterPath: i?['poster_path'],
+              date: i['release_date'] != null
+                  ? DateTime.parse(i['release_date'])
+                  : null,
+              backdropPath: i?['backdrop_path'],
+            ),
+          );
+        else if (mediaType == MediaType.tv)
+          results.add(
+            MinimalMedia(
+              mediaType: mediaType,
+              id: i['id'],
+              title: i['name'],
+              posterPath: i?['poster_path'],
+              date: i['first_air_date'] != null
+                  ? DateTime.parse(i['first_air_date'])
+                  : null,
+              backdropPath: i?['backdrop_path'],
+            ),
+          );
+      }
+      return results;
+    } else {
+      print(
+        "https://api.themoviedb.org/3/account/$accountID/watchlist/${mediaType == MediaType.movie ? describeEnum(mediaType) + 's' : describeEnum(mediaType)}?api_key=$apiKeyV3&language=$language&session_id=$sessionID&sort_by=$sorting&page=$page",
+      );
+      return null;
+    }
+  }
+
+  static Future<List<MinimalMedia>?> getFavourites(
+      MediaType mediaType,
+      AvailableWatchListSortingOptions sortingOption,
+      String sessionID,
+      String accountID,
+      [String language = "en-US",
+      int page = 1]) async {
+    late String sorting;
+    List<MinimalMedia> results = [];
+    if (sortingOption == AvailableWatchListSortingOptions.CreatedAtAsc)
+      sorting = "created_at.asc";
+    else
+      sorting = "created_at.desc";
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/account/$accountID/favorite/${mediaType == MediaType.movie ? describeEnum(mediaType) + 's' : describeEnum(mediaType)}?api_key=$apiKeyV3&session_id=$sessionID&language=$language&sort_by=$sorting&page=$page",
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      for (dynamic i in json.decode(response.body)["results"]) {
+        if (mediaType == MediaType.movie)
+          results.add(
+            MinimalMedia(
+              mediaType: mediaType,
+              id: i['id'],
+              title: i['title'],
+              posterPath: i?['poster_path'],
+              date: i['release_date'] != null
+                  ? DateTime.parse(i['release_date'])
+                  : null,
+              backdropPath: i?['backdrop_path'],
+            ),
+          );
+        else if (mediaType == MediaType.tv)
+          results.add(
+            MinimalMedia(
+              mediaType: mediaType,
+              id: i['id'],
+              title: i['name'],
+              posterPath: i?['poster_path'],
+              date: i['first_air_date'] != null
+                  ? DateTime.parse(i['first_air_date'])
+                  : null,
+              backdropPath: i?['backdrop_path'],
+            ),
+          );
+      }
+      return results;
+    } else {
+      print(
+        "https://api.themoviedb.org/3/account/$accountID/favorite/${mediaType == MediaType.movie ? describeEnum(mediaType) + 's' : describeEnum(mediaType)}?api_key=$apiKeyV3&session_id=$sessionID&language=$language&sort_by=$sorting&page=$page",
+      );
+      return null;
+    }
+  }
 }

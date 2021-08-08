@@ -1,6 +1,8 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
+import 'package:watched_it_getx/app/data/enums/time_window.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';

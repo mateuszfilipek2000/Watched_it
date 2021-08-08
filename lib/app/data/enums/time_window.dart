@@ -1,0 +1,4 @@
+enum TimeWindow {
+  day,
+  week,
+}

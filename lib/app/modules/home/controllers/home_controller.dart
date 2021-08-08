@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 
@@ -73,9 +74,4 @@ class HomeController extends GetxController {
   //   print(user?.name);
   //   print(Get.find<UserController>().sessionID.value);
   // }
-}
-
-extension leadingZeros on int {
-  String addLeadingZeros(int numberOfTotalDigits) =>
-      this.toString().padLeft(numberOfTotalDigits, '0');
 }

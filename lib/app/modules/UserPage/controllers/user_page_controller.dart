@@ -28,4 +28,14 @@ class UserPageController extends GetxController {
     if (tempUser != null) this.user = tempUser;
     update();
   }
+
+/*
+TMDBApiService.getWatchlist(
+      mediaType: activeMediaType,
+      sortingOption: sortingMethod,
+      sessionID: Get.find<UserController>().sessionID.value,
+      accountID: user?.id.toString() as String,
+    );
+*/
+
 }
