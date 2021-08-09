@@ -36,23 +36,32 @@ class SwipeableImageView extends StatelessWidget {
                           clipBehavior: Clip.antiAlias,
                           child: AnimatedSwitcher(
                             duration: Duration(milliseconds: 300),
-                            child: Image.network(
-                              ImageUrl.getPosterImageUrl(
-                                url: controller.getActiveObjectBackdropUrl(),
-                              ),
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                              key: UniqueKey(),
-                              fit: BoxFit.cover,
-                            ),
+                            child: controller
+                                        .objects[controller
+                                            .currentlyActiveObject.value]
+                                        .backdropPath ==
+                                    null
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Image.network(
+                                    ImageUrl.getPosterImageUrl(
+                                      url: controller
+                                          .getActiveObjectBackdropUrl(),
+                                    ),
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+                                    key: UniqueKey(),
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                         ),
                         Align(

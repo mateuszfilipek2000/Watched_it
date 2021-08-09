@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/controllers/main_page_view_controller.dart';
-import 'package:watched_it_getx/app/modules/home/controllers/home_controller.dart';
 
 class NavBarController extends GetxController {
   NavBarController({required this.amountOfNavBarTabs});

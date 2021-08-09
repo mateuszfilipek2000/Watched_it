@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:watched_it_getx/app/modules/SearchPage/views/search_page_view.dart';
 import 'package:watched_it_getx/app/modules/UserPage/views/user_page_view.dart';
 import 'package:watched_it_getx/app/modules/home/views/home_view.dart';
 import 'package:watched_it_getx/app/modules/home/widgets/navigation_bar.dart';
@@ -31,11 +32,7 @@ class MainPageViewView extends GetView<MainPageViewController> {
               child: Text("1"),
             ),
           ),
-          Container(
-            child: Center(
-              child: Text("2"),
-            ),
-          ),
+          SearchPageView(),
           Container(
             child: Center(
               child: Text("3"),

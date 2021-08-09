@@ -1,13 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
-import 'package:watched_it_getx/app/data/models/media_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/home/controllers/home_controller.dart';
 
+//DONE: FIX NULL ERROR ON NETWORK IMAGE FETCH SOMEWHERE IDK GOOD LUCK PROBABLY WHEN MINIMALMEDIA OBJECT HAS NULL POSTERPATH (ILLEGAL STRING CAST?)
+//TODO: CREATE DARK THEME NO IMAGE PLACEHOLDER
 class PosterListView extends StatelessWidget {
   const PosterListView({
     Key? key,
@@ -102,24 +102,29 @@ class PosterListViewItem extends StatelessWidget {
                     aspectRatio: 1.0 / 1.5,
                     child: FittedBox(
                       fit: BoxFit.fill,
-                      child: Image.network(
-                        ImageUrl.getPosterImageUrl(
-                          url: object.posterPath != null
-                              ? object.posterPath as String
-                              : "",
-                          size: PosterSizes.w342,
-                        ),
-                        //fit: BoxFit.fill,
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      ),
+                      child: object.posterPath == null
+                          ? Center(
+                              child: Image.asset(
+                                'assets/images/no_image_placeholder.png',
+                              ),
+                            )
+                          : Image.network(
+                              ImageUrl.getPosterImageUrl(
+                                url: object.posterPath as String,
+                                size: PosterSizes.w342,
+                              ),
+                              //fit: BoxFit.fill,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                            ),
                     ),
                   ),
                 ),

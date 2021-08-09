@@ -9,7 +9,7 @@ import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 
 class SwipeableViewController extends GetxController {
   RxList<MinimalMedia> objects = RxList<MinimalMedia>();
-  RxInt _currentlyActiveObject = RxInt(0);
+  RxInt currentlyActiveObject = RxInt(0);
   bool wasLastSwipeLeft = false;
   late RestartableTimer objectIncrementTimer;
 
@@ -38,14 +38,14 @@ class SwipeableViewController extends GetxController {
   }
 
   String getActiveObjectPosterUrl() => ImageUrl.getPosterImageUrl(
-        url: objects[_currentlyActiveObject.value].posterPath as String,
+        url: objects[currentlyActiveObject.value].posterPath as String,
       );
 
   String getActiveObjectBackdropUrl() => ImageUrl.getBackdropImageUrl(
-        url: objects[_currentlyActiveObject.value].backdropPath as String,
-        size: BackdropSizes.w780,
+        url: objects[currentlyActiveObject.value].backdropPath as String,
+        size: BackdropSizes.w300,
       );
-  String getActiveObjectTitle() => objects[_currentlyActiveObject.value].title;
+  String getActiveObjectTitle() => objects[currentlyActiveObject.value].title;
 
   List<Widget> getNavigationBar({double dotSize = 15.0}) {
     List<Widget> results = [];
@@ -58,9 +58,8 @@ class SwipeableViewController extends GetxController {
             width: dotSize,
             height: dotSize,
             decoration: BoxDecoration(
-              color: i == _currentlyActiveObject.value
-                  ? Colors.white
-                  : Colors.grey,
+              color:
+                  i == currentlyActiveObject.value ? Colors.white : Colors.grey,
               shape: BoxShape.circle,
             ),
           ),
@@ -91,22 +90,22 @@ class SwipeableViewController extends GetxController {
   }
 
   void nextObject() {
-    if (_currentlyActiveObject.value + 1 < objects.length)
-      _currentlyActiveObject.value += 1;
+    if (currentlyActiveObject.value + 1 < objects.length)
+      currentlyActiveObject.value += 1;
     else
-      _currentlyActiveObject.value = 0;
+      currentlyActiveObject.value = 0;
     objectIncrementTimer.reset();
   }
 
   void previousObject() {
-    if (_currentlyActiveObject.value - 1 >= 0)
-      _currentlyActiveObject.value -= 1;
+    if (currentlyActiveObject.value - 1 >= 0)
+      currentlyActiveObject.value -= 1;
     else
-      _currentlyActiveObject.value = objects.length - 1;
+      currentlyActiveObject.value = objects.length - 1;
     objectIncrementTimer.reset();
   }
 
   void handlePageChange(int page) {
-    _currentlyActiveObject.value = page;
+    currentlyActiveObject.value = page;
   }
 }

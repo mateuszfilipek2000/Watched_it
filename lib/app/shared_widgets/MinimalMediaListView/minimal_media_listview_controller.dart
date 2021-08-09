@@ -3,7 +3,6 @@ import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_optio
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
-import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
 class MinimalMediaListViewController extends GetxController {

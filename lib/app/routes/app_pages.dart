@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import 'package:watched_it_getx/app/modules/MainPageView/bindings/main_page_view_binding.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/views/main_page_view_view.dart';
+import 'package:watched_it_getx/app/modules/SearchPage/bindings/search_page_binding.dart';
+import 'package:watched_it_getx/app/modules/SearchPage/views/search_page_view.dart';
 import 'package:watched_it_getx/app/modules/UserPage/bindings/user_page_binding.dart';
 import 'package:watched_it_getx/app/modules/UserPage/views/user_page_view.dart';
 import 'package:watched_it_getx/app/modules/WatchList/bindings/watch_list_binding.dart';
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.MINIMAL_MEDIA_LIST_VIEW,
       page: () => MinimalMediaListView(),
       binding: MinimalMediaListViewBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEARCH_PAGE,
+      page: () => SearchPageView(),
+      binding: SearchPageBinding(),
     ),
   ];
 }

@@ -5,6 +5,7 @@ import 'package:watched_it_getx/app/data/models/image_model.dart';
 
 import '../controllers/watch_list_controller.dart';
 
+//TODO REPLACE FILES IN THIS FOLDER WITH FILES IS SHARED WIDGETS - MINIMALMEDIALISTVIEW FOLDER
 class WatchListView extends GetView<WatchListController> {
   @override
   Widget build(BuildContext context) {

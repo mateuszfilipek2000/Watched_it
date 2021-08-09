@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/WatchList/bindings/watch_list_binding.dart';
-import 'package:watched_it_getx/app/modules/WatchList/views/watch_list_view.dart';
 import 'package:watched_it_getx/app/shared_widgets/MinimalMediaListView/minimal_media_listview.dart';
 import 'package:watched_it_getx/app/shared_widgets/MinimalMediaListView/minimal_media_listview_binding.dart';
 
 import '../controllers/user_page_controller.dart';
 
+//TODO MOVE NAVIGATION LOGIC TO CONTROLLER MAYBE?
 class UserPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -140,7 +139,7 @@ class UserPageView extends StatelessWidget {
                             binding: MinimalMediaListViewBinding(),
                             arguments: {
                               "user": _.user,
-                              "ListTitle": "Your watchlists :))",
+                              "ListTitle": "Your watchlists",
                               "ButtonTexts": ["Movies", "Tv Shows"],
                               "SortingMethodTexts": [
                                 "Created At - Ascending",
@@ -175,7 +174,7 @@ class UserPageView extends StatelessWidget {
                             binding: MinimalMediaListViewBinding(),
                             arguments: {
                               "user": _.user,
-                              "ListTitle": "Your favourites :)",
+                              "ListTitle": "Your favourites",
                               "ButtonTexts": ["Movies", "Tv Shows"],
                               "SortingMethodTexts": [
                                 "Created At - Ascending",
@@ -185,27 +184,6 @@ class UserPageView extends StatelessWidget {
                                   TMDBApiService.getFavourites,
                             },
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            right: 10, left: 10, top: 10, bottom: 10),
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.usb_rounded,
-                            color: Colors.white,
-                          ),
-                          title: Text(
-                            "My Reviewed",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          tileColor: Colors.black38,
-                          onTap: () {},
                         ),
                       ),
                     ],
@@ -219,112 +197,3 @@ class UserPageView extends StatelessWidget {
     );
   }
 }
-
-// class WatchListView extends StatelessWidget {
-//   const WatchListView({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-// return Column(
-//   children: [
-//     Row(
-//       children: [
-//         Expanded(
-//           flex: 5,
-//           child: Obx(
-//             () => Row(
-//               children: <MediaButton>[
-//                 for (var i = 0; i < _.buttonTexts.length; i++)
-//                   MediaButton(
-//                     color: i == _.activeMediaIndex.value
-//                         ? Colors.blue
-//                         : Colors.grey,
-//                     id: i,
-//                     onPressed: _.changeActiveMedia,
-//                     text: _.buttonTexts[i],
-//                   ),
-//               ],
-//             ),
-//           ),
-//         ),
-//         Expanded(
-//           child: Container(),
-//         ),
-//         Expanded(
-//           flex: 4,
-//           child: Align(
-//             alignment: Alignment.centerRight,
-//             child: PopupMenuButton(
-//               onSelected: (Text text) => _.changeSortingMethod(
-//                 int.parse(
-//                   text.data as String,
-//                 ),
-//               ),
-//               child: Column(
-//                 mainAxisSize: MainAxisSize.max,
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Row(
-//                     mainAxisSize: MainAxisSize.min,
-//                     children: [
-//                       Text(
-//                         "Sorted By",
-//                         style: TextStyle(
-//                           color: Colors.white,
-//                         ),
-//                       ),
-//                       Icon(
-//                         Icons.filter_alt_rounded,
-//                         color: Colors.white,
-//                       ),
-//                     ],
-//                   ),
-//                   Obx(() => Text(
-//                         _.sortingMethodsTexts[_.activeSortingMethod.value],
-//                         style: TextStyle(color: Colors.grey, fontSize: 10),
-//                         overflow: TextOverflow.ellipsis,
-//                         maxLines: 1,
-//                       )),
-//                 ],
-//               ),
-//               itemBuilder: (context) => <PopupMenuEntry<Text>>[
-//                 for (var i = 0; i < _.sortingMethodsTexts.length; i++)
-//                   PopupMenuItem(
-//                     value: Text(i.toString()),
-//                     child: Text(
-//                       _.sortingMethodsTexts[i],
-//                     ),
-//                   ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ],
-//     ),
-//     Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 20.0),
-//       child: Divider(
-//         height: 2,
-//         color: Colors.grey,
-//       ),
-//     ),
-//     Column(
-//       children: <Widget>[
-//         for (var i = 0; i < _.watchlist.length; i++)
-//           Container(
-//             height: 50,
-//             child: Text(
-//               _.watchlist[i].title,
-//               style: TextStyle(color: Colors.white, fontSize: 30),
-//             ),
-//           )
-//       ],
-//     ),
-//   ],
-// );
-//   }
-// }
-
-

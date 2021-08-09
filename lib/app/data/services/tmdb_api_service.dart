@@ -5,11 +5,9 @@ import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_optio
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/enums/time_window.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
-import 'package:watched_it_getx/app/data/models/media_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
-import 'package:watched_it_getx/app/modules/UserPage/controllers/user_page_controller.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
