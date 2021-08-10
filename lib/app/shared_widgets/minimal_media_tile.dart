@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detail_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detail_view.dart';
 
 //TODO ADD DIFFERENT MEDIA TYPES HANDLING
 //TODO ADD DETAIL PAGE ROUTE ON TILE CLICK
@@ -14,7 +17,14 @@ class MinimalMediaTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
-      onPressed: () {},
+      onPressed: () {
+        Get.to(
+          () => MediaDetailView(),
+          binding: MediaDetailBinding(),
+          arguments: media,
+          fullscreenDialog: true,
+        );
+      },
       child: Container(
         margin: EdgeInsets.all(5),
         child: Row(
