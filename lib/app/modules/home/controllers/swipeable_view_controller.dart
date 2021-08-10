@@ -43,7 +43,7 @@ class SwipeableViewController extends GetxController {
 
   String getActiveObjectBackdropUrl() => ImageUrl.getBackdropImageUrl(
         url: objects[currentlyActiveObject.value].backdropPath as String,
-        size: BackdropSizes.w300,
+        size: BackdropSizes.w780,
       );
   String getActiveObjectTitle() => objects[currentlyActiveObject.value].title;
 
@@ -54,7 +54,7 @@ class SwipeableViewController extends GetxController {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 3.0),
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 400),
             width: dotSize,
             height: dotSize,
             decoration: BoxDecoration(

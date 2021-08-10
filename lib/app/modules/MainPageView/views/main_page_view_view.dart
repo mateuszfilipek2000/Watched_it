@@ -27,11 +27,6 @@ class MainPageViewView extends GetView<MainPageViewController> {
         controller: controller.pageController.value,
         children: [
           HomeView(),
-          Container(
-            child: Center(
-              child: Text("1"),
-            ),
-          ),
           SearchPageView(),
           Container(
             child: Center(

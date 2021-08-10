@@ -27,6 +27,7 @@ class UserPageController extends GetxController {
     print(tempUser?.avatar_Path);
     if (tempUser != null) this.user = tempUser;
     update();
+    refresh();
   }
 
 /*

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/controllers/main_page_view_controller.dart';
 
+//TODO MOVE TO MAINVIEW FOLDER
 class NavBarController extends GetxController {
   NavBarController({required this.amountOfNavBarTabs});
 
@@ -10,7 +11,6 @@ class NavBarController extends GetxController {
 
   final List<IconData> icons = [
     Icons.home_rounded,
-    Icons.favorite_rounded,
     Icons.search_rounded,
     Icons.explore_rounded,
     Icons.account_box_rounded,

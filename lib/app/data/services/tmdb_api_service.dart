@@ -340,4 +340,64 @@ class TMDBApiService {
       return null;
     }
   }
+
+  static Future<List<MinimalMedia>?> getSearchResults({
+    required String query,
+    int page = 1,
+    String language = "en_US",
+    bool includeAdult = false,
+  }) async {
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/search/multi?api_key=$apiKeyV3&language=$language&query=$query&page=$page&include_adult=${includeAdult.toString()}",
+      ),
+    );
+
+    List<MinimalMedia> results = [];
+    if (response.statusCode == 200) {
+      dynamic body = jsonDecode(response.body)['results'];
+      for (dynamic i in body) {
+        if (i['media_type'] == 'movie') {
+          print(i);
+          results.add(
+            MinimalMedia(
+              mediaType: MediaType.movie,
+              id: i['id'],
+              title: i['title'],
+              posterPath: i?['poster_path'],
+              date: i['release_date'] != null && i['release_date'] != ""
+                  ? DateTime.parse(i['release_date'])
+                  : null,
+              backdropPath: i?['backdrop_path'],
+            ),
+          );
+        } else if (i['media_type'] == 'tv')
+          results.add(
+            MinimalMedia(
+              mediaType: MediaType.tv,
+              id: i['id'],
+              title: i['name'],
+              posterPath: i?['poster_path'],
+              date: i['first_air_date'] != null
+                  ? DateTime.parse(i['first_air_date'])
+                  : null,
+              backdropPath: i?['backdrop_path'],
+            ),
+          );
+        else if (i['media_type'] == 'person')
+          results.add(MinimalMedia(
+              mediaType: MediaType.person,
+              id: i['id'],
+              title: i['name'],
+              posterPath: i?['profile_path']));
+      }
+
+      return results;
+    } else {
+      print(
+        "https://api.themoviedb.org/3/search/multi?api_key=$apiKeyV3&language=$language&query=$query&page=$page&include_adult=${includeAdult.toString()}",
+      );
+      return null;
+    }
+  }
 }

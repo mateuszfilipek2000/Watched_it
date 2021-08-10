@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:watched_it_getx/app/data/models/image_model.dart';
+import 'package:watched_it_getx/app/modules/WatchList/controllers/minimal_media_listview_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/minimal_media_tile.dart';
 
-import '../controllers/watch_list_controller.dart';
+//when navigating to this screen pass required arguments in this way:
+/*
+  "user": AppUser,
+  "ListTitle": String,
+  "ButtonTexts": List<String>,
+  "SortingMethodTexts": List<String>,
+  "MinimalMediaRetrievalFuture": Future<List<MinimalMedia>?,
 
-//TODO REPLACE FILES IN THIS FOLDER WITH FILES IS SHARED WIDGETS - MINIMALMEDIALISTVIEW FOLDER
-class WatchListView extends GetView<WatchListController> {
+currently working only with tv and movie media types
+*/
+class MinimalMediaListView extends GetView<MinimalMediaListViewController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black38,
-        title: Text("My Watchlists"),
+        title: Text(controller.title),
       ),
       backgroundColor: Color(0xFF1c1d25),
       body: Container(
@@ -77,7 +85,7 @@ class WatchListView extends GetView<WatchListController> {
                             ],
                           ),
                           Obx(() => Text(
-                                controller.sortingMethodsTexts[
+                                controller.sortingMethodTexts[
                                     controller.activeSortingMethod.value],
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 10),
@@ -88,12 +96,12 @@ class WatchListView extends GetView<WatchListController> {
                       ),
                       itemBuilder: (context) => <PopupMenuEntry<Text>>[
                         for (var i = 0;
-                            i < controller.sortingMethodsTexts.length;
+                            i < controller.sortingMethodTexts.length;
                             i++)
                           PopupMenuItem(
                             value: Text(i.toString()),
                             child: Text(
-                              controller.sortingMethodsTexts[i],
+                              controller.sortingMethodTexts[i],
                             ),
                           ),
                       ],
@@ -113,77 +121,16 @@ class WatchListView extends GetView<WatchListController> {
               child: Padding(
                 padding: EdgeInsets.only(top: 5),
                 child: Obx(
-                  () => controller.watchlistFetchingStatus.value == false
+                  () => controller.mediaListFetchingStatus.value == false
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
                       : Container(
                           child: ListView.builder(
-                            itemCount: controller.watchlist.length,
+                            itemCount: controller.mediaList.length,
                             itemBuilder: (context, index) {
-                              return RawMaterialButton(
-                                onPressed: () {},
-                                child: Container(
-                                  margin: EdgeInsets.all(5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Image.network(
-                                            ImageUrl.getPosterImageUrl(
-                                              url: controller.watchlist[index]
-                                                  .posterPath as String,
-                                              size: PosterSizes.w185,
-                                            ),
-                                            loadingBuilder:
-                                                (BuildContext context,
-                                                    Widget child,
-                                                    ImageChunkEvent?
-                                                        loadingProgress) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              }
-                                              return Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                controller
-                                                    .watchlist[index].title,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              Text(
-                                                "Premiere date: " +
-                                                    controller.watchlist[index]
-                                                        .getDateString(),
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              //Text(),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                              return MinimalMediaTile(
+                                media: controller.mediaList[index],
                               );
                             },
                           ),

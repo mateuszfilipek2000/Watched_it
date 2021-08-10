@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/shared_widgets/MinimalMediaListView/minimal_media_listview.dart';
-import 'package:watched_it_getx/app/shared_widgets/MinimalMediaListView/minimal_media_listview_binding.dart';
+import 'package:watched_it_getx/app/modules/WatchList/bindings/minimal_media_listview_binding.dart';
+import 'package:watched_it_getx/app/modules/WatchList/views/minimal_media_listview.dart';
 
 import '../controllers/user_page_controller.dart';
 
 //TODO MOVE NAVIGATION LOGIC TO CONTROLLER MAYBE?
+//TODO FIX BUTTON BACKGROUND COLOR
 class UserPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,8 +41,6 @@ class UserPageView extends StatelessWidget {
                           child: Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                             alignment: Alignment.center,
-                            // width: 100.0,
-                            // height: 100.0,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                             ),
@@ -68,7 +67,6 @@ class UserPageView extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Container(
-                            //color: Colors.blue,
                             padding: EdgeInsets.all(15.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +96,6 @@ class UserPageView extends StatelessWidget {
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
-                  //height: 300.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.black26,
@@ -122,17 +119,6 @@ class UserPageView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           tileColor: Colors.black38,
-                          // onTap: () => Get.to(
-                          //   () => WatchListView(),
-                          //   binding: WatchListBinding(),
-                          //   arguments: _.user,
-                          // ),
-                          // onTap: () => Get.to(
-                          //   () => WatchListView(),
-                          //   fullscreenDialog: true,
-                          //   binding: WatchListBinding(),
-                          //   arguments: _.user,
-                          // ),
                           onTap: () => Get.to(
                             () => MinimalMediaListView(),
                             fullscreenDialog: true,
@@ -152,7 +138,8 @@ class UserPageView extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(right: 10, left: 10, top: 10),
+                        padding: EdgeInsets.only(
+                            right: 10, left: 10, top: 10, bottom: 10),
                         child: ListTile(
                           leading: Icon(
                             Icons.usb_rounded,

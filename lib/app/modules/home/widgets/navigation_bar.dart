@@ -13,7 +13,7 @@ class NavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<NavBarController>(
-      init: NavBarController(amountOfNavBarTabs: 5),
+      init: NavBarController(amountOfNavBarTabs: 4),
       builder: (_) {
         return Container(
           height: 60.0,

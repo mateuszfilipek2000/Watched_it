@@ -1,9 +1,10 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detail_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detail_view.dart';
 import 'package:watched_it_getx/app/modules/home/controllers/home_controller.dart';
 
 //DONE: FIX NULL ERROR ON NETWORK IMAGE FETCH SOMEWHERE IDK GOOD LUCK PROBABLY WHEN MINIMALMEDIA OBJECT HAS NULL POSTERPATH (ILLEGAL STRING CAST?)
@@ -87,44 +88,58 @@ class PosterListViewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(5.0),
-      child: OpenContainer(
-        closedColor: Color(0xFF151515),
-        closedShape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-        closedBuilder: (BuildContext context, void Function() action) {
-          return AspectRatio(
+      child: GestureDetector(
+        onTap: () {
+          Get.to(
+            () => MediaDetailView(),
+            binding: MediaDetailBinding(),
+            arguments: object,
+            fullscreenDialog: true,
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF151515),
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+          child: AspectRatio(
             aspectRatio: 1 / 1.86,
             child: Column(
               children: [
                 Expanded(
                   flex: 9,
-                  child: AspectRatio(
-                    aspectRatio: 1.0 / 1.5,
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: object.posterPath == null
-                          ? Center(
-                              child: Image.asset(
-                                'assets/images/no_image_placeholder.png',
+                  child: Container(
+                    child: AspectRatio(
+                      aspectRatio: 1.0 / 1.5,
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: object.posterPath == null
+                            ? Center(
+                                child: Image.asset(
+                                  'assets/images/no_image_placeholder.png',
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(25.0),
+                                child: Image.network(
+                                  ImageUrl.getPosterImageUrl(
+                                    url: object.posterPath as String,
+                                    size: PosterSizes.w342,
+                                  ),
+                                  //fit: BoxFit.fill,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                ),
                               ),
-                            )
-                          : Image.network(
-                              ImageUrl.getPosterImageUrl(
-                                url: object.posterPath as String,
-                                size: PosterSizes.w342,
-                              ),
-                              //fit: BoxFit.fill,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                            ),
+                      ),
                     ),
                   ),
                 ),
@@ -159,14 +174,8 @@ class PosterListViewItem extends StatelessWidget {
                 )
               ],
             ),
-          );
-        },
-        openBuilder: (BuildContext context,
-            void Function({Object? returnValue}) action) {
-          return MovieDetailsView(
-            object: this.object,
-          );
-        },
+          ),
+        ),
       ),
     );
   }
