@@ -10,45 +10,147 @@ import '../controllers/media_detail_controller.dart';
 class MediaDetailView extends GetView<MediaDetailController> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Obx(
-          () => controller.minimalMedia.value == null
-              ? Container(
-                  color: Colors.black,
-                )
-              : FittedBox(
-                  fit: BoxFit.cover,
-                  child: controller.minimalMedia.value?.posterPath == null
-                      ? Image.asset('assets/images/no_image_placeholder.png')
-                      : Opacity(
-                          opacity: controller.bgOpacity.value,
-                          child: Image.network(
-                            ImageUrl.getPosterImageUrl(
-                              url: controller.minimalMedia.value?.posterPath
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Obx(
+            () => controller.minimalMedia.value == null
+                ? Container(
+                    color: Colors.black,
+                  )
+                : FittedBox(
+                    fit: BoxFit.cover,
+                    child: controller.minimalMedia.value?.posterPath == null
+                        ? Image.asset('assets/images/no_image_placeholder.png')
+                        : Opacity(
+                            opacity: controller.bgOpacity.value,
+                            child: Hero(
+                              tag: controller.minimalMedia.value?.title
                                   as String,
-                              size: PosterSizes.w780,
+                              child: Image.network(
+                                ImageUrl.getPosterImageUrl(
+                                  url: controller.minimalMedia.value?.posterPath
+                                      as String,
+                                  size: PosterSizes.w780,
+                                ),
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    controller.animationController.forward();
+                                    return child;
+                                  }
+                                  return Container(
+                                    color: Colors.black,
+                                  );
+                                },
+                              ),
                             ),
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                controller.animationController.forward();
-                                return child;
-                              }
-                              return Container(
-                                color: Colors.black,
-                              );
-                            },
                           ),
-                        ),
+                  ),
+          ),
+          Obx(
+            () => GestureDetector(
+              onVerticalDragStart: (DragStartDetails details) =>
+                  controller.handleDragStart(details),
+              onVerticalDragUpdate: (DragUpdateDetails details) =>
+                  controller.handleDragUpdate(details),
+              onVerticalDragEnd: (DragEndDetails details) =>
+                  controller.handleDragEnd(),
+              // onVerticalDragEnd: (DragEndDetails details) =>
+              //     controller.handleDragEnd(details),
+              child: Container(
+                color: Colors.transparent,
+                margin: EdgeInsets.only(
+                  bottom: controller.swipeIndicatorPadding.value,
                 ),
-        ),
-      ],
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.arrow_drop_up_rounded,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Swipe Up",
+                        style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.none,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Obx(
+          //   () => controller.isBottomSheetVisible.value
+          //       ? Container(
+          //           // alignment: Alignment.bottomCenter,
+          //           // color: Colors.blue,
+          //           // height: 300.0,
+          //           // width: 50.0,
+          //           )
+          //       : Container(),
+          // ),
+          // Obx(
+          //   () => SlideTransition(
+          //     position: controller.slideAnimation.value,
+          //     child: Align(
+          //       alignment: Alignment.bottomCenter,
+          //       child: Container(
+          //         height: controller.bottomSheetSize,
+          //         child: Column(
+          //           children: [
+          //             Container(
+          //               width: double.infinity,
+          //               decoration: BoxDecoration(
+          //                 gradient: LinearGradient(
+          //                   colors: [
+          //                     Color(0xFF1c1d25),
+          //                     Color(0x001c1d25),
+          //                   ],
+          //                   begin: Alignment.center,
+          //                   end: Alignment.topCenter,
+          //                 ),
+          //               ),
+          //               child: Padding(
+          //                 padding: EdgeInsets.all(5),
+          //                 child: Align(
+          //                   alignment: Alignment.center,
+          //                   child: Text(
+          //                     controller.minimalMedia.value?.title as String,
+          //                     style: TextStyle(
+          //                       fontSize: 25.0,
+          //                       color: Colors.white,
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //             Expanded(
+          //               child: Container(
+          //                 color: Color(0xFF1c1d25),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
     );
   }
 }
-
 
 /*
 Image.network(

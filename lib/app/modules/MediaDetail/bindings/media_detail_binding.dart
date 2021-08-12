@@ -5,8 +5,8 @@ import '../controllers/media_detail_controller.dart';
 class MediaDetailBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MediaDetailController>(
-      () => MediaDetailController(),
+    Get.put<MediaDetailController>(
+      MediaDetailController(),
     );
   }
 }
