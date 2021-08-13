@@ -56,16 +56,12 @@ class PosterListView extends StatelessWidget {
           ),
           Expanded(
             flex: 8,
-            child: GetX<HomeController>(
-              builder: (_) {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: objects.length,
-                  itemBuilder: (context, index) {
-                    return PosterListViewItem(
-                      object: objects[index],
-                    );
-                  },
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: objects.length,
+              itemBuilder: (context, index) {
+                return PosterListViewItem(
+                  object: objects[index],
                 );
               },
             ),

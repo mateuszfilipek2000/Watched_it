@@ -41,6 +41,16 @@ class SplashScreenView extends GetView<SplashScreenController> {
               }
             },
           ),
+          Center(
+            child: RawMaterialButton(
+              onPressed: () => controller.login(),
+              child: Container(
+                width: 50.0,
+                height: 50.0,
+                color: Colors.red,
+              ),
+            ),
+          ),
         ],
       ),
     );

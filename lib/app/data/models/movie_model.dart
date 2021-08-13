@@ -10,29 +10,29 @@ Movie movieFromJson(String str) => Movie.fromJson(json.decode(str));
 
 class Movie extends Media {
   Movie({
-    this.adult,
+    required this.adult,
     required backdropPath,
     this.belongsToCollection,
-    this.budget,
+    required this.budget,
     required genres,
     required homepage,
     required id,
     this.imdbId,
     required originalLanguage,
-    this.originalTitle,
+    required this.originalTitle,
     required overview,
     required popularity,
     required posterPath,
     required productionCompanies,
     required productionCountries,
-    this.releaseDate,
-    this.revenue,
+    required this.releaseDate,
+    required this.revenue,
     this.runtime,
     required spokenLanguages,
     required status,
     required tagline,
-    this.title,
-    this.video,
+    required this.title,
+    required this.video,
     required voteAverage,
     required voteCount,
   }) : super(
@@ -53,16 +53,16 @@ class Movie extends Media {
           tagline: tagline,
         );
 
-  bool? adult;
+  bool adult;
   dynamic belongsToCollection;
-  int? budget;
+  int budget;
   String? imdbId;
-  String? originalTitle;
-  DateTime? releaseDate;
-  int? revenue;
+  String originalTitle;
+  DateTime releaseDate;
+  int revenue;
   int? runtime;
-  String? title;
-  bool? video;
+  String title;
+  bool video;
 
   factory Movie.fromJson(Map<String, dynamic> json) => Movie(
         adult: json["adult"],
@@ -96,7 +96,17 @@ class Movie extends Media {
         voteAverage: json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
       );
+
+  String getDateString() =>
+      "${releaseDate.year}-${releaseDate.month.addLeadingZeros(2)}-${releaseDate.day.addLeadingZeros(2)}";
 }
+
+extension leadingZeros on int {
+  String addLeadingZeros(int numberOfTotalDigits) =>
+      this.toString().padLeft(numberOfTotalDigits, '0');
+}
+
+
 
 // class ProductionCompany {
 //   ProductionCompany({

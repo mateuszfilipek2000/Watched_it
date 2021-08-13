@@ -7,7 +7,6 @@ import 'package:watched_it_getx/app/routes/app_pages.dart';
 
 class SplashScreenController extends GetxController
     with SingleGetTickerProviderMixin {
-  //final Rx<String> mostPopularMoviePosterURL = "".obs;
   late Future<String> mostPopularMoviePosterURL;
 
   late AnimationController controller;
@@ -59,10 +58,7 @@ class SplashScreenController extends GetxController
   }
 
   void login() async {
-    this.controller.isCompleted
-        ? this.controller.reverse()
-        : this.controller.forward();
-
+    TMDBApiService.authenticateUser();
     print(isSessionActive);
   }
 

@@ -4,9 +4,15 @@ import 'package:watched_it_getx/app/data/api_keys.dart';
 import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_options.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/enums/time_window.dart';
+import 'package:watched_it_getx/app/data/models/account_states.dart';
+import 'package:watched_it_getx/app/data/models/credits_model.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
+import 'package:watched_it_getx/app/data/models/keywords.dart';
+import 'package:watched_it_getx/app/data/models/lists_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
+import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
+import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -18,6 +24,7 @@ import 'package:flutter/foundation.dart';
 class TMDBApiService {
   static http.Client client = http.Client();
 
+  //TODO REFACTOR THIS FUNCTION
   static Future<bool> authenticateUser({bool rewriteExisting = false}) async {
     final storage = new FlutterSecureStorage();
     var sessionID = await storage.read(key: "session_id");
@@ -398,6 +405,214 @@ class TMDBApiService {
         "https://api.themoviedb.org/3/search/multi?api_key=$apiKeyV3&language=$language&query=$query&page=$page&include_adult=${includeAdult.toString()}",
       );
       return null;
+    }
+  }
+
+  static Future<AccountStates?> getAccountStates(
+      {required String sessionID, required int movieID}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/movie/$movieID/account_states?api_key=$apiKeyV3&session_id=$sessionID"),
+    );
+
+    if (response.statusCode == 200)
+      return AccountStates.fromJson(json.decode(response.body));
+    else {
+      print("unable to retrieve account states");
+      return null;
+    }
+  }
+
+  static Future<Credits?> getCredits({required int movieID}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/movie/$movieID/credits?api_key=$apiKeyV3&language=en-US"),
+    );
+
+    if (response.statusCode == 200)
+      return Credits.fromJson(json.decode(response.body));
+    else {
+      print("unable to get movie credits");
+      return null;
+    }
+  }
+
+  static Future<KeyWords?> getKeyWords({required int id}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/movie/$id/keywords?api_key=$apiKeyV3"),
+    );
+
+    if (response.statusCode == 200)
+      return KeyWords.fromJson(json.decode(response.body));
+    else {
+      print("unable to get keywords");
+      return null;
+    }
+  }
+
+  static Future<Lists?> getLists({required int id, int page = 1}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/movie/$id/lists?api_key=$apiKeyV3&language=en-US&page=$page"),
+    );
+
+    if (response.statusCode == 200)
+      return Lists.fromJson(json.decode(response.body));
+    else {
+      print("unable to get lists");
+      return null;
+    }
+  }
+
+  static Future<Recommendations?> getRecommendations(
+      {required int id, int page = 1, String language = "en_US"}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/movie/$id/recommendations?api_key=$apiKeyV3&language=$language&page=$page",
+      ),
+    );
+    if (response.statusCode == 200)
+      return Recommendations.fromJson(json.decode(response.body));
+    else {
+      print("unable to get recommendations");
+      return null;
+    }
+  }
+
+  static Future<Reviews?> getReviews({
+    required int id,
+    int page = 1,
+    String language = "en_US",
+  }) async {
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/movie/$id/reviews?api_key=$apiKeyV3&language=$language&page=$page",
+      ),
+    );
+    if (response.statusCode == 200)
+      return Reviews.fromJson(json.decode(response.body));
+    else {
+      print("unable to get reviews");
+      return null;
+    }
+  }
+
+  static void rateMovie({
+    required int id,
+    required double rating,
+  }) async {
+    http.Response response = await client.post(
+        Uri.parse(
+          "https://api.themoviedb.org/3/movie/$id/rating?api_key=$apiKeyV3",
+        ),
+        body: {
+          "value": rating,
+        });
+    if (response.statusCode == 200) {
+      print("succesfully revied movie");
+      Get.snackbar("Review", "Succesfully reviewed a movie");
+    } else {
+      print("unable to review");
+      Get.snackbar("Review", "Oops, something went wrong");
+    }
+  }
+
+  static Future<bool> markAsFavourite({
+    required int accountID,
+    required int contentID,
+    required MediaType mediaType,
+    required String sessionID,
+    bool isFavourite = true,
+  }) async {
+    http.Response response = await client.post(
+        Uri.parse(
+          "https://api.themoviedb.org/3/account/$accountID/favorite?api_key=$apiKeyV3&session_id=$sessionID",
+        ),
+        headers: {
+          "Content-type": "application/json",
+          "charset": "utf-8",
+        },
+        body: json.encode({
+          "media_type": describeEnum(mediaType).toString(),
+          "media_id": contentID,
+          "favorite": isFavourite,
+        }));
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      // print(isFavourite
+      //     ? "Succesfully added to favourites"
+      //     : "Succesfully removed from favourites");
+      Get.snackbar(
+        "Favourite",
+        isFavourite
+            ? "Succesfully added to favourites"
+            : "Succesfully removed from favourites",
+      );
+      return true;
+    } else {
+      print(json.encode({
+        "media_type": describeEnum(mediaType).toString(),
+        "media_id": contentID,
+        "favorite": isFavourite,
+      }));
+      // print(response.statusCode);
+      // print(
+      //   "https://api.themoviedb.org/3/account/$accountID/favorite?api_key=$apiKeyV3&session_id=$sessionID",
+      // );
+      // print(isFavourite.toString());
+      // print(contentID.toString());
+      // print(describeEnum(mediaType).toString());
+      // // print("unable to review");
+      Get.snackbar("Favourite", "Oops, something went wrong");
+      return false;
+    }
+  }
+
+  static Future<bool> addToWatchlist({
+    required int accountID,
+    required int contentID,
+    required MediaType mediaType,
+    required String sessionID,
+    bool add = true,
+  }) async {
+    http.Response response = await client.post(
+        Uri.parse(
+          "https://api.themoviedb.org/3/account/$accountID/watchlist?api_key=$apiKeyV3&session_id=$sessionID",
+        ),
+        headers: {
+          "Content-type": "application/json",
+          "charset": "utf-8",
+        },
+        body: json.encode({
+          "media_type": describeEnum(mediaType).toString(),
+          "media_id": contentID,
+          "watchlist": add,
+        }));
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      Get.snackbar(
+        "Watchlist",
+        add
+            ? "Succesfully added to watchlist"
+            : "Succesfully removed from watchlist",
+      );
+      return true;
+    } else {
+      print(json.encode({
+        "media_type": describeEnum(mediaType).toString(),
+        "media_id": contentID,
+        "favorite": add,
+      }));
+      print(response.statusCode);
+      print(
+        "https://api.themoviedb.org/3/account/$accountID/watchlist?api_key=$apiKeyV3&session_id=$sessionID",
+      );
+      print(add.toString());
+      print(contentID.toString());
+      print(describeEnum(mediaType).toString());
+      Get.snackbar("Watchlist", "Oops, something went wrong");
+      return false;
     }
   }
 }

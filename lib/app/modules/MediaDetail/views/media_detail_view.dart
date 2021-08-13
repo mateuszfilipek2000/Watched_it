@@ -59,8 +59,6 @@ class MediaDetailView extends GetView<MediaDetailController> {
                   controller.handleDragUpdate(details),
               onVerticalDragEnd: (DragEndDetails details) =>
                   controller.handleDragEnd(),
-              // onVerticalDragEnd: (DragEndDetails details) =>
-              //     controller.handleDragEnd(details),
               child: Container(
                 color: Colors.transparent,
                 margin: EdgeInsets.only(
@@ -68,23 +66,26 @@ class MediaDetailView extends GetView<MediaDetailController> {
                 ),
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_drop_up_rounded,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "Swipe Up",
-                        style: TextStyle(
+                  child: Opacity(
+                    opacity: controller.indicatorOpacity.value,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.arrow_drop_up_rounded,
                           color: Colors.white,
-                          decoration: TextDecoration.none,
-                          fontSize: 30,
                         ),
-                      ),
-                    ],
+                        Text(
+                          "Swipe Up",
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.none,
+                            fontSize: 30,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

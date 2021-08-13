@@ -1,5 +1,5 @@
 abstract class Media {
-  final String backdropPath;
+  final String? backdropPath;
   final List<Genre> genres;
   final String homepage;
   final int id;
@@ -16,7 +16,7 @@ abstract class Media {
   final int voteCount;
 
   Media({
-    required this.backdropPath,
+    this.backdropPath,
     required this.genres,
     required this.homepage,
     required this.id,
@@ -32,6 +32,14 @@ abstract class Media {
     required this.voteAverage,
     required this.voteCount,
   });
+
+  List<String> getGenresNames() {
+    List<String> results = [];
+    for (Genre genre in genres) results.add(genre.name);
+    return results;
+  }
+
+  String genresCommaSeparated() => getGenresNames().join(", ");
 }
 
 class ProductionCompany {

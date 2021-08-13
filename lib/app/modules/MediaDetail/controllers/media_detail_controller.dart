@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_description_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_description_view.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/bindings/movie_description_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/movie_description_view.dart';
 
 //TODO change swipe up scale to opacity
+//TODO FIX ANIMATIONS? THEY SOMETIMES WORK JUST FINE IDK WHATS HAPPENING THINK NOT USING GETX FOR ANIMATIONS
 class MediaDetailController extends GetxController
     with SingleGetTickerProviderMixin {
   Rx<MinimalMedia?> minimalMedia = Rx<MinimalMedia?>(null);
@@ -18,7 +18,7 @@ class MediaDetailController extends GetxController
   Rx<ScrollController> scrollController = Rx<ScrollController>(
     ScrollController(),
   );
-  RxBool shouldBeScrollable = false.obs;
+  //RxBool shouldBeScrollable = false.obs;
   /*
   when vertical swipe will be detected by gesture detector, the controller
   will keep track of delta y, and change swipe indicator scale 
@@ -30,12 +30,14 @@ class MediaDetailController extends GetxController
   */
   RxDouble swipeIndicatorPadding = 0.0.obs;
   double maxSwipeIndicatorPadding = 200.0;
-  double maxSwipeIndicatorScale = 2.0;
   RxDouble swipeIndicatorOpacity = 1.0.obs;
-  //RxBool isBottomSheetVisible = false.obs;
   double _currentDragDistance = 0.0;
   double _dragTreshold = 100.0;
-  RxBool isCurrentlyDragged = false.obs;
+  //RxBool isCurrentlyDragged = false.obs;
+
+  late AnimationController indicatorOpacityAnimationController;
+  late Animation<double> indicatorOpacityAnimation;
+  RxDouble indicatorOpacity = 1.0.obs;
 
   @override
   void onInit() {
@@ -64,6 +66,13 @@ class MediaDetailController extends GetxController
         milliseconds: 200,
       ),
     );
+    //indicator opacity animation controller
+    indicatorOpacityAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 200,
+      ),
+    );
 
     super.onInit();
   }
@@ -77,6 +86,7 @@ class MediaDetailController extends GetxController
   void onClose() {
     animationController.dispose();
     slideAnimationController.dispose();
+    indicatorOpacityAnimationController.dispose();
   }
 
   void handleDragStart(DragStartDetails details) {
@@ -88,24 +98,27 @@ class MediaDetailController extends GetxController
     double step = details.delta.dy;
 
     _currentDragDistance -= step;
+
     //if bottom sheet is visible then the current padding defaults
     //to max padding + x pixels
 
     if (swipeIndicatorPadding.value - step > 0) {
       if (swipeIndicatorPadding.value - step <= maxSwipeIndicatorPadding) {
         swipeIndicatorPadding.value -= step;
+
+        indicatorOpacity.value += (step / maxSwipeIndicatorPadding);
       }
     }
 
-    print(swipeIndicatorPadding.value);
+    //print(swipeIndicatorPadding.value);
     if (_currentDragDistance >= _dragTreshold) {
       handleDragEnd();
       Get.to(
-        () => MediaDescriptionView(),
-        binding: MediaDescriptionBinding(),
+        () => MovieDescriptionView(),
+        binding: MovieDescriptionBinding(),
         fullscreenDialog: true,
         duration: Duration(milliseconds: 500),
-        transition: Transition.fadeIn,
+        transition: Transition.fade,
       );
     }
     //else if (_currentDragDistance <= _dragTreshold * (-1.0) &&
@@ -120,7 +133,9 @@ class MediaDetailController extends GetxController
   }
 
   void handleDragEnd() {
+    print("end" + swipeIndicatorPadding.value.toString());
     slideAnimationController.reset();
+    indicatorOpacityAnimationController.reset();
 
     slideAnimation =
         Tween<double>(begin: swipeIndicatorPadding.value, end: 0.0).animate(
@@ -129,9 +144,22 @@ class MediaDetailController extends GetxController
         curve: Curves.easeIn,
       ),
     )..addListener(() {
+            print("anim" + swipeIndicatorPadding.value.toString());
             swipeIndicatorPadding.value = slideAnimation.value;
           });
+
+    indicatorOpacityAnimation =
+        Tween<double>(begin: indicatorOpacity.value, end: 1.0).animate(
+      CurvedAnimation(
+        parent: indicatorOpacityAnimationController,
+        curve: Curves.easeIn,
+      ),
+    )..addListener(() {
+            indicatorOpacity.value = indicatorOpacityAnimation.value;
+          });
+
     slideAnimationController.forward();
+    indicatorOpacityAnimationController.forward();
     //swipeIndicatorPadding.value = 0;
   }
 }

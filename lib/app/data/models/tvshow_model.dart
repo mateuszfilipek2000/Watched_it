@@ -9,35 +9,35 @@ TvShow tvShowFromJson(String str) => TvShow.fromJson(json.decode(str));
 
 class TvShow extends Media {
   TvShow({
-    required backdropPath,
-    this.createdBy,
-    this.episodeRunTime,
-    this.firstAirDate,
+    backdropPath,
+    required this.createdBy,
+    required this.episodeRunTime,
+    required this.firstAirDate,
     required genres,
     required homepage,
     required id,
-    this.inProduction,
-    this.languages,
-    this.lastAirDate,
-    this.lastEpisodeToAir,
-    this.name,
+    required this.inProduction,
+    required this.languages,
+    required this.lastAirDate,
+    required this.lastEpisodeToAir,
+    required this.name,
     this.nextEpisodeToAir,
-    this.networks,
-    this.numberOfEpisodes,
-    this.numberOfSeasons,
-    this.originCountry,
+    required this.networks,
+    required this.numberOfEpisodes,
+    required this.numberOfSeasons,
+    required this.originCountry,
     required originalLanguage,
-    this.originalName,
+    required this.originalName,
     required overview,
     required popularity,
     required posterPath,
     required productionCompanies,
     required productionCountries,
-    this.seasons,
+    required this.seasons,
     required spokenLanguages,
     required status,
     required tagline,
-    this.type,
+    required this.type,
     required voteAverage,
     required voteCount,
   }) : super(
@@ -58,22 +58,22 @@ class TvShow extends Media {
           tagline: tagline,
         );
 
-  final List<CreatedBy>? createdBy;
-  final List<int>? episodeRunTime;
-  final DateTime? firstAirDate;
-  final bool? inProduction;
-  final List<String>? languages;
-  final DateTime? lastAirDate;
-  final LastEpisodeToAir? lastEpisodeToAir;
-  final String? name;
+  final List<CreatedBy> createdBy;
+  final List<int> episodeRunTime;
+  final DateTime firstAirDate;
+  final bool inProduction;
+  final List<String> languages;
+  final DateTime lastAirDate;
+  final LastEpisodeToAir lastEpisodeToAir;
+  final String name;
   final dynamic nextEpisodeToAir;
-  final List<Network>? networks;
-  final int? numberOfEpisodes;
-  final int? numberOfSeasons;
-  final List<String>? originCountry;
-  final String? originalName;
-  final List<Season>? seasons;
-  final String? type;
+  final List<Network> networks;
+  final int numberOfEpisodes;
+  final int numberOfSeasons;
+  final List<String> originCountry;
+  final String originalName;
+  final List<Season> seasons;
+  final String type;
 
   factory TvShow.fromJson(Map<String, dynamic> json) => TvShow(
         backdropPath: json["backdrop_path"],
