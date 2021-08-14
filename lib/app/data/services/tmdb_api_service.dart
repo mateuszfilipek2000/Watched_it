@@ -14,6 +14,7 @@ import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
+import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
@@ -613,6 +614,23 @@ class TMDBApiService {
       print(describeEnum(mediaType).toString());
       Get.snackbar("Watchlist", "Oops, something went wrong");
       return false;
+    }
+  }
+
+  static Future<Videos?> getVideos({
+    required int id,
+    String lang = "en_US",
+  }) async {
+    http.Response response = await http.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/movie/$id/videos?api_key=$apiKeyV3&language=$lang"),
+    );
+
+    if (response.statusCode == 200)
+      return Videos.fromJson(json.decode(response.body));
+    else {
+      print("unable to retrieve videos");
+      return null;
     }
   }
 }

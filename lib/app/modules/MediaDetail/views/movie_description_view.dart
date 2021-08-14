@@ -5,6 +5,7 @@ import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_description_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/movie_details.dart';
 
+//TODO SWITCH THIS LONG COLUMN WITH TABVIEW (THIS COULD ALSO LEAD TO SMALLER AMOUNT OF REQUESTS)
 class MovieDescriptionView extends GetView<MovieDescriptionController> {
   const MovieDescriptionView({Key? key}) : super(key: key);
 
@@ -17,6 +18,16 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              //TODO ADD VIDEO PLAYER HERE
+              // Obx(
+              //   () => controller.videos.value == null
+              //       ? Container()
+              //       : Container(
+              //           height: 200.0,
+              //           width: double.infinity,
+              //           color: Colors.red,
+              //         ),
+              // ),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -137,18 +148,18 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
                   ),
                 ],
               ),
-              Obx(
-                () => controller.movie.value == null
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: MovieDetails(
-                          movie: controller.movie.value as Movie,
-                        ),
-                      ),
-              ),
+              // Obx(
+              //   () => controller.movie.value == null
+              //       ? Center(
+              //           child: CircularProgressIndicator(),
+              //         )
+              //       : Padding(
+              //           padding: const EdgeInsets.all(10.0),
+              //           child: MovieDetails(
+              //             movie: controller.movie.value as Movie,
+              //           ),
+              //         ),
+              // ),
             ],
           ),
         ),

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/credits_model.dart';
@@ -9,6 +11,7 @@ import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
+import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detail_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/fractionally_coloured_star.dart';
@@ -26,7 +29,10 @@ class MovieDescriptionController extends GetxController {
   late Rx<Lists> lists;
   late Rx<Recommendations> recommendations;
   late Rx<Reviews> reviews;
+  late Rx<Videos?> videos = Rx<Videos?>(null);
   late String sessionID;
+  late VideoPlayerController videoPlayerController;
+  //DefaultTabController tabController = DefaultTabController();
   //RxBool isFavourite = false.obs;
 
   @override
@@ -40,6 +46,8 @@ class MovieDescriptionController extends GetxController {
         sessionID: sessionID, movieID: minimalMedia.value.id);
     credits.value =
         await TMDBApiService.getCredits(movieID: minimalMedia.value.id);
+    videos.value = await TMDBApiService.getVideos(id: minimalMedia.value.id);
+
     super.onInit();
   }
 
