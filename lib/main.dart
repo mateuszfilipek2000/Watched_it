@@ -13,3 +13,8 @@ void main() {
     ),
   );
 }
+
+extension leadingZeros on int {
+  String addLeadingZeros(int numberOfTotalDigits) =>
+      this.toString().padLeft(numberOfTotalDigits, '0');
+}

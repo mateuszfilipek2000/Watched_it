@@ -70,6 +70,6 @@ class AuthorDetails {
 
   final String name;
   final String username;
-  final String avatarPath;
-  final int rating;
+  final String? avatarPath;
+  final double? rating;
 }

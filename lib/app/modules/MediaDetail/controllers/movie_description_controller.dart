@@ -28,7 +28,6 @@ class MovieDescriptionController extends GetxController {
   late Rx<KeyWords> keywords;
   late Rx<Lists> lists;
   late Rx<Recommendations> recommendations;
-  late Rx<Reviews> reviews;
   late Rx<Videos?> videos = Rx<Videos?>(null);
   late String sessionID;
   late VideoPlayerController videoPlayerController;
