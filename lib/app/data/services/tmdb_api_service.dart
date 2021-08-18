@@ -9,6 +9,7 @@ import 'package:watched_it_getx/app/data/models/credits_model.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/keywords.dart';
 import 'package:watched_it_getx/app/data/models/lists_model.dart';
+import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
@@ -628,6 +629,26 @@ class TMDBApiService {
 
     if (response.statusCode == 200)
       return Videos.fromJson(json.decode(response.body));
+    else {
+      print("unable to retrieve videos");
+      return null;
+    }
+  }
+
+  static Future<MediaImages?> getMediaImages(
+      {required String mediaID,
+      String language = "en-US",
+      MediaType mediaType = MediaType.movie}) async {
+    //TODO ???? NO RESULTS WHEN PASSING LANGUAGE PARAMETER
+    http.Response response = await http.get(
+      Uri.parse(
+        //"https://api.themoviedb.org/3/${describeEnum(mediaType)}/$mediaID/images?api_key=$apiKeyV3&language=$language",
+        "https://api.themoviedb.org/3/${describeEnum(mediaType)}/$mediaID/images?api_key=$apiKeyV3",
+      ),
+    );
+
+    if (response.statusCode == 200)
+      return MediaImages.fromJson(json.decode(response.body));
     else {
       print("unable to retrieve videos");
       return null;

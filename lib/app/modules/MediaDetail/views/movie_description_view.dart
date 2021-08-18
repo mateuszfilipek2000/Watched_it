@@ -5,6 +5,8 @@ import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_description_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/media_review_screen.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/movie_details.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/widgets/swipeable_image_view_f.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
 
 //TODO SWITCH THIS LONG COLUMN WITH TABVIEW (THIS COULD ALSO LEAD TO SMALLER AMOUNT OF REQUESTS)
 class MovieDescriptionView extends GetView<MovieDescriptionController> {
@@ -17,21 +19,34 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Color(0xFF1c1d25),
-          appBar: TabBar(
-            tabs: [
-              Tab(
-                text: "Overview",
+          bottomNavigationBar: Material(
+            color: Color(0xFF151515),
+            child: TabBar(
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(
+                  color: Colors.blue,
+                  width: 3.0,
+                ),
+                insets: EdgeInsets.only(bottom: 45),
               ),
-              Tab(
-                text: "Overview",
-              ),
-              Tab(
-                text: "Similar",
-              ),
-              Tab(
-                text: "Reviews",
-              ),
-            ],
+              indicatorColor: Colors.blue,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Tab(
+                  text: "Overview",
+                ),
+                Tab(
+                  text: "Overview",
+                ),
+                Tab(
+                  text: "Similar",
+                ),
+                Tab(
+                  text: "Reviews",
+                ),
+              ],
+            ),
           ),
           body: TabBarView(
             children: [
@@ -39,150 +54,236 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    //TODO ADD VIDEO PLAYER HERE
-                    // Obx(
-                    //   () => controller.videos.value == null
-                    //       ? Container()
-                    //       : Container(
-                    //           height: 200.0,
-                    //           width: double.infinity,
-                    //           color: Colors.red,
-                    //         ),
-                    // ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Obx(
-                              () => Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: controller.movie.value == null
-                                    ? []
-                                    : controller.generateRating(),
-                              ),
+                    Obx(
+                      () => AnimatedContainer(
+                        height: controller.swipeableController.value == null
+                            ? 200
+                            : 300,
+                        duration: Duration(milliseconds: 200),
+                        child: Stack(
+                          fit: StackFit.loose,
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Obx(
+                              () => controller.swipeableController.value != null
+                                  ? Align(
+                                      alignment: Alignment.topCenter,
+                                      child: GetBuilder(
+                                        init: controller
+                                            .swipeableController.value,
+                                        builder: (_) => SwipeableWidgetView(
+                                          height: 250,
+                                          navigationIndicatorAlignment:
+                                              Alignment.topRight,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
                             ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: Stack(
+                            // Obx(
+                            //   () => AnimatedOpacity(
+                            //     duration: Duration(milliseconds: 500),
+                            //     opacity: controller.images.value == null &&
+                            //             controller.images.value?.backdrops
+                            //                     .length !=
+                            //                 0
+                            //         ? 0
+                            //         : 1,
+                            //     child: Image.network(
+                            //       ImageUrl.getBackdropImageUrl(
+                            //           url: controller.images.value?.backdrops[0]
+                            //               as String),
+                            //     ),
+                            //   ),
+                            // ),
+                            Container(
+                              height: 200,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Hero(
-                                      tag: controller.minimalMedia.value.title,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                            bottomRight: Radius.circular(30)),
-                                        child: Image.network(
-                                          ImageUrl.getPosterImageUrl(
-                                            url: controller.minimalMedia.value
-                                                .posterPath as String,
-                                            size: PosterSizes.w780,
+                                  AspectRatio(
+                                    aspectRatio: 1 / 1.5,
+                                    child: Stack(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Hero(
+                                            tag: controller
+                                                .minimalMedia.value.title,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                bottomRight:
+                                                    Radius.circular(30),
+                                              ),
+                                              child: Image.network(
+                                                ImageUrl.getPosterImageUrl(
+                                                  url: controller
+                                                      .minimalMedia
+                                                      .value
+                                                      .posterPath as String,
+                                                  size: PosterSizes.w342,
+                                                ),
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
                                           ),
-                                          loadingBuilder: (BuildContext context,
-                                              Widget child,
-                                              ImageChunkEvent?
-                                                  loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }
-                                            return Container(
-                                              color: Colors.black,
-                                            );
-                                          },
+                                        ),
+                                        Obx(
+                                          () => controller
+                                                      .accountStates.value ==
+                                                  null
+                                              ? Container()
+                                              : Positioned(
+                                                  //alignment: Alignment.bottomRight,
+                                                  bottom: 0,
+                                                  right: 0,
+                                                  child: GestureDetector(
+                                                    onTap: () => controller
+                                                        .addToFavourites(),
+                                                    child: Container(
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  20),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20),
+                                                        ),
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .favorite_rounded,
+                                                          size: 20.0,
+                                                          color: controller
+                                                                  .accountStates
+                                                                  .value
+                                                                  ?.favourite as bool
+                                                              ? Colors.red
+                                                              : Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                        ),
+                                        Obx(
+                                          () =>
+                                              controller.accountStates.value ==
+                                                      null
+                                                  ? Container()
+                                                  : Positioned(
+                                                      top: 0,
+                                                      right: 0,
+                                                      child: GestureDetector(
+                                                        onTap: () => controller
+                                                            .addToWatchlist(),
+                                                        child: ClipPath(
+                                                          clipper: TabClip(),
+                                                          child: Container(
+                                                            width: 40.0,
+                                                            height: 40.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              // borderRadius:
+                                                              //     BorderRadius.only(
+                                                              //   bottomLeft:
+                                                              //       Radius.circular(
+                                                              //           20),
+                                                              // ),
+                                                              //color: Colors.white,
+                                                              color: controller
+                                                                      .accountStates
+                                                                      .value
+                                                                      ?.watchlist as bool
+                                                                  ? Colors.blue
+                                                                  : Colors.grey,
+                                                            ),
+                                                            // child: Center(
+                                                            //   child: Icon(
+                                                            //     Icons.tab_outlined,
+                                                            //     size: 20.0,
+                                                            //     color: controller
+                                                            //             .accountStates
+                                                            //             .value
+                                                            //             ?.watchlist as bool
+                                                            //         ? Colors.blue
+                                                            //         : Colors.grey,
+                                                            //   ),
+                                                            // ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Obx(
+                                      () => Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: controller.movie.value ==
+                                                  null
+                                              ? []
+                                              : [
+                                                  FittedBox(
+                                                    fit: BoxFit.fitWidth,
+                                                    child: Text(
+                                                      controller.movie.value
+                                                          ?.title as String,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 400,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: controller
+                                                          .generateRating(),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 10),
+                                                    child: Text(
+                                                      "${controller.movie.value?.voteAverage.toString() as String}/10",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                  Obx(
-                                    () => controller.accountStates.value == null
-                                        ? Container()
-                                        : Positioned(
-                                            //alignment: Alignment.bottomRight,
-                                            bottom: 0,
-                                            right: 0,
-                                            child: GestureDetector(
-                                              onTap: () =>
-                                                  controller.addToFavourites(),
-                                              child: Container(
-                                                width: 60.0,
-                                                height: 60.0,
-                                                decoration: BoxDecoration(
-                                                  //shape: BoxShape.circle,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    bottomRight:
-                                                        Radius.circular(30),
-                                                    topLeft:
-                                                        Radius.circular(30),
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.favorite_rounded,
-                                                    size: 30.0,
-                                                    color: controller
-                                                            .accountStates
-                                                            .value
-                                                            ?.favourite as bool
-                                                        ? Colors.red
-                                                        : Colors.grey,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                  ),
-                                  Obx(
-                                    () => controller.accountStates.value == null
-                                        ? Container()
-                                        : Positioned(
-                                            //alignment: Alignment.bottomRight,
-                                            top: 0,
-                                            right: 0,
-                                            child: GestureDetector(
-                                              onTap: () =>
-                                                  controller.addToWatchlist(),
-                                              child: Container(
-                                                width: 60.0,
-                                                height: 60.0,
-                                                decoration: BoxDecoration(
-                                                  //shape: BoxShape.circle,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(30),
-                                                    //topRight: Radius.circular(30),
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.tab_outlined,
-                                                    size: 30.0,
-                                                    color: controller
-                                                            .accountStates
-                                                            .value
-                                                            ?.watchlist as bool
-                                                        ? Colors.blue
-                                                        : Colors.grey,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                  ),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Obx(
@@ -208,5 +309,38 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
         ),
       ),
     );
+  }
+}
+
+class TabClip extends CustomClipper<Path> {
+  @override
+  getClip(Size size) {
+    Path path = Path();
+
+    // path.lineTo(0, size.height);
+    // path.lineTo(0, 0);
+    // path.lineTo(size.width / 2, size.height / 3);
+    // path.lineTo(size.width, 0);
+    // path.lineTo(size.width, size.height);
+
+    // path.lineTo(0, 0);
+    // path.lineTo(size.width / 2, size.height / 3);
+    // path.lineTo(size.width, 0);
+
+    path.lineTo(0, 0);
+    path.lineTo(0, size.height);
+    path.lineTo(size.width / 2, size.height / 3 * 2);
+    path.lineTo(size.width, size.height);
+    path.lineTo(size.width, 0);
+    //path.lineTo();
+
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper oldClipper) {
+    return false;
   }
 }

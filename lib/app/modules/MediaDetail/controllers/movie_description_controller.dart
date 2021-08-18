@@ -1,19 +1,22 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/credits_model.dart';
+import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/keywords.dart';
 import 'package:watched_it_getx/app/data/models/lists_model.dart';
+import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
-import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detail_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/fractionally_coloured_star.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
@@ -31,8 +34,13 @@ class MovieDescriptionController extends GetxController {
   late Rx<Videos?> videos = Rx<Videos?>(null);
   late String sessionID;
   late VideoPlayerController videoPlayerController;
-  //DefaultTabController tabController = DefaultTabController();
-  //RxBool isFavourite = false.obs;
+  late ChewieController chewieController;
+  Rx<MediaImages?> images = Rx<MediaImages?>(null);
+
+  Rx<SwipeableWidgetViewController?> swipeableController =
+      Rx<SwipeableWidgetViewController?>(null);
+
+  //widget sizes
 
   @override
   void onInit() async {
@@ -45,7 +53,8 @@ class MovieDescriptionController extends GetxController {
         sessionID: sessionID, movieID: minimalMedia.value.id);
     credits.value =
         await TMDBApiService.getCredits(movieID: minimalMedia.value.id);
-    videos.value = await TMDBApiService.getVideos(id: minimalMedia.value.id);
+
+    getAdditionalImages();
 
     super.onInit();
   }
@@ -63,8 +72,8 @@ class MovieDescriptionController extends GetxController {
         mediaRating = 0;
       }
     }
-
-    return rating.reversed.toList();
+    return rating;
+    //return rating.reversed.toList();
   }
 
   void addToFavourites() async {
@@ -133,5 +142,33 @@ class MovieDescriptionController extends GetxController {
       );
     }
     return results;
+  }
+
+  void initializeVideos() async {
+    videos.value = await TMDBApiService.getVideos(id: minimalMedia.value.id);
+    if (videos.value != null) {}
+  }
+
+  void getAdditionalImages() async {
+    images.value = await TMDBApiService.getMediaImages(
+      mediaID: minimalMedia.value.id.toString(),
+    );
+    print(images.value?.backdrops.length);
+    if (images.value?.backdrops != null) {
+      List<Image> results = [];
+      for (Backdrop backdrop in images.value?.backdrops as List<Backdrop>) {
+        Image result = Image.network(
+          ImageUrl.getBackdropImageUrl(
+              url: backdrop.filePath, size: BackdropSizes.w780),
+          key: UniqueKey(),
+        );
+        results.add(result);
+      }
+      if (results.length != 0) {
+        swipeableController.value = SwipeableWidgetViewController(
+          children: results,
+        );
+      }
+    }
   }
 }

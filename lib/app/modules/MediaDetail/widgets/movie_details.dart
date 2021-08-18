@@ -19,45 +19,45 @@ class MovieDetails extends StatelessWidget {
       builder: (_) {
         return Column(
           children: [
-            Column(
-              children: [
-                Text(
-                  movie.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        movie.getDateString(),
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                      BulletSeparator(
-                        radius: 4,
-                      ),
-                      Text(
-                        movie.genresCommaSeparated(),
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            // Column(
+            //   children: [
+            //     Text(
+            //       movie.title,
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: 35.0,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     SingleChildScrollView(
+            //       scrollDirection: Axis.horizontal,
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Text(
+            //             movie.getDateString(),
+            //             style: TextStyle(
+            //               color: Colors.grey,
+            //               fontSize: 15.0,
+            //             ),
+            //           ),
+            //           BulletSeparator(
+            //             radius: 4,
+            //           ),
+            //           Text(
+            //             movie.genresCommaSeparated(),
+            //             style: TextStyle(
+            //               color: Colors.grey,
+            //               fontSize: 15.0,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0),
+              padding: const EdgeInsets.only(top: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
