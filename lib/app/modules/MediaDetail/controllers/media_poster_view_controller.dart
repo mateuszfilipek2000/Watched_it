@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detailed_binding.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/bindings/movie_description_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/views/movie_description_view.dart';
 
 //TODO change swipe up scale to opacity
 //TODO FIX ANIMATIONS? THEY SOMETIMES WORK JUST FINE IDK WHATS HAPPENING THINK NOT USING GETX FOR ANIMATIONS
-class MediaDetailController extends GetxController
+class MediaPosterViewController extends GetxController
     with SingleGetTickerProviderMixin {
   Rx<MinimalMedia?> minimalMedia = Rx<MinimalMedia?>(null);
   late AnimationController animationController;
@@ -114,22 +116,13 @@ class MediaDetailController extends GetxController
     if (_currentDragDistance >= _dragTreshold) {
       handleDragEnd();
       Get.to(
-        () => MovieDescriptionView(),
-        binding: MovieDescriptionBinding(),
+        () => MediaDetailedView(),
+        binding: MediaDetailedViewBinding(),
         fullscreenDialog: true,
         duration: Duration(milliseconds: 500),
         transition: Transition.fade,
       );
     }
-    //else if (_currentDragDistance <= _dragTreshold * (-1.0) &&
-    //     isBottomSheetVisible.value) {
-    //   isBottomSheetVisible.value = false;
-    //   swipeIndicatorPadding.value = 0.0;
-    //   swipeIndicatorOpacity.value = 1.0;
-    //   slideAnimationController.reverse();
-    // }
-
-    //print(_currentDragDistance);
   }
 
   void handleDragEnd() {

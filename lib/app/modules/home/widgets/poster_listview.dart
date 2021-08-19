@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detail_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detail_view.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_poster_view_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_poster_view.dart';
 import 'package:watched_it_getx/app/modules/home/controllers/home_controller.dart';
 
 //DONE: FIX NULL ERROR ON NETWORK IMAGE FETCH SOMEWHERE IDK GOOD LUCK PROBABLY WHEN MINIMALMEDIA OBJECT HAS NULL POSTERPATH (ILLEGAL STRING CAST?)
@@ -87,7 +87,7 @@ class PosterListViewItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Get.to(
-            () => MediaDetailView(),
+            () => MediaPosterView(),
             binding: MediaDetailBinding(),
             arguments: object,
             fullscreenDialog: true,

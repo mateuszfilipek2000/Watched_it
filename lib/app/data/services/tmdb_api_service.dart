@@ -500,23 +500,35 @@ class TMDBApiService {
     }
   }
 
-  static void rateMovie({
+  static Future<bool> rateMedia({
     required int id,
     required double rating,
+    required MediaType mediaType,
+    required String mediaName,
+    required String sessionID,
   }) async {
     http.Response response = await client.post(
         Uri.parse(
-          "https://api.themoviedb.org/3/movie/$id/rating?api_key=$apiKeyV3",
+          "https://api.themoviedb.org/3/${describeEnum(mediaType)}/$id/rating?api_key=$apiKeyV3&session_id=$sessionID",
         ),
-        body: {
+        headers: {
+          "Content-type": "application/json",
+          "charset": "utf-8",
+        },
+        body: json.encode({
           "value": rating,
-        });
-    if (response.statusCode == 200) {
+        }));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
       print("succesfully revied movie");
-      Get.snackbar("Review", "Succesfully reviewed a movie");
+      Get.snackbar("Review", "Succesfully reviewed $mediaName");
+      return true;
     } else {
+      print(response.statusCode);
+      print(response.body);
       print("unable to review");
       Get.snackbar("Review", "Oops, something went wrong");
+      return false;
     }
   }
 

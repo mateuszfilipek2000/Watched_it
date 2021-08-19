@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_description_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/posterlistview.dart';
 
 //TODO REPLACE POSTER LISTVIEW WITH ONE FROM THIS PAGE WHEN IT'S FINISHED
@@ -15,49 +15,47 @@ class MovieDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MovieDescriptionController>(
+    return GetBuilder<MovieOverviewController>(
       builder: (_) {
         return Column(
           children: [
-            // Column(
-            //   children: [
-            //     Text(
-            //       movie.title,
-            //       style: TextStyle(
-            //         color: Colors.white,
-            //         fontSize: 35.0,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ),
-            //     SingleChildScrollView(
-            //       scrollDirection: Axis.horizontal,
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           Text(
-            //             movie.getDateString(),
-            //             style: TextStyle(
-            //               color: Colors.grey,
-            //               fontSize: 15.0,
-            //             ),
-            //           ),
-            //           BulletSeparator(
-            //             radius: 4,
-            //           ),
-            //           Text(
-            //             movie.genresCommaSeparated(),
-            //             style: TextStyle(
-            //               color: Colors.grey,
-            //               fontSize: 15.0,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Padding(
-              padding: const EdgeInsets.only(top: 5.0),
+              padding: EdgeInsets.only(top: 5.0),
+              child: Container(
+                height: 40,
+                width: double.infinity,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: movie.genres.length,
+                  itemBuilder: (context, index) {
+                    //TODO ADD SAERCH BASED ON GENRE ON BUTTON CLICK ??? ADD SEARCH QUERY AS AN ARGUMENT TO SEARCH PAGE ???
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black38),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Center(
+                            child: Text(
+                              movie.genres[index].name,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

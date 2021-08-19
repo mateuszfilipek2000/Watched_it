@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 import 'package:watched_it_getx/app/modules/MainPageView/bindings/main_page_view_binding.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/views/main_page_view_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detail_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detail_view.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_poster_view_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_poster_view.dart';
 import 'package:watched_it_getx/app/modules/SearchPage/bindings/search_page_binding.dart';
 import 'package:watched_it_getx/app/modules/SearchPage/views/search_page_view.dart';
 import 'package:watched_it_getx/app/modules/UserPage/bindings/user_page_binding.dart';
@@ -55,7 +55,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MEDIA_DETAIL,
-      page: () => MediaDetailView(),
+      page: () => MediaPosterView(),
       binding: MediaDetailBinding(),
     ),
   ];

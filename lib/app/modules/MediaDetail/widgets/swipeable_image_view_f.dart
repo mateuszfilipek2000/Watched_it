@@ -57,9 +57,17 @@ class SwipeableWidgetView extends GetView<SwipeableWidgetViewController> {
                       //           : Colors.grey,
                       //     ),
                       //   )
-                      Text(
-                        "${controller.activeIndex.value + 1}/${controller.children.length}",
-                        style: TextStyle(color: Colors.white),
+                      Container(
+                        margin: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          "${controller.activeIndex.value + 1}/${controller.children.length}",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),

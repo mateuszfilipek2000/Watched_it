@@ -11,31 +11,31 @@ import 'package:watched_it_getx/app/data/models/lists_model.dart';
 import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
-import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detail_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/fractionally_coloured_star.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
-class MovieDescriptionController extends GetxController {
-  late AppUser? user;
+class MovieOverviewController extends GetxController {
+  AppUser? user = Get.find<MediaDetailedController>().user;
   Rx<MinimalMedia> minimalMedia =
-      (Get.find<MediaDetailController>().minimalMedia.value as MinimalMedia)
-          .obs;
+      (Get.find<MediaDetailedController>().minimalMedia.value).obs;
+  String sessionID = Get.find<MediaDetailedController>().sessionID;
+
   Rx<Movie?> movie = Rx<Movie?>(null);
   late Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
   Rx<Credits?> credits = Rx<Credits?>(null);
   late Rx<KeyWords> keywords;
   late Rx<Lists> lists;
-  late Rx<Recommendations> recommendations;
   late Rx<Videos?> videos = Rx<Videos?>(null);
-  late String sessionID;
+
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
   Rx<MediaImages?> images = Rx<MediaImages?>(null);
+  RxBool isFabActive = false.obs;
+  RxDouble userMediaRating = 0.0.obs;
 
   Rx<SwipeableWidgetViewController?> swipeableController =
       Rx<SwipeableWidgetViewController?>(null);
@@ -44,19 +44,26 @@ class MovieDescriptionController extends GetxController {
 
   @override
   void onInit() async {
-    user = await TMDBApiService.getUserDetails(
-      Get.find<UserController>().sessionID.value,
-    );
-    sessionID = await Get.find<UserController>().sessionID.value;
     movie.value = await TMDBApiService.getMovieDetails(minimalMedia.value.id);
-    accountStates.value = await TMDBApiService.getAccountStates(
-        sessionID: sessionID, movieID: minimalMedia.value.id);
+    getAccountStates();
     credits.value =
         await TMDBApiService.getCredits(movieID: minimalMedia.value.id);
 
     getAdditionalImages();
 
     super.onInit();
+  }
+
+  void getAccountStates() async {
+    accountStates.value = await TMDBApiService.getAccountStates(
+        sessionID: sessionID, movieID: minimalMedia.value.id);
+
+    if (accountStates.value != null) {
+      if (accountStates.value?.rated != null) {
+        userMediaRating.value = accountStates.value?.rated as double;
+        print("aaaaa ${accountStates.value?.rated as double}");
+      }
+    }
   }
 
   List<FractionallyColouredStar> generateRating() {
@@ -107,8 +114,6 @@ class MovieDescriptionController extends GetxController {
       );
     }
   }
-
-  void updateAccountStates() {}
 
   List<MinimalMedia> minimalMediaFromCast() {
     List<MinimalMedia> results = [];
@@ -170,5 +175,50 @@ class MovieDescriptionController extends GetxController {
         );
       }
     }
+  }
+
+  void openMediaRatingDialog() {
+    Get.defaultDialog(
+      title: "How'd you rate: ${minimalMedia.value.title}?",
+      content: Obx(
+        () => Column(
+          children: [
+            Slider.adaptive(
+              min: 0.0,
+              max: 10.0,
+              divisions: 20,
+              label: userMediaRating.value.toString(),
+              onChanged: (newRating) => userMediaRating.value = newRating,
+              value: userMediaRating.value,
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Center(
+                child: Text(
+                  "Your rating: ${userMediaRating.value.toString()}",
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      onConfirm: () {
+        print("yeah!");
+        rate();
+        Get.back();
+      },
+      onCancel: () {},
+    );
+  }
+
+  void rate() async {
+    bool result = await TMDBApiService.rateMedia(
+      id: minimalMedia.value.id,
+      rating: userMediaRating.value,
+      mediaType: minimalMedia.value.mediaType,
+      mediaName: minimalMedia.value.title,
+      sessionID: sessionID,
+    );
+    if (result) getAccountStates();
   }
 }

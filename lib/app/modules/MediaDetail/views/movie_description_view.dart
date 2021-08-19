@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_description_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/widgets/media_review_screen.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/similar_movies_view.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_review_view.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/movie_details.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/swipeable_image_view_f.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
 
 //TODO SWITCH THIS LONG COLUMN WITH TABVIEW (THIS COULD ALSO LEAD TO SMALLER AMOUNT OF REQUESTS)
-class MovieDescriptionView extends GetView<MovieDescriptionController> {
+class MovieDescriptionView extends GetView<MovieOverviewController> {
   const MovieDescriptionView({Key? key}) : super(key: key);
 
   @override
@@ -18,6 +19,12 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
       length: 4,
       child: SafeArea(
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: controller.openMediaRatingDialog,
+            child: Icon(
+              Icons.star,
+            ),
+          ),
           backgroundColor: Color(0xFF1c1d25),
           bottomNavigationBar: Material(
             color: Color(0xFF151515),
@@ -80,22 +87,6 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
                                     )
                                   : Container(),
                             ),
-                            // Obx(
-                            //   () => AnimatedOpacity(
-                            //     duration: Duration(milliseconds: 500),
-                            //     opacity: controller.images.value == null &&
-                            //             controller.images.value?.backdrops
-                            //                     .length !=
-                            //                 0
-                            //         ? 0
-                            //         : 1,
-                            //     child: Image.network(
-                            //       ImageUrl.getBackdropImageUrl(
-                            //           url: controller.images.value?.backdrops[0]
-                            //               as String),
-                            //     ),
-                            //   ),
-                            // ),
                             Container(
                               height: 200,
                               child: Row(
@@ -173,53 +164,34 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
                                                 ),
                                         ),
                                         Obx(
-                                          () =>
-                                              controller.accountStates.value ==
-                                                      null
-                                                  ? Container()
-                                                  : Positioned(
-                                                      top: 0,
-                                                      right: 0,
-                                                      child: GestureDetector(
-                                                        onTap: () => controller
-                                                            .addToWatchlist(),
-                                                        child: ClipPath(
-                                                          clipper: TabClip(),
-                                                          child: Container(
-                                                            width: 40.0,
-                                                            height: 40.0,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              // borderRadius:
-                                                              //     BorderRadius.only(
-                                                              //   bottomLeft:
-                                                              //       Radius.circular(
-                                                              //           20),
-                                                              // ),
-                                                              //color: Colors.white,
-                                                              color: controller
-                                                                      .accountStates
-                                                                      .value
-                                                                      ?.watchlist as bool
-                                                                  ? Colors.blue
-                                                                  : Colors.grey,
-                                                            ),
-                                                            // child: Center(
-                                                            //   child: Icon(
-                                                            //     Icons.tab_outlined,
-                                                            //     size: 20.0,
-                                                            //     color: controller
-                                                            //             .accountStates
-                                                            //             .value
-                                                            //             ?.watchlist as bool
-                                                            //         ? Colors.blue
-                                                            //         : Colors.grey,
-                                                            //   ),
-                                                            // ),
-                                                          ),
+                                          () => controller
+                                                      .accountStates.value ==
+                                                  null
+                                              ? Container()
+                                              : Positioned(
+                                                  top: 0,
+                                                  right: 0,
+                                                  child: GestureDetector(
+                                                    onTap: () => controller
+                                                        .addToWatchlist(),
+                                                    child: ClipPath(
+                                                      clipper: TabClip(),
+                                                      child: Container(
+                                                        width: 40.0,
+                                                        height: 40.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: controller
+                                                                  .accountStates
+                                                                  .value
+                                                                  ?.watchlist as bool
+                                                              ? Colors.blue
+                                                              : Colors.white,
                                                         ),
                                                       ),
                                                     ),
+                                                  ),
+                                                ),
                                         ),
                                       ],
                                     ),
@@ -302,8 +274,8 @@ class MovieDescriptionView extends GetView<MovieDescriptionController> {
                 ),
               ),
               Text("2"),
-              Text("3"),
-              MediaReviewScreen(),
+              SimilarMoviesView(),
+              MediaReviewView(),
             ],
           ),
         ),
@@ -329,7 +301,7 @@ class TabClip extends CustomClipper<Path> {
 
     path.lineTo(0, 0);
     path.lineTo(0, size.height);
-    path.lineTo(size.width / 2, size.height / 3 * 2);
+    path.lineTo(size.width / 2, size.height / 4 * 3);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0);
     //path.lineTo();
