@@ -1,41 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel_controller.dart';
 
 class ImageCarousel extends StatelessWidget {
-  const ImageCarousel({
+  ImageCarousel({
     required this.height,
+    required this.imageUrls,
+    required this.tag,
+    required this.controller,
+    this.onPageChanged,
     this.width = double.infinity,
     Key? key,
   }) : super(key: key);
+  final ImageCarouselController controller;
   final double height;
   final double width;
-
+  final List<String?> imageUrls;
+  final String tag;
+  final Function(int)? onPageChanged;
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) => GetBuilder<ImageCarouselController>(
-        init: ImageCarouselController(),
-        builder: (_) => Container(
-          height: this.height,
-          width: this.width,
-          child: PageView.builder(
-            onPageChanged: (index) {
-              print(constraints.maxHeight);
-              _.activeChildIndex.value = index;
-            },
-            controller: _.pageController,
-            physics: BouncingScrollPhysics(),
-            itemCount: 30,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleCarouselItem(
-                  index: index,
-                ),
-              );
-            },
-          ),
+      builder: (context, constraints) => Container(
+        height: this.height,
+        width: this.width,
+        child: PageView.builder(
+          onPageChanged: (index) {
+            if (onPageChanged != null) onPageChanged!(index);
+
+            controller.activeChildIndex.value = index;
+          },
+          controller: controller.pageController,
+          physics: BouncingScrollPhysics(),
+          itemCount: imageUrls.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleCarouselItem(
+                index: index,
+                imageURL: imageUrls[index],
+                controllerTag: tag,
+              ),
+            );
+          },
         ),
       ),
     );
@@ -43,31 +52,38 @@ class ImageCarousel extends StatelessWidget {
 }
 
 class SingleCarouselItem extends StatelessWidget {
-  const SingleCarouselItem({
+  SingleCarouselItem({
     Key? key,
     required this.index,
-  }) : super(key: key);
+    required this.imageURL,
+    required String controllerTag,
+  })  : controller = Get.find<ImageCarouselController>(tag: controllerTag),
+        super(key: key);
   final int index;
+  final String? imageURL;
+  final ImageCarouselController controller;
 
   @override
   Widget build(BuildContext context) {
-    return GetX<ImageCarouselController>(
-      builder: (_) {
-        //right side
-        double fraction = (index - _.pageValue.value).abs();
+    return Obx(
+      () {
+        double fraction = (index - controller.pageValue.value).abs();
         if (fraction < 0) fraction = 0;
-        if (fraction > 1) fraction = 1;
+        //if (fraction > 1) fraction = 1;
         //fraction varies between 0 and 1
         //zero is start, 1 is finish
-        double heightFactor = -0.2 * fraction + 1;
-
-        //if (index == 0) print((heightFactor));
-
+        double heightFactor =
+            -(1 - controller.minimumChildScale) * fraction + 1;
         return FractionallySizedBox(
           heightFactor: heightFactor,
-          child: Container(
-            color: Colors.blue,
-          ),
+          child: imageURL == null
+              ? Container(
+                  color: Colors.blue,
+                )
+              : Image.network(
+                  imageURL as String,
+                  fit: BoxFit.contain,
+                ),
         );
       },
     );

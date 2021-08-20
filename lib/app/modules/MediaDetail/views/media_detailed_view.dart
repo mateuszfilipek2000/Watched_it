@@ -56,6 +56,7 @@ class MediaDetailedView extends GetView<MediaDetailedController> {
                     ),
                   ),
                   body: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
                     children: controller.pages,
                     // children: [
                     //   MovieOverviewView(),

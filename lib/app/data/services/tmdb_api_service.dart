@@ -477,6 +477,8 @@ class TMDBApiService {
     if (response.statusCode == 200)
       return Recommendations.fromJson(json.decode(response.body));
     else {
+      print(response.statusCode);
+      print(response.body);
       print("unable to get recommendations");
       return null;
     }

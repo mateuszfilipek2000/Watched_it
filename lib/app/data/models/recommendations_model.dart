@@ -57,17 +57,17 @@ class Result {
       );
 
   final bool adult;
-  final dynamic backdropPath;
+  final String? backdropPath;
   final List<int> genreIds;
   final int id;
   final String originalLanguage;
   final String originalTitle;
   final String overview;
   final DateTime releaseDate;
-  final dynamic posterPath;
+  final String? posterPath;
   final double popularity;
   final String title;
   final bool video;
-  final int voteAverage;
+  final double voteAverage;
   final int voteCount;
 }
