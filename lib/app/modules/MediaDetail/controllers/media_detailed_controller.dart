@@ -99,4 +99,50 @@ class MediaDetailedController extends GetxController {
     // TODO: implement onClose
     super.onClose();
   }
+
+  //TODO CHECK IF ACCOUNT STATES ARE THE SAME FOR EVERY MEDIA, IF THEY ARE THE SAME/SIMILAR ENOUGH THEN MOVE ACCOUNT STATES VARIABLE AND THE WHOLE LOGIC TO THIS CONTROLLER
+  // void openMediaRatingDialog() {
+  //   Get.defaultDialog(
+  //     title: "How'd you rate: ${minimalMedia.value.title}?",
+  //     content: Obx(
+  //       () => Column(
+  //         children: [
+  //           Slider.adaptive(
+  //             min: 0.0,
+  //             max: 10.0,
+  //             divisions: 20,
+  //             label: userMediaRating.value.toString(),
+  //             onChanged: (newRating) => userMediaRating.value = newRating,
+  //             value: userMediaRating.value,
+  //           ),
+  //           Padding(
+  //             padding: EdgeInsets.all(5),
+  //             child: Center(
+  //               child: Text(
+  //                 "Your rating: ${userMediaRating.value.toString()}",
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     onConfirm: () {
+  //       print("yeah!");
+  //       rate();
+  //       Get.back();
+  //     },
+  //     onCancel: () {},
+  //   );
+  // }
+
+  // void rate() async {
+  //   bool result = await TMDBApiService.rateMedia(
+  //     id: minimalMedia.value.id,
+  //     rating: userMediaRating.value,
+  //     mediaType: minimalMedia.value.mediaType,
+  //     mediaName: minimalMedia.value.title,
+  //     sessionID: sessionID,
+  //   );
+  //   if (result) getAccountStates();
+  // }
 }

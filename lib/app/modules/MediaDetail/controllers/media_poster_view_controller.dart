@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detailed_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/movie_description_binding.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/movie_description_view.dart';
 
 //TODO change swipe up scale to opacity
 //TODO FIX ANIMATIONS? THEY SOMETIMES WORK JUST FINE IDK WHATS HAPPENING THINK NOT USING GETX FOR ANIMATIONS
@@ -60,7 +58,9 @@ class MediaPosterViewController extends GetxController
         },
       );
     minimalMedia.value = Get.arguments;
-
+    print(minimalMedia.value?.title);
+    print(minimalMedia.value?.mediaType);
+    print(minimalMedia.value?.id);
     //slide animation
     slideAnimationController = AnimationController(
       vsync: this,

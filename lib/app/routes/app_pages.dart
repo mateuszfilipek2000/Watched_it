@@ -56,7 +56,7 @@ class AppPages {
     GetPage(
       name: _Paths.MEDIA_DETAIL,
       page: () => MediaPosterView(),
-      binding: MediaDetailBinding(),
+      binding: MediaPosterViewBinding(),
     ),
   ];
 }

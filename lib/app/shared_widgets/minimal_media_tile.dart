@@ -20,7 +20,7 @@ class MinimalMediaTile extends StatelessWidget {
       onPressed: () {
         Get.to(
           () => MediaPosterView(),
-          binding: MediaDetailBinding(),
+          binding: MediaPosterViewBinding(),
           arguments: media,
           fullscreenDialog: true,
         );

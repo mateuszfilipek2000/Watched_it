@@ -24,7 +24,7 @@ class SwipeableImageView extends StatelessWidget {
             onTap: () {
               Get.to(
                 () => MediaPosterView(),
-                binding: MediaDetailBinding(),
+                binding: MediaPosterViewBinding(),
                 arguments:
                     controller.objects[controller.currentlyActiveObject.value],
                 fullscreenDialog: true,

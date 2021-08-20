@@ -88,7 +88,7 @@ class PosterListViewItem extends StatelessWidget {
         onTap: () {
           Get.to(
             () => MediaPosterView(),
-            binding: MediaDetailBinding(),
+            binding: MediaPosterViewBinding(),
             arguments: object,
             fullscreenDialog: true,
           );
