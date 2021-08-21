@@ -1,51 +1,54 @@
 import 'package:get/get.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
+import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
-import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel_controller.dart';
+import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
-class SimilarMoviesController extends GetxController {
+class SimilarMoviesController extends GetxController
+    with SingleGetTickerProviderMixin {
   Rx<Recommendations?> recommendations = Rx<Recommendations?>(null);
   RxInt currentPage = 1.obs;
-  RxList<String?> recommendedUrls = RxList([]);
+  RxList<String?> results = RxList([]);
   RxInt currentCarouselItem = 0.obs;
+  Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
 
-  //late ImageCarouselController smallCarouselController;
+  List<String> sortingOption = ["Similar", "Recommended"];
+  RxInt selectedSortingOption = 0.obs;
 
   @override
   void onInit() {
-    // smallCarouselController = Get.put<ImageCarouselController>(
-    //   ImageCarouselController(0.7, 0.8),
-    //   tag: "smallCarouselController",
-    // );
-    getRecommendedUrls();
+    getPosterUrls();
+
     super.onInit();
   }
 
   @override
   void onClose() {
-    print("closing similar movies");
+    //print("closing similar movies");
     super.onClose();
   }
 
-  void getRecommendedUrls() async {
-    recommendations.value = await TMDBApiService.getRecommendations(
-      id: Get.find<MediaDetailedController>().minimalMedia.value.id,
-      page: currentPage.value,
-    );
+  void getPosterUrls() async {
+    if (selectedSortingOption.value == 0) {
+      recommendations.value = await TMDBApiService.getRecommendations(
+        id: Get.find<MediaDetailedController>().minimalMedia.value.id,
+        page: currentPage.value,
+      );
+    } else {
+      recommendations.value = await TMDBApiService.getSimilar(
+        id: Get.find<MediaDetailedController>().minimalMedia.value.id,
+        page: currentPage.value,
+      );
+    }
     if (recommendations.value != null) {
       for (Result result in recommendations.value?.results as List<Result>) {
         if (result.posterPath == null) {
-          recommendedUrls.add(null);
+          results.add(null);
         } else {
-          // print(
-          //   ImageUrl.getPosterImageUrl(
-          //     url: result.posterPath as String,
-          //     size: PosterSizes.w342,
-          //   ),
-          // );
-          recommendedUrls.add(
+          results.add(
             ImageUrl.getPosterImageUrl(
               url: result.posterPath as String,
               size: PosterSizes.w342,
@@ -53,6 +56,83 @@ class SimilarMoviesController extends GetxController {
           );
         }
       }
+      getAccountStates();
     }
   }
+
+  String getReleaseDate() {
+    if (recommendations.value?.results[currentCarouselItem.value].releaseDate !=
+        null)
+      return recommendations
+          .value?.results[currentCarouselItem.value].releaseDate
+          .getDashedDate() as String;
+    else
+      return "No date available";
+  }
+
+  String getTitle() {
+    if (recommendations.value?.results[currentCarouselItem.value].title != null)
+      return recommendations.value?.results[currentCarouselItem.value].title
+          as String;
+    else
+      return "No title available";
+  }
+
+  void handlePageChange(int index) async {
+    currentCarouselItem.value = index;
+    getAccountStates();
+  }
+
+  void changeFavourite() async {
+    bool status = await TMDBApiService.markAsFavourite(
+      accountID: Get.find<MediaDetailedController>().user?.id as int,
+      contentID:
+          recommendations.value?.results[currentCarouselItem.value].id as int,
+      mediaType: MediaType.movie,
+      sessionID: Get.find<UserController>().sessionID.value,
+    );
+    if (status == true) {
+      getAccountStates();
+    }
+  }
+
+  void changeWatchlist() async {
+    bool status = await TMDBApiService.addToWatchlist(
+      accountID: Get.find<MediaDetailedController>().user?.id as int,
+      contentID:
+          recommendations.value?.results[currentCarouselItem.value].id as int,
+      mediaType: MediaType.movie,
+      sessionID: Get.find<UserController>().sessionID.value,
+    );
+    if (status == true) {
+      getAccountStates();
+    }
+  }
+
+  void getAccountStates() async {
+    accountStates.value = await TMDBApiService.getAccountStates(
+      sessionID: Get.find<UserController>().sessionID.value,
+      movieID:
+          recommendations.value?.results[currentCarouselItem.value].id as int,
+    );
+  }
+
+  void changeSortingOption(int i) async {
+    if (i != selectedSortingOption.value) {
+      selectedSortingOption.value = i;
+      results.clear();
+      currentCarouselItem.value = 0;
+      getPosterUrls();
+    }
+  }
+}
+
+extension leadingZeros on int {
+  String addLeadingZeros(int numberOfTotalDigits) =>
+      this.toString().padLeft(numberOfTotalDigits, '0');
+}
+
+extension dashedDate on DateTime {
+  String getDashedDate() =>
+      "${this.year}-${this.month.addLeadingZeros(2)}-${this.day.addLeadingZeros(2)}";
 }

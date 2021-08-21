@@ -484,6 +484,23 @@ class TMDBApiService {
     }
   }
 
+  static Future<Recommendations?> getSimilar(
+      {required int id, int page = 1, String language = "en_US"}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/movie/$id/similar?api_key=$apiKeyV3&language=$language&page=$page",
+      ),
+    );
+    if (response.statusCode == 200)
+      return Recommendations.fromJson(json.decode(response.body));
+    else {
+      print(response.statusCode);
+      print(response.body);
+      print("unable to get recommendations");
+      return null;
+    }
+  }
+
   static Future<Reviews?> getReviews({
     required int id,
     int page = 1,

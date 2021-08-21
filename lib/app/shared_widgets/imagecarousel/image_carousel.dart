@@ -22,30 +22,28 @@ class ImageCarousel extends StatelessWidget {
   final Function(int)? onPageChanged;
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Container(
-        height: this.height,
-        width: this.width,
-        child: PageView.builder(
-          onPageChanged: (index) {
-            if (onPageChanged != null) onPageChanged!(index);
+    return SizedBox(
+      height: this.height,
+      width: this.width,
+      child: PageView.builder(
+        onPageChanged: (index) {
+          if (onPageChanged != null) onPageChanged!(index);
 
-            controller.activeChildIndex.value = index;
-          },
-          controller: controller.pageController,
-          physics: BouncingScrollPhysics(),
-          itemCount: imageUrls.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleCarouselItem(
-                index: index,
-                imageURL: imageUrls[index],
-                controllerTag: tag,
-              ),
-            );
-          },
-        ),
+          controller.activeChildIndex.value = index;
+        },
+        controller: controller.pageController,
+        physics: BouncingScrollPhysics(),
+        itemCount: imageUrls.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleCarouselItem(
+              index: index,
+              imageURL: imageUrls[index],
+              controllerTag: tag,
+            ),
+          );
+        },
       ),
     );
   }

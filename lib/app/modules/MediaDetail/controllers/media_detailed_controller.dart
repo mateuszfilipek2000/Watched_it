@@ -32,10 +32,10 @@ class MediaDetailedController extends GetxController {
           text: "Overview",
         ),
         Tab(
-          text: "Overview",
+          text: "Videos",
         ),
         Tab(
-          text: "Similar",
+          text: "More",
         ),
         Tab(
           text: "Reviews",

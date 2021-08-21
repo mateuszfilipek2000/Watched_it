@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/similar_movies_controller.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel.dart';
@@ -14,7 +15,7 @@ class SimilarMoviesView extends StatelessWidget {
     return GetX<SimilarMoviesController>(
       init: SimilarMoviesController(),
       builder: (_) {
-        if (_.recommendations.value == null) {
+        if (_.results.length == 0) {
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -27,7 +28,7 @@ class SimilarMoviesView extends StatelessWidget {
                 child: AnimatedSwitcher(
                   duration: Duration(milliseconds: 200),
                   child: Image.network(
-                    _.recommendedUrls[_.currentCarouselItem.value] as String,
+                    _.results[_.currentCarouselItem.value] as String,
                     key: UniqueKey(),
                     fit: BoxFit.cover,
                   ),
@@ -42,24 +43,139 @@ class SimilarMoviesView extends StatelessWidget {
                   color: Colors.black.withOpacity(0.6),
                 ),
               ),
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
-                  child: GetBuilder<ImageCarouselController>(
-                    init: ImageCarouselController(0.7, 0.8),
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.only(bottomLeft: Radius.circular(15)),
+                  ),
+                  child: Obx(
+                    () => Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        for (var i = 0; i < _.sortingOption.length; i++)
+                          TextButton(
+                            onPressed: () => _.changeSortingOption(i),
+                            child: Text(
+                              _.sortingOption[i],
+                              style: TextStyle(
+                                color: _.selectedSortingOption.value == i
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ),
+                        // TextButton(
+                        //   onPressed: () {},
+                        //   child: Text(
+                        //     _.sortingOption[1],
+                        //     style: TextStyle(color: Colors.black),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.only(bottomRight: Radius.circular(15)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Obx(
+                        () => IconButton(
+                          onPressed: () => _.changeFavourite(),
+                          icon: Icon(
+                            Icons.favorite_rounded,
+                            color: _.accountStates.value != null
+                                ? _.accountStates.value?.favourite as bool
+                                    ? Colors.red
+                                    : Colors.grey
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () => IconButton(
+                          onPressed: () => _.changeWatchlist(),
+                          icon: Icon(
+                            _.accountStates.value != null
+                                ? _.accountStates.value?.watchlist as bool
+                                    ? Icons.bookmark_added_rounded
+                                    : Icons.bookmark_add_rounded
+                                : Icons.bookmark_add_rounded,
+                            color: _.accountStates.value != null
+                                ? _.accountStates.value?.watchlist as bool
+                                    ? Colors.blue
+                                    : Colors.grey
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GetBuilder<ImageCarouselController>(
+                    init: ImageCarouselController(0.5, 0.6),
                     tag: "smallCarouselController",
                     builder: (controller) {
                       return ImageCarousel(
                         height: 300.0,
-                        imageUrls: _.recommendedUrls,
-                        onPageChanged: (index) =>
-                            _.currentCarouselItem.value = index,
+                        imageUrls: _.results,
+                        onPageChanged: (index) => _.handlePageChange(index),
                         tag: "smallCarouselController",
                         controller: controller,
                       );
                     },
                   ),
-                ),
+                  AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: Container(
+                      key: UniqueKey(),
+                      margin: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      //height: 100.0,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              _.getTitle(),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 30.0),
+                            ),
+                          ),
+                          Text(
+                            _.getReleaseDate(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           );
