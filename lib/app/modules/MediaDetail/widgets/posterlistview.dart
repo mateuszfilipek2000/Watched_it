@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
 
 class PosterListView extends StatelessWidget {
   const PosterListView({
@@ -51,15 +53,27 @@ class PosterListView extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: objects.length,
               itemBuilder: (context, index) {
-                return PosterListViewItem(
-                  title: objects[index].title,
-                  subtitle: objects[index].subtitle as String,
-                  imagePath: objects[index].posterPath == null
-                      ? null
-                      : ImageUrl.getProfileImageUrl(
-                          url: objects[index].posterPath as String,
-                          size: ProfileSizes.w342,
-                        ),
+                return GestureDetector(
+                  onTap: () {
+                    print("tapped ${objects[index].title}");
+                    Get.to(
+                      () => MediaDetailedView(),
+                      arguments: objects[index],
+                      fullscreenDialog: true,
+                      //id: objects[index].id,
+                      preventDuplicates: false,
+                    );
+                  },
+                  child: PosterListViewItem(
+                    title: objects[index].title,
+                    subtitle: objects[index].subtitle as String,
+                    imagePath: objects[index].posterPath == null
+                        ? null
+                        : ImageUrl.getProfileImageUrl(
+                            url: objects[index].posterPath as String,
+                            size: ProfileSizes.w342,
+                          ),
+                  ),
                 );
               },
             ),

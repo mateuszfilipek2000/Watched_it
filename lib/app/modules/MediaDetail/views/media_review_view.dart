@@ -10,6 +10,7 @@ class MediaReviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetX<MediaReviewController>(
       init: MediaReviewController(tag: context.read<int>().toString()),
+      tag: context.read<int>().toString(),
       builder: (_) {
         return _.reviews.value == null
             ? Center(

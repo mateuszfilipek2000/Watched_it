@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
 
-class SwipeableWidgetView extends GetWidget<SwipeableWidgetViewController> {
-  const SwipeableWidgetView({
+class SwipeableWidgetView extends StatelessWidget {
+  SwipeableWidgetView({
     Key? key,
     required this.height,
     required this.navigationIndicatorAlignment,
+    required String tag,
     this.width = double.infinity,
-  }) : super(key: key);
+  })  : controller = Get.find<SwipeableWidgetViewController>(tag: tag),
+        super(key: key);
 
   final double height;
   final double width;
   final Alignment navigationIndicatorAlignment;
+  final SwipeableWidgetViewController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +33,11 @@ class SwipeableWidgetView extends GetWidget<SwipeableWidgetViewController> {
               alignment: Alignment.center,
               fit: BoxFit.cover,
               clipBehavior: Clip.antiAlias,
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
-                child: controller.getActiveChild(),
+              child: Obx(
+                () => AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child: controller.getActiveChild(),
+                ),
               ),
             ),
             Align(
@@ -64,10 +69,10 @@ class SwipeableWidgetView extends GetWidget<SwipeableWidgetViewController> {
                           color: Colors.black38,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text(
-                          "${controller.activeIndex.value + 1}/${controller.children.length}",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: Obx(() => Text(
+                              "${controller.activeIndex.value + 1}/${controller.children.length}",
+                              style: TextStyle(color: Colors.white),
+                            )),
                       ),
                     ],
                   ),

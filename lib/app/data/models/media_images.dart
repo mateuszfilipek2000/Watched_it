@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:watched_it_getx/app/data/models/image_model.dart';
+
 MediaImages mediaImagesFromJson(String str) =>
     MediaImages.fromJson(json.decode(str));
 
@@ -21,6 +23,15 @@ class MediaImages {
         posters: List<Backdrop>.from(
             json["posters"].map((x) => Backdrop.fromJson(x))),
       );
+
+  List<String> getBackdropUrls() {
+    List<String> results = [];
+    for (Backdrop backdrop in backdrops)
+      results.add(
+        ImageUrl.getBackdropImageUrl(url: backdrop.filePath),
+      );
+    return results;
+  }
 }
 
 class Backdrop {

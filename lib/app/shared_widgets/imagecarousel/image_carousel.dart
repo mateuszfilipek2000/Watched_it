@@ -11,6 +11,7 @@ class ImageCarousel extends StatelessWidget {
     required this.tag,
     required this.controller,
     this.onPageChanged,
+    this.onTap,
     this.width = double.infinity,
     Key? key,
   }) : super(key: key);
@@ -20,6 +21,7 @@ class ImageCarousel extends StatelessWidget {
   final List<String?> imageUrls;
   final String tag;
   final Function(int)? onPageChanged;
+  final Function(int)? onTap;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -35,12 +37,18 @@ class ImageCarousel extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         itemCount: imageUrls.length,
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleCarouselItem(
-              index: index,
-              imageURL: imageUrls[index],
-              controllerTag: tag,
+          return GestureDetector(
+            onTap: () {
+              if (this.onTap != null) this.onTap!(index);
+              print("carousel item with index $index was tapped");
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleCarouselItem(
+                index: index,
+                imageURL: imageUrls[index],
+                controllerTag: tag,
+              ),
             ),
           );
         },

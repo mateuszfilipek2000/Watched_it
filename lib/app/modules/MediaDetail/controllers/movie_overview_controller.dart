@@ -5,7 +5,6 @@ import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/credits_model.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/keywords.dart';
-import 'package:watched_it_getx/app/data/models/lists_model.dart';
 import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
@@ -34,8 +33,8 @@ class MovieOverviewController extends GetxController {
   RxBool isFabActive = false.obs;
   RxDouble userMediaRating = 0.0.obs;
 
-  Rx<SwipeableWidgetViewController?> swipeableController =
-      Rx<SwipeableWidgetViewController?>(null);
+  // Rx<SwipeableWidgetViewController?> swipeableController =
+  //     Rx<SwipeableWidgetViewController?>(null);
 
   @override
   void onInit() async {
@@ -159,22 +158,19 @@ class MovieOverviewController extends GetxController {
     images.value = await TMDBApiService.getMediaImages(
       mediaID: minimalMedia.value.id.toString(),
     );
-    print(images.value?.backdrops.length);
-    if (images.value?.backdrops != null) {
-      List<Image> results = [];
-      for (Backdrop backdrop in images.value?.backdrops as List<Backdrop>) {
-        Image result = Image.network(
-          ImageUrl.getBackdropImageUrl(
-              url: backdrop.filePath, size: BackdropSizes.w780),
-          key: UniqueKey(),
-        );
-        results.add(result);
-      }
-      if (results.length != 0) {
-        swipeableController.value = SwipeableWidgetViewController(
-          children: results,
-        );
-      }
+    //print(images.value?.backdrops.length);
+  }
+
+  List<Image> getBackdropImages() {
+    List<Image> results = [];
+    for (Backdrop backdrop in images.value?.backdrops as List<Backdrop>) {
+      Image result = Image.network(
+        ImageUrl.getBackdropImageUrl(
+            url: backdrop.filePath, size: BackdropSizes.w780),
+        key: UniqueKey(),
+      );
+      results.add(result);
     }
+    return results;
   }
 }

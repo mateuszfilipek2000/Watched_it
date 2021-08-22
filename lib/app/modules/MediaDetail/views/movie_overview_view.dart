@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/widgets/image_with_icons.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/movie_details.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/swipeable_image_view_f.dart';
 import 'package:provider/provider.dart';
@@ -14,29 +15,33 @@ class MovieOverviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<MovieOverviewController>(
       init: MovieOverviewController(tag: context.read<int>().toString()),
+      tag: context.read<int>().toString(),
       builder: (controller) => SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Obx(
               () => AnimatedContainer(
-                height:
-                    controller.swipeableController.value == null ? 200 : 300,
+                height: controller.images.value == null ? 200 : 300,
                 duration: Duration(milliseconds: 200),
                 child: Stack(
                   fit: StackFit.loose,
                   alignment: Alignment.bottomCenter,
                   children: [
                     Obx(
-                      () => controller.swipeableController.value != null
-                          ? Align(
-                              alignment: Alignment.topCenter,
-                              child: GetBuilder(
-                                init: controller.swipeableController.value,
-                                builder: (_) => SwipeableWidgetView(
+                      () => controller.images.value != null
+                          ? GetBuilder(
+                              init: SwipeableWidgetViewController(
+                                children: controller.getBackdropImages(),
+                              ),
+                              tag: context.read<int>().toString(),
+                              builder: (_) => Align(
+                                alignment: Alignment.topCenter,
+                                child: SwipeableWidgetView(
                                   height: 250,
                                   navigationIndicatorAlignment:
                                       Alignment.topRight,
+                                  tag: context.read<int>().toString(),
                                 ),
                               ),
                             )
@@ -47,94 +52,19 @@ class MovieOverviewView extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          AspectRatio(
-                            aspectRatio: 1 / 1.5,
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Hero(
-                                    tag: controller.minimalMedia.value.title,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(30),
-                                      ),
-                                      child: Image.network(
-                                        ImageUrl.getPosterImageUrl(
-                                          url: controller.minimalMedia.value
-                                              .posterPath as String,
-                                          size: PosterSizes.w342,
-                                        ),
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Obx(
-                                  () => controller.accountStates.value == null
-                                      ? Container()
-                                      : Positioned(
-                                          //alignment: Alignment.bottomRight,
-                                          bottom: 0,
-                                          right: 0,
-                                          child: GestureDetector(
-                                            onTap: () =>
-                                                controller.addToFavourites(),
-                                            child: Container(
-                                              width: 40.0,
-                                              height: 40.0,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  bottomRight:
-                                                      Radius.circular(20),
-                                                  topLeft: Radius.circular(20),
-                                                ),
-                                                color: Colors.white,
-                                              ),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.favorite_rounded,
-                                                  size: 20.0,
-                                                  color: controller
-                                                          .accountStates
-                                                          .value
-                                                          ?.favourite as bool
-                                                      ? Colors.red
-                                                      : Colors.grey,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                ),
-                                Obx(
-                                  () => controller.accountStates.value == null
-                                      ? Container()
-                                      : Positioned(
-                                          top: 0,
-                                          right: 0,
-                                          child: GestureDetector(
-                                            onTap: () =>
-                                                controller.addToWatchlist(),
-                                            child: ClipPath(
-                                              clipper: TabClip(),
-                                              child: Container(
-                                                width: 40.0,
-                                                height: 40.0,
-                                                decoration: BoxDecoration(
-                                                  color: controller
-                                                          .accountStates
-                                                          .value
-                                                          ?.watchlist as bool
-                                                      ? Colors.blue
-                                                      : Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                ),
-                              ],
+                          Obx(
+                            () => ImageWithIcons(
+                              minimalMedia: controller.minimalMedia.value,
+                              onBookmarkTap: controller.addToWatchlist,
+                              onIconTap: controller.addToFavourites,
+                              topIconInactive: Icons.bookmark_add_rounded,
+                              topIconActive: Icons.bookmark_added_rounded,
+                              bottomIconInactive: Icons.favorite_rounded,
+                              bottomIconActive: Icons.favorite_rounded,
+                              isTopActive:
+                                  controller.accountStates.value?.watchlist,
+                              isBottomActive:
+                                  controller.accountStates.value?.favourite,
                             ),
                           ),
                           Expanded(
@@ -154,7 +84,7 @@ class MovieOverviewView extends StatelessWidget {
                                                   as String,
                                               style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 400,
+                                                fontSize: 40,
                                               ),
                                             ),
                                           ),

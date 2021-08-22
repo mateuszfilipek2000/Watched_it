@@ -2,9 +2,11 @@ import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
+import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
 class SimilarMoviesController extends GetxController
@@ -127,12 +129,26 @@ class SimilarMoviesController extends GetxController
       getPosterUrls();
     }
   }
+
+  void getToMovieDetailPage(int index) {
+    Get.to(
+      () => MediaDetailedView(),
+      fullscreenDialog: true,
+      preventDuplicates: false,
+      arguments: MinimalMedia(
+        id: this.recommendations.value?.results[index].id as int,
+        mediaType: MediaType.movie,
+        title: this.recommendations.value?.results[index].title as String,
+        posterPath: this.recommendations.value?.results[index].posterPath,
+      ),
+    );
+  }
 }
 
-extension leadingZeros on int {
-  String addLeadingZeros(int numberOfTotalDigits) =>
-      this.toString().padLeft(numberOfTotalDigits, '0');
-}
+// extension leadingZeros on int {
+//   String addLeadingZeros(int numberOfTotalDigits) =>
+//       this.toString().padLeft(numberOfTotalDigits, '0');
+// }
 
 extension dashedDate on DateTime {
   String getDashedDate() =>

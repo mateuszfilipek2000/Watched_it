@@ -14,6 +14,7 @@ class SimilarMoviesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetX<SimilarMoviesController>(
       init: SimilarMoviesController(tag: context.read<int>().toString()),
+      tag: context.read<int>().toString(),
       builder: (_) {
         if (_.results.length == 0) {
           return Center(
@@ -69,13 +70,6 @@ class SimilarMoviesView extends StatelessWidget {
                               ),
                             ),
                           ),
-                        // TextButton(
-                        //   onPressed: () {},
-                        //   child: Text(
-                        //     _.sortingOption[1],
-                        //     style: TextStyle(color: Colors.black),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -142,6 +136,7 @@ class SimilarMoviesView extends StatelessWidget {
                         onPageChanged: (index) => _.handlePageChange(index),
                         tag:
                             "smallCarouselController-${context.read<int>().toString()}",
+                        onTap: _.getToMovieDetailPage,
                         controller: controller,
                       );
                     },

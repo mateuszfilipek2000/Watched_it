@@ -92,6 +92,8 @@ class PosterListViewItem extends StatelessWidget {
             //binding: MediaPosterViewBinding(),
             arguments: object,
             fullscreenDialog: true,
+            //id: object.id,
+            preventDuplicates: false,
           );
         },
         child: Container(
