@@ -5,6 +5,7 @@ import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/movie_details.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/swipeable_image_view_f.dart';
+import 'package:provider/provider.dart';
 
 class MovieOverviewView extends StatelessWidget {
   const MovieOverviewView({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class MovieOverviewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MovieOverviewController>(
-      init: MovieOverviewController(),
+      init: MovieOverviewController(tag: context.read<int>().toString()),
       builder: (controller) => SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,

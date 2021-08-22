@@ -117,7 +117,7 @@ class MediaPosterViewController extends GetxController
       handleDragEnd();
       Get.to(
         () => MediaDetailedView(),
-        binding: MediaDetailedViewBinding(),
+        //binding: MediaDetailedViewBinding(),
         fullscreenDialog: true,
         duration: Duration(milliseconds: 500),
         transition: Transition.fade,

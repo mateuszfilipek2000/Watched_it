@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/posterlistview.dart';
 
 //TODO REPLACE POSTER LISTVIEW WITH ONE FROM THIS PAGE WHEN IT'S FINISHED
+//TODO ADD WATCH PROVIDERS
 class MovieDetails extends StatelessWidget {
   const MovieDetails({
     Key? key,
@@ -29,26 +31,9 @@ class MovieDetails extends StatelessWidget {
                   itemCount: movie.genres.length,
                   itemBuilder: (context, index) {
                     //TODO ADD SAERCH BASED ON GENRE ON BUTTON CLICK ??? ADD SEARCH QUERY AS AN ARGUMENT TO SEARCH PAGE ???
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black38),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Center(
-                            child: Text(
-                              movie.genres[index].name,
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                    return SearchTextButton(
+                      text: movie.genres[index].name,
+                      onPressed: () {},
                     );
                   },
                 ),
@@ -103,9 +88,85 @@ class MovieDetails extends StatelessWidget {
                       ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Keywords:",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Obx(
+                    () => _.keywords.value == null
+                        ? Container()
+                        : Container(
+                            height: 40,
+                            width: double.infinity,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _.keywords.value?.keywords.length,
+                              itemBuilder: (context, index) {
+                                //TODO ADD SAERCH BASED ON KEYWORD ON BUTTON CLICK ??? ADD SEARCH QUERY AS AN ARGUMENT TO SEARCH PAGE ???
+                                return SearchTextButton(
+                                  text: _.keywords.value?.keywords[index].name
+                                      as String,
+                                  onPressed: () {},
+                                );
+                              },
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+            )
           ],
         );
       },
+    );
+  }
+}
+
+class SearchTextButton extends StatelessWidget {
+  const SearchTextButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final String text;
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0),
+      child: OutlinedButton(
+        onPressed: () => onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.black38),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Center(
+            child: Text(
+              this.text,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

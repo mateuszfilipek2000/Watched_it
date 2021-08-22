@@ -23,6 +23,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart';
 
+//TODO LOOK INTO QUERYING REQUESTS
 class TMDBApiService {
   static http.Client client = http.Client();
 
@@ -652,10 +653,11 @@ class TMDBApiService {
   static Future<Videos?> getVideos({
     required int id,
     String lang = "en_US",
+    MediaType mediaType = MediaType.movie,
   }) async {
     http.Response response = await http.get(
       Uri.parse(
-          "https://api.themoviedb.org/3/movie/$id/videos?api_key=$apiKeyV3&language=$lang"),
+          "https://api.themoviedb.org/3/${describeEnum(mediaType)}/$id/videos?api_key=$apiKeyV3&language=$lang"),
     );
 
     if (response.statusCode == 200)

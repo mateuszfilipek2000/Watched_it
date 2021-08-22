@@ -6,6 +6,8 @@ import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detail
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
 
 class MediaReviewController extends GetxController {
+  MediaReviewController({required this.tag});
+  String tag;
   Rx<Reviews?> reviews = Rx<Reviews?>(null);
   int reviewPage = 1;
   ScrollController scrollController = ScrollController();
@@ -43,7 +45,7 @@ class MediaReviewController extends GetxController {
 
   void _fetchReviews() async {
     reviews.value = await TMDBApiService.getReviews(
-      id: Get.find<MediaDetailedController>().minimalMedia.value.id,
+      id: Get.find<MediaDetailedController>(tag: tag).minimalMedia.value.id,
       page: reviewPage,
     );
 

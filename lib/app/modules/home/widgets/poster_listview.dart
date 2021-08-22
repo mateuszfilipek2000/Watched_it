@@ -4,6 +4,7 @@ import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_poster_view_binding.dart';
+import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/views/media_poster_view.dart';
 import 'package:watched_it_getx/app/modules/home/controllers/home_controller.dart';
 
@@ -87,8 +88,8 @@ class PosterListViewItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Get.to(
-            () => MediaPosterView(),
-            binding: MediaPosterViewBinding(),
+            () => MediaDetailedView(),
+            //binding: MediaPosterViewBinding(),
             arguments: object,
             fullscreenDialog: true,
           );

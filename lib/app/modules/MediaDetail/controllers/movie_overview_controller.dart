@@ -1,7 +1,5 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/credits_model.dart';
@@ -19,20 +17,19 @@ import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_im
 import 'package:watched_it_getx/app/modules/MediaDetail/widgets/fractionally_coloured_star.dart';
 
 class MovieOverviewController extends GetxController {
-  AppUser? user = Get.find<MediaDetailedController>().user;
-  Rx<MinimalMedia> minimalMedia =
-      (Get.find<MediaDetailedController>().minimalMedia.value).obs;
-  String sessionID = Get.find<MediaDetailedController>().sessionID;
+  MovieOverviewController({required this.tag});
+  String tag;
+
+  late AppUser user;
+  late Rx<MinimalMedia> minimalMedia;
+  late String sessionID;
 
   Rx<Movie?> movie = Rx<Movie?>(null);
-  late Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
+  Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
   Rx<Credits?> credits = Rx<Credits?>(null);
-  late Rx<KeyWords> keywords;
-  late Rx<Lists> lists;
-  late Rx<Videos?> videos = Rx<Videos?>(null);
+  Rx<KeyWords?> keywords = Rx<KeyWords?>(null);
+  Rx<Videos?> videos = Rx<Videos?>(null);
 
-  late VideoPlayerController videoPlayerController;
-  late ChewieController chewieController;
   Rx<MediaImages?> images = Rx<MediaImages?>(null);
   RxBool isFabActive = false.obs;
   RxDouble userMediaRating = 0.0.obs;
@@ -40,10 +37,12 @@ class MovieOverviewController extends GetxController {
   Rx<SwipeableWidgetViewController?> swipeableController =
       Rx<SwipeableWidgetViewController?>(null);
 
-  //widget sizes
-
   @override
   void onInit() async {
+    minimalMedia = Get.find<MediaDetailedController>(tag: tag).minimalMedia;
+    user = Get.find<MediaDetailedController>(tag: tag).user as AppUser;
+    sessionID = Get.find<MediaDetailedController>(tag: tag).sessionID;
+
     movie.value = await TMDBApiService.getMovieDetails(minimalMedia.value.id);
     getAccountStates();
     credits.value =
@@ -51,6 +50,8 @@ class MovieOverviewController extends GetxController {
 
     getAdditionalImages();
 
+    keywords.value =
+        await TMDBApiService.getKeyWords(id: minimalMedia.value.id);
     super.onInit();
   }
 
@@ -85,7 +86,7 @@ class MovieOverviewController extends GetxController {
 
   void addToFavourites() async {
     bool status = await TMDBApiService.markAsFavourite(
-      accountID: user?.id as int,
+      accountID: user.id,
       contentID: minimalMedia.value.id,
       mediaType: minimalMedia.value.mediaType,
       sessionID: sessionID,
@@ -101,7 +102,7 @@ class MovieOverviewController extends GetxController {
 
   void addToWatchlist() async {
     bool status = await TMDBApiService.addToWatchlist(
-      accountID: user?.id as int,
+      accountID: user.id,
       contentID: minimalMedia.value.id,
       mediaType: minimalMedia.value.mediaType,
       sessionID: sessionID,

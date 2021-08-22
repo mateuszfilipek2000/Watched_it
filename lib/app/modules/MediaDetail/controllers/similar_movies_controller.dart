@@ -9,6 +9,8 @@ import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_contr
 
 class SimilarMoviesController extends GetxController
     with SingleGetTickerProviderMixin {
+  SimilarMoviesController({required this.tag});
+  String tag;
   Rx<Recommendations?> recommendations = Rx<Recommendations?>(null);
   RxInt currentPage = 1.obs;
   RxList<String?> results = RxList([]);
@@ -34,12 +36,12 @@ class SimilarMoviesController extends GetxController
   void getPosterUrls() async {
     if (selectedSortingOption.value == 0) {
       recommendations.value = await TMDBApiService.getRecommendations(
-        id: Get.find<MediaDetailedController>().minimalMedia.value.id,
+        id: Get.find<MediaDetailedController>(tag: tag).minimalMedia.value.id,
         page: currentPage.value,
       );
     } else {
       recommendations.value = await TMDBApiService.getSimilar(
-        id: Get.find<MediaDetailedController>().minimalMedia.value.id,
+        id: Get.find<MediaDetailedController>(tag: tag).minimalMedia.value.id,
         page: currentPage.value,
       );
     }
@@ -85,7 +87,7 @@ class SimilarMoviesController extends GetxController
 
   void changeFavourite() async {
     bool status = await TMDBApiService.markAsFavourite(
-      accountID: Get.find<MediaDetailedController>().user?.id as int,
+      accountID: Get.find<MediaDetailedController>(tag: tag).user?.id as int,
       contentID:
           recommendations.value?.results[currentCarouselItem.value].id as int,
       mediaType: MediaType.movie,
@@ -98,7 +100,7 @@ class SimilarMoviesController extends GetxController
 
   void changeWatchlist() async {
     bool status = await TMDBApiService.addToWatchlist(
-      accountID: Get.find<MediaDetailedController>().user?.id as int,
+      accountID: Get.find<MediaDetailedController>(tag: tag).user?.id as int,
       contentID:
           recommendations.value?.results[currentCarouselItem.value].id as int,
       mediaType: MediaType.movie,

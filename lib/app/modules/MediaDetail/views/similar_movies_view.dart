@@ -1,11 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/similar_movies_controller.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel_controller.dart';
+import 'package:provider/provider.dart';
 
 class SimilarMoviesView extends StatelessWidget {
   const SimilarMoviesView({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class SimilarMoviesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<SimilarMoviesController>(
-      init: SimilarMoviesController(),
+      init: SimilarMoviesController(tag: context.read<int>().toString()),
       builder: (_) {
         if (_.results.length == 0) {
           return Center(
@@ -133,13 +133,15 @@ class SimilarMoviesView extends StatelessWidget {
                 children: [
                   GetBuilder<ImageCarouselController>(
                     init: ImageCarouselController(0.5, 0.6),
-                    tag: "smallCarouselController",
+                    tag:
+                        "smallCarouselController-${context.read<int>().toString()}",
                     builder: (controller) {
                       return ImageCarousel(
                         height: 300.0,
                         imageUrls: _.results,
                         onPageChanged: (index) => _.handlePageChange(index),
-                        tag: "smallCarouselController",
+                        tag:
+                            "smallCarouselController-${context.read<int>().toString()}",
                         controller: controller,
                       );
                     },

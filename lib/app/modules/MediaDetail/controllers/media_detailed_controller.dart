@@ -13,9 +13,7 @@ import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_contr
 class MediaDetailedController extends GetxController {
   late AppUser? user;
   late String sessionID;
-  Rx<MinimalMedia> minimalMedia =
-      (Get.find<MediaPosterViewController>().minimalMedia.value as MinimalMedia)
-          .obs;
+  Rx<MinimalMedia> minimalMedia = Rx<MinimalMedia>(Get.arguments);
   RxList<Tab> tabs = RxList([]);
   RxList<Widget> pages = RxList([]);
 
@@ -32,9 +30,6 @@ class MediaDetailedController extends GetxController {
           text: "Overview",
         ),
         Tab(
-          text: "Videos",
-        ),
-        Tab(
           text: "More",
         ),
         Tab(
@@ -43,20 +38,19 @@ class MediaDetailedController extends GetxController {
       ];
       pages.value = [
         MovieOverviewView(),
-        Text("2"),
         SimilarMoviesView(),
         MediaReviewView(),
       ];
-    } else if (minimalMedia.value.mediaType == MediaType.person) {
+    } else if (minimalMedia.value.mediaType == MediaType.tv) {
       tabs.value = [
         Tab(
           text: "Overview",
         ),
         Tab(
-          text: "Overview",
+          text: "Episodes",
         ),
         Tab(
-          text: "Similar",
+          text: "More",
         ),
         Tab(
           text: "Reviews",

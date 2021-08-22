@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_review_controller.dart';
+import 'package:provider/provider.dart';
 
 class MediaReviewView extends StatelessWidget {
   const MediaReviewView({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class MediaReviewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<MediaReviewController>(
-      init: MediaReviewController(),
+      init: MediaReviewController(tag: context.read<int>().toString()),
       builder: (_) {
         return _.reviews.value == null
             ? Center(

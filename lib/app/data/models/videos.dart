@@ -39,6 +39,16 @@ class Result {
   final DateTime publishedAt;
   final String id;
 
+  String? getVideoLink() {
+    if (this.site == "YouTube")
+      return "https://www.youtube.com/watch?v=${this.key}";
+    else if (this.site == "Vimeo")
+      return "https://vimeo.com/${this.key}";
+    else {
+      return null;
+    }
+  }
+
   factory Result.fromJson(Map<String, dynamic> json) => Result(
         iso6391: json["iso_639_1"],
         iso31661: json["iso_3166_1"],

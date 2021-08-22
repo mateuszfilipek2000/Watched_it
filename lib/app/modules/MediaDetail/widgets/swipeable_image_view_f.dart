@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
 
-class SwipeableWidgetView extends GetView<SwipeableWidgetViewController> {
+class SwipeableWidgetView extends GetWidget<SwipeableWidgetViewController> {
   const SwipeableWidgetView({
     Key? key,
     required this.height,
