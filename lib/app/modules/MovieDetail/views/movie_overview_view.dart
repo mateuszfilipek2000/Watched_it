@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/widgets/image_with_icons.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/widgets/movie_details.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/widgets/swipeable_image_view_f.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_overview_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/swipeable_image_view_f_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/widgets/image_with_icons.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/widgets/movie_details.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/widgets/swipeable_image_view_f.dart';
 import 'package:provider/provider.dart';
 
 class MovieOverviewView extends StatelessWidget {

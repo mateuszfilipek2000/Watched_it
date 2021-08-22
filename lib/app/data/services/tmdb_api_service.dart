@@ -14,6 +14,9 @@ import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
+import 'package:watched_it_getx/app/data/models/tv/tv_aggregated_credits.dart';
+import 'package:watched_it_getx/app/data/models/tv/tv_details_model.dart';
+import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
@@ -440,7 +443,7 @@ class TMDBApiService {
     }
   }
 
-  static Future<KeyWords?> getKeyWords({required int id}) async {
+  static Future<KeyWords?> getKeywords({required int id}) async {
     http.Response response = await client.get(
       Uri.parse(
           "https://api.themoviedb.org/3/movie/$id/keywords?api_key=$apiKeyV3"),
@@ -504,12 +507,13 @@ class TMDBApiService {
 
   static Future<Reviews?> getReviews({
     required int id,
+    required MediaType mediaType,
     int page = 1,
     String language = "en_US",
   }) async {
     http.Response response = await client.get(
       Uri.parse(
-        "https://api.themoviedb.org/3/movie/$id/reviews?api_key=$apiKeyV3&language=$language&page=$page",
+        "https://api.themoviedb.org/3/${describeEnum(mediaType)}/$id/reviews?api_key=$apiKeyV3&language=$language&page=$page",
       ),
     );
     if (response.statusCode == 200)
@@ -684,6 +688,51 @@ class TMDBApiService {
       return MediaImages.fromJson(json.decode(response.body));
     else {
       print("unable to retrieve videos");
+      return null;
+    }
+  }
+
+  //TODO ATTRIBUTE JUSTWATCH
+  //TODO IMAGES ARE NOT RETRIEVED WHEN LANGUAGE IS SET???
+  /*if a request is succesfull then this function returns map
+  "Details": TvDetails,
+  "AccountStates": AccountStates,
+  "AggregateCredits": TvAggregatedCredits,
+  "Keywords": Keywords,
+  "Reviews": Reviews,
+  "SimilarTvShows": TvSimilar,
+  "Recommendations": TvRecommendations
+  */
+  static Future<Map<String, dynamic>?> getAggregatedTv({
+    required int id,
+    required String sessionID,
+    String lang = "en-US",
+  }) async {
+    http.Response response = await http.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/tv/$id?api_key=$apiKeyV3&session_id=$sessionID&language=$lang&append_to_response=account_states,aggregate_credits,keywords,reviews,similar,recommendations"),
+    );
+
+    if (response.statusCode == 200) {
+      return <String, dynamic>{
+        "Details": TvDetails.fromJson(json.decode(response.body)),
+        "AccountStates": AccountStates.fromJson(
+            json.decode(response.body)["account_states"]),
+        "AggregateCredits": TvAggregatedCredits.fromJson(
+            json.decode(response.body)["aggregate_credits"]),
+        "Keywords":
+            KeyWords.fromAggregatedJson(json.decode(response.body)["keywords"]),
+        "Reviews": Reviews.fromJson(json.decode(response.body)["reviews"]),
+        "SimilarTvShows":
+            SimilarTvShows.fromJson(json.decode(response.body)["similar"]),
+        "Recommendations": SimilarTvShows.fromJson(
+            json.decode(response.body)["recommendations"])
+      };
+    } else {
+      print("couldnt get tv information");
+      print(response.statusCode.toString() + " " + response.body.toString());
+      print(
+          "https://api.themoviedb.org/3/tv/$id?api_key=$apiKeyV3&language=$lang&append_to_response=account_states,aggregate_credits,keywords,reviews,similar,recommendations");
       return null;
     }
   }

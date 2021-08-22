@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/widgets/posterlistview.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_overview_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/widgets/posterlistview.dart';
 
 //TODO REPLACE POSTER LISTVIEW WITH ONE FROM THIS PAGE WHEN IT'S FINISHED
 //TODO ADD WATCH PROVIDERS

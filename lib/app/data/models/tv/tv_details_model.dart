@@ -1,14 +1,7 @@
-// To parse this JSON data, do
-//
-//     final tvShow = tvShowFromJson(jsonString);
-import 'dart:convert';
-
 import 'package:watched_it_getx/app/data/models/media_model.dart';
 
-TvShow tvShowFromJson(String str) => TvShow.fromJson(json.decode(str));
-
-class TvShow extends Media {
-  TvShow({
+class TvDetails extends Media {
+  TvDetails({
     backdropPath,
     required this.createdBy,
     required this.episodeRunTime,
@@ -75,7 +68,7 @@ class TvShow extends Media {
   final List<Season> seasons;
   final String type;
 
-  factory TvShow.fromJson(Map<String, dynamic> json) => TvShow(
+  factory TvDetails.fromJson(Map<String, dynamic> json) => TvDetails(
         backdropPath: json["backdrop_path"],
         createdBy: List<CreatedBy>.from(
             json["created_by"].map((x) => CreatedBy.fromJson(x))),
@@ -102,7 +95,8 @@ class TvShow extends Media {
         popularity: json["popularity"].toDouble(),
         posterPath: json["poster_path"],
         productionCompanies: List<ProductionCompany>.from(
-            json["production_companies"].map((x) => Network.fromJson(x))),
+            json["production_companies"]
+                .map((x) => ProductionCompany.fromJson(x))),
         productionCountries: List<ProductionCountry>.from(
             json["production_countries"]
                 .map((x) => ProductionCountry.fromJson(x))),

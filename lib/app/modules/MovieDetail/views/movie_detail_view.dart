@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:provider/provider.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_detail_controller.dart';
 
-class MediaDetailedView extends StatelessWidget {
-  const MediaDetailedView({Key? key}) : super(key: key);
+class MovieDetailView extends StatelessWidget {
+  const MovieDetailView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Provider<int>(
       create: (context) => Get.arguments.id,
-      child: GetBuilder<MediaDetailedController>(
-        init: MediaDetailedController(),
+      child: GetBuilder<MovieDetailController>(
+        init: MovieDetailController(),
         tag: Get.arguments.id.toString(),
         builder: (controller) => Obx(
           () => DefaultTabController(

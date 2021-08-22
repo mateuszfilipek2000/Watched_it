@@ -4,13 +4,12 @@ import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_poster_view_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/movie_overview_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/similar_movies_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_review_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_overview_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/similar_movies_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/media_review_view.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
-class MediaDetailedController extends GetxController {
+class MovieDetailController extends GetxController {
   late AppUser? user;
   late String sessionID;
   Rx<MinimalMedia> minimalMedia = Rx<MinimalMedia>(Get.arguments);

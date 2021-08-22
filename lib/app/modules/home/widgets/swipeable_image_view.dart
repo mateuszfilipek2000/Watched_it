@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_poster_view_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_poster_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
 import 'package:watched_it_getx/app/modules/home/controllers/swipeable_view_controller.dart';
 
 class SwipeableImageView extends StatelessWidget {
@@ -24,7 +22,7 @@ class SwipeableImageView extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               Get.to(
-                () => MediaDetailedView(),
+                () => MovieDetailView(),
                 arguments:
                     controller.objects[controller.currentlyActiveObject.value],
                 fullscreenDialog: true,

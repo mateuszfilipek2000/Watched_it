@@ -11,6 +11,8 @@ abstract class Routes {
   static const MINIMAL_MEDIA_LIST_VIEW = _Paths.MINIMAL_MEDIA_LIST_VIEW;
   static const SEARCH_PAGE = _Paths.SEARCH_PAGE;
   static const MEDIA_DETAIL = _Paths.MEDIA_DETAIL;
+  static const TV_DETAIL = _Paths.TV_DETAIL;
+  static const PERSON_DETAIL = _Paths.PERSON_DETAIL;
 }
 
 abstract class _Paths {
@@ -21,4 +23,6 @@ abstract class _Paths {
   static const MINIMAL_MEDIA_LIST_VIEW = "/minimal-media-list-view";
   static const SEARCH_PAGE = '/search-page';
   static const MEDIA_DETAIL = '/media-detail';
+  static const TV_DETAIL = '/tv-detail';
+  static const PERSON_DETAIL = '/person-detail';
 }

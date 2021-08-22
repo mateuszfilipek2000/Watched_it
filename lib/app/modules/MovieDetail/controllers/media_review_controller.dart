@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/movie_overview_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_detail_controller.dart';
 
 class MediaReviewController extends GetxController {
   MediaReviewController({required this.tag});
@@ -45,8 +44,12 @@ class MediaReviewController extends GetxController {
 
   void _fetchReviews() async {
     reviews.value = await TMDBApiService.getReviews(
-      id: Get.find<MediaDetailedController>(tag: tag).minimalMedia.value.id,
+      id: Get.find<MovieDetailController>(tag: tag).minimalMedia.value.id,
       page: reviewPage,
+      mediaType: Get.find<MovieDetailController>(tag: tag)
+          .minimalMedia
+          .value
+          .mediaType,
     );
 
     if (reviews.value != null) {

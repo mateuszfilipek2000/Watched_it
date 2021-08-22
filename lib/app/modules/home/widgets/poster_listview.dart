@@ -1,11 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_poster_view_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_poster_view.dart';
 import 'package:watched_it_getx/app/modules/home/controllers/home_controller.dart';
 
 //DONE: FIX NULL ERROR ON NETWORK IMAGE FETCH SOMEWHERE IDK GOOD LUCK PROBABLY WHEN MINIMALMEDIA OBJECT HAS NULL POSTERPATH (ILLEGAL STRING CAST?)
@@ -87,12 +85,18 @@ class PosterListViewItem extends StatelessWidget {
       padding: EdgeInsets.all(5.0),
       child: GestureDetector(
         onTap: () {
-          Get.to(
-            () => MediaDetailedView(),
-            //binding: MediaPosterViewBinding(),
+          // Get.to(
+          //   () => MediaDetailedView(),
+          //   //binding: MediaPosterViewBinding(),
+          //   arguments: object,
+          //   fullscreenDialog: true,
+          //   //id: object.id,
+          //   preventDuplicates: false,
+          // );
+          print("/MediaDetails/${describeEnum(object.mediaType)}");
+          Get.toNamed(
+            "/MediaDetails/${describeEnum(object.mediaType)}",
             arguments: object,
-            fullscreenDialog: true,
-            //id: object.id,
             preventDuplicates: false,
           );
         },

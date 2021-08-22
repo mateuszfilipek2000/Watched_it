@@ -11,9 +11,8 @@ import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/swipeable_image_view_f_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/widgets/fractionally_coloured_star.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_detail_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/widgets/fractionally_coloured_star.dart';
 
 class MovieOverviewController extends GetxController {
   MovieOverviewController({required this.tag});
@@ -38,9 +37,9 @@ class MovieOverviewController extends GetxController {
 
   @override
   void onInit() async {
-    minimalMedia = Get.find<MediaDetailedController>(tag: tag).minimalMedia;
-    user = Get.find<MediaDetailedController>(tag: tag).user as AppUser;
-    sessionID = Get.find<MediaDetailedController>(tag: tag).sessionID;
+    minimalMedia = Get.find<MovieDetailController>(tag: tag).minimalMedia;
+    user = Get.find<MovieDetailController>(tag: tag).user as AppUser;
+    sessionID = Get.find<MovieDetailController>(tag: tag).sessionID;
 
     movie.value = await TMDBApiService.getMovieDetails(minimalMedia.value.id);
     getAccountStates();
@@ -50,7 +49,7 @@ class MovieOverviewController extends GetxController {
     getAdditionalImages();
 
     keywords.value =
-        await TMDBApiService.getKeyWords(id: minimalMedia.value.id);
+        await TMDBApiService.getKeywords(id: minimalMedia.value.id);
     super.onInit();
   }
 

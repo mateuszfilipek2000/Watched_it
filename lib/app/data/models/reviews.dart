@@ -1,6 +1,6 @@
 class Reviews {
   Reviews({
-    required this.id,
+    this.id,
     required this.page,
     required this.results,
     required this.totalPages,
@@ -16,7 +16,7 @@ class Reviews {
         totalResults: json["total_results"],
       );
 
-  final int id;
+  final int? id;
   final int page;
   final List<Result> results;
   final int totalPages;

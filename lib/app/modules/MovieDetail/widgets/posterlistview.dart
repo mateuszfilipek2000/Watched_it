@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
 
 class PosterListView extends StatelessWidget {
   const PosterListView({
@@ -57,7 +57,7 @@ class PosterListView extends StatelessWidget {
                   onTap: () {
                     print("tapped ${objects[index].title}");
                     Get.to(
-                      () => MediaDetailedView(),
+                      () => MovieDetailView(),
                       arguments: objects[index],
                       fullscreenDialog: true,
                       //id: objects[index].id,

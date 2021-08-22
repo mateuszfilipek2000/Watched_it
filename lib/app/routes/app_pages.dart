@@ -2,10 +2,12 @@ import 'package:get/get.dart';
 
 import 'package:watched_it_getx/app/modules/MainPageView/bindings/main_page_view_binding.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/views/main_page_view_view.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_poster_view_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_poster_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/media_poster_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
+import 'package:watched_it_getx/app/modules/PersonDetail/views/person_detail_view.dart';
 import 'package:watched_it_getx/app/modules/SearchPage/bindings/search_page_binding.dart';
 import 'package:watched_it_getx/app/modules/SearchPage/views/search_page_view.dart';
+import 'package:watched_it_getx/app/modules/TvDetail/views/tv_detail_view.dart';
 import 'package:watched_it_getx/app/modules/UserPage/bindings/user_page_binding.dart';
 import 'package:watched_it_getx/app/modules/UserPage/views/user_page_view.dart';
 import 'package:watched_it_getx/app/modules/WatchList/bindings/minimal_media_listview_binding.dart';
@@ -56,7 +58,27 @@ class AppPages {
     GetPage(
       name: _Paths.MEDIA_DETAIL,
       page: () => MediaPosterView(),
-      binding: MediaPosterViewBinding(),
+    ),
+    // GetPage(
+    //   name: _Paths.TV_DETAIL,
+    //   page: () => TvDetailView(),
+    //   binding: TvDetailBinding(),
+    // ),
+    GetPage(
+      name: "/MediaDetails/tv",
+      page: () => TvDetailView(),
+    ),
+    GetPage(
+      name: "/MediaDetails/movie",
+      page: () => MovieDetailView(),
+    ),
+    GetPage(
+      name: "/MediaDetails/person",
+      page: () => PersonDetailView(),
+    ),
+    GetPage(
+      name: _Paths.PERSON_DETAIL,
+      page: () => PersonDetailView(),
     ),
   ];
 }

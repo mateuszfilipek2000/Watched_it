@@ -1,9 +1,10 @@
 class AccountStates {
-  AccountStates(
-      {required this.id,
-      required this.favourite,
-      required this.rated,
-      required this.watchlist});
+  AccountStates({
+    this.id,
+    required this.favourite,
+    required this.rated,
+    required this.watchlist,
+  });
   factory AccountStates.fromJson(Map<String, dynamic> json) => AccountStates(
         id: json["id"],
         favourite: json["favorite"],
@@ -11,7 +12,7 @@ class AccountStates {
         watchlist: json["watchlist"],
       );
 
-  final int id;
+  final int? id;
   final bool favourite;
   final double? rated;
   final bool watchlist;

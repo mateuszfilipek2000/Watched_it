@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/bindings/media_detailed_binding.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
 
 //TODO change swipe up scale to opacity
 //TODO FIX ANIMATIONS? THEY SOMETIMES WORK JUST FINE IDK WHATS HAPPENING THINK NOT USING GETX FOR ANIMATIONS
@@ -116,7 +115,7 @@ class MediaPosterViewController extends GetxController
     if (_currentDragDistance >= _dragTreshold) {
       handleDragEnd();
       Get.to(
-        () => MediaDetailedView(),
+        () => MovieDetailView(),
         //binding: MediaDetailedViewBinding(),
         fullscreenDialog: true,
         duration: Duration(milliseconds: 500),

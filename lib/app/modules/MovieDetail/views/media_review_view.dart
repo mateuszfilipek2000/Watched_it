@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_review_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/media_review_controller.dart';
 import 'package:provider/provider.dart';
 
 class MediaReviewView extends StatelessWidget {

@@ -5,8 +5,8 @@ import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/controllers/media_detailed_controller.dart';
-import 'package:watched_it_getx/app/modules/MediaDetail/views/media_detailed_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_detail_controller.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
 class SimilarMoviesController extends GetxController
@@ -38,12 +38,12 @@ class SimilarMoviesController extends GetxController
   void getPosterUrls() async {
     if (selectedSortingOption.value == 0) {
       recommendations.value = await TMDBApiService.getRecommendations(
-        id: Get.find<MediaDetailedController>(tag: tag).minimalMedia.value.id,
+        id: Get.find<MovieDetailController>(tag: tag).minimalMedia.value.id,
         page: currentPage.value,
       );
     } else {
       recommendations.value = await TMDBApiService.getSimilar(
-        id: Get.find<MediaDetailedController>(tag: tag).minimalMedia.value.id,
+        id: Get.find<MovieDetailController>(tag: tag).minimalMedia.value.id,
         page: currentPage.value,
       );
     }
@@ -89,7 +89,7 @@ class SimilarMoviesController extends GetxController
 
   void changeFavourite() async {
     bool status = await TMDBApiService.markAsFavourite(
-      accountID: Get.find<MediaDetailedController>(tag: tag).user?.id as int,
+      accountID: Get.find<MovieDetailController>(tag: tag).user?.id as int,
       contentID:
           recommendations.value?.results[currentCarouselItem.value].id as int,
       mediaType: MediaType.movie,
@@ -102,7 +102,7 @@ class SimilarMoviesController extends GetxController
 
   void changeWatchlist() async {
     bool status = await TMDBApiService.addToWatchlist(
-      accountID: Get.find<MediaDetailedController>(tag: tag).user?.id as int,
+      accountID: Get.find<MovieDetailController>(tag: tag).user?.id as int,
       contentID:
           recommendations.value?.results[currentCarouselItem.value].id as int,
       mediaType: MediaType.movie,
@@ -132,7 +132,7 @@ class SimilarMoviesController extends GetxController
 
   void getToMovieDetailPage(int index) {
     Get.to(
-      () => MediaDetailedView(),
+      () => MovieDetailView(),
       fullscreenDialog: true,
       preventDuplicates: false,
       arguments: MinimalMedia(
