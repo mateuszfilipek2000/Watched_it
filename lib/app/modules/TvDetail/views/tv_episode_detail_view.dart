@@ -54,30 +54,37 @@ class TvEpisodeDetailView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5.0),
-                                  child: Text(
-                                    "Episode name:",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                FittedBox(
-                                  fit: BoxFit.fitWidth,
-                                  child: Container(
-                                    child: Text(
-                                      _.details.name,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.w500,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    FittedBox(
+                                      fit: BoxFit.fitWidth,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(bottom: 5.0),
+                                        child: Text(
+                                          "Episode name: ",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
-                                      maxLines: 3,
                                     ),
-                                  ),
+                                    FittedBox(
+                                      fit: BoxFit.fitWidth,
+                                      child: Text(
+                                        _.details.name,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25.0,
+                                          //fontWeight: FontWeight.w300,
+                                        ),
+                                        maxLines: 3,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -122,6 +129,15 @@ class TvEpisodeDetailView extends StatelessWidget {
                             height: 300.0,
                             objects:
                                 _.credits.getPosterListviewObjectsFromCast(),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: PosterListView(
+                            listTitle: "Guest Stars",
+                            height: 300.0,
+                            objects: _.credits
+                                .getPosterListviewObjectsFromGuestStars(),
                           ),
                         ),
                         Container(

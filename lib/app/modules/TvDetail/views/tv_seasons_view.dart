@@ -32,47 +32,47 @@ class TvSeasonView extends StatelessWidget {
               );
             else
               return ListView.builder(
-                itemCount: tvDetailController.tvShow?.numberOfSeasons,
-                itemBuilder: (context, index) {
+                itemCount: tvDetailController.tvShow?.seasons.length,
+                itemBuilder: (context, seasonIndex) {
                   return ExpansionTile(
                     textColor: Colors.blue,
                     collapsedTextColor: Colors.white,
                     tilePadding: EdgeInsets.all(8),
                     backgroundColor: Colors.black38,
-                    leading:
-                        tvDetailController.tvShow?.seasons[index].posterPath ==
-                                null
-                            ? null
-                            : Image.network(
-                                ImageUrl.getPosterImageUrl(
-                                  url: tvDetailController.tvShow?.seasons[index]
-                                      .posterPath as String,
-                                  size: PosterSizes.w92,
-                                ),
-                              ),
+                    leading: tvDetailController
+                                .tvShow?.seasons[seasonIndex].posterPath ==
+                            null
+                        ? null
+                        : Image.network(
+                            ImageUrl.getPosterImageUrl(
+                              url: tvDetailController.tvShow
+                                  ?.seasons[seasonIndex].posterPath as String,
+                              size: PosterSizes.w92,
+                            ),
+                          ),
                     title: Text(
-                      "${index + 1}. " +
-                          (tvDetailController.tvShow?.seasons[index].name
+                      "${seasonIndex + 1}. " +
+                          (tvDetailController.tvShow?.seasons[seasonIndex].name
                               as String),
                     ),
-                    subtitle:
-                        tvDetailController.tvShow?.seasons[index].airDate ==
-                                null
-                            ? null
-                            : Text(
-                                "Air date: " +
-                                    (tvDetailController
-                                        .tvShow?.seasons[index].airDate
-                                        ?.getDashedDate() as String),
-                              ),
+                    subtitle: tvDetailController
+                                .tvShow?.seasons[seasonIndex].airDate ==
+                            null
+                        ? null
+                        : Text(
+                            "Air date: " +
+                                (tvDetailController
+                                    .tvShow?.seasons[seasonIndex].airDate
+                                    ?.getDashedDate() as String),
+                          ),
                     onExpansionChanged: (isOpen) {
-                      if (isOpen) _.retrieveInfo(index);
+                      if (isOpen) _.retrieveInfo(seasonIndex);
                       //print(isOpen.toString());
                     },
                     children: [
                       Obx(
                         () {
-                          if (_.seasonsInfo[index] == null)
+                          if (_.seasonsInfo[seasonIndex] == null)
                             return Container(
                               height: 300.0,
                               child: Center(
@@ -82,115 +82,126 @@ class TvSeasonView extends StatelessWidget {
                           else
                             return Container(
                               height: 300.0,
-                              //color: Colors.red,
                               child: ListView.builder(
-                                itemCount: _.seasonsInfo[index]!.details
+                                itemCount: _.seasonsInfo[seasonIndex]!.details
                                     .episodes.length,
-                                itemBuilder: (context, i) {
-                                  return ListTile(
-                                    onTap: () => _.getToEpisodeDetails(
-                                      seasonNumber: index + 1,
-                                      episodeNumber: i + 1,
-                                    ),
-                                    contentPadding: EdgeInsets.all(8),
-                                    isThreeLine: _.seasonsInfo[index]!.details
-                                            .episodes[i].airDate ==
-                                        null,
-                                    leading: _.seasonsInfo[index]?.details
-                                                .episodes[i].stillPath ==
-                                            null
-                                        ? null
-                                        : Image.network(
-                                            ImageUrl.getStillImageUrl(
-                                              url: _
-                                                  .seasonsInfo[index]
-                                                  ?.details
-                                                  .episodes[i]
-                                                  .stillPath as String,
-                                              size: StillSizes.w185,
-                                            ),
-                                          ),
-                                    title: Text(
-                                      "${i + 1}. " +
-                                          _.seasonsInfo[index]!.details
-                                              .episodes[i].name,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
+                                itemBuilder: (context, episodeIndex) {
+                                  return Obx(
+                                    () => ListTile(
+                                      onTap: () => _.getToEpisodeDetails(
+                                        seasonNumber: _
+                                            .seasonsInfo[seasonIndex]!
+                                            .details
+                                            .seasonNumber,
+                                        episodeNumber: episodeIndex + 1,
                                       ),
-                                    ),
-                                    subtitle: _.seasonsInfo[index]!.details
-                                                .episodes[i].airDate ==
-                                            null
-                                        ? null
-                                        : Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Air date: ${_.seasonsInfo[index]!.details.episodes[i].airDate!.getDashedDate()}",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
+                                      contentPadding: EdgeInsets.all(8),
+                                      isThreeLine: _
+                                              .seasonsInfo[seasonIndex]!
+                                              .details
+                                              .episodes[episodeIndex]
+                                              .airDate !=
+                                          null,
+                                      leading: _
+                                                  .seasonsInfo[seasonIndex]
+                                                  ?.details
+                                                  .episodes[episodeIndex]
+                                                  .stillPath ==
+                                              null
+                                          ? null
+                                          : Image.network(
+                                              ImageUrl.getStillImageUrl(
+                                                url: _
+                                                    .seasonsInfo[seasonIndex]
+                                                    ?.details
+                                                    .episodes[episodeIndex]
+                                                    .stillPath as String,
+                                                size: StillSizes.w185,
                                               ),
-                                              Text(
-                                                "Vote average: ${_.seasonsInfo[index]!.details.episodes[i].voteAverage.toStringAsFixed(1)}",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                    trailing: _
-                                                .seasonsInfo[index]
-                                                ?.tvSeasonAccountStates
-                                                .episodeRatings[i]
-                                                .rated ==
-                                            null
-                                        ? ElevatedButton(
-                                            onPressed: () => _.rateEpisode(
-                                              seasonNumber: _
-                                                  .seasonsInfo[index]!
+                                            ),
+                                      title: Text(
+                                        "${episodeIndex + 1}. " +
+                                            _.seasonsInfo[seasonIndex]!.details
+                                                .episodes[episodeIndex].name,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      subtitle: _
+                                                  .seasonsInfo[seasonIndex]!
                                                   .details
-                                                  .seasonNumber,
-                                              episodeNumber: i + 1,
-                                              seasonIndex: index,
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.star_rounded,
-                                                  color: Colors.grey,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: () {},
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  .episodes[episodeIndex]
+                                                  .airDate ==
+                                              null
+                                          ? null
+                                          : Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Icon(
-                                                  Icons.star_rounded,
-                                                  color: Colors.yellow,
+                                                Text(
+                                                  "Air date: ${_.seasonsInfo[seasonIndex]!.details.episodes[episodeIndex].airDate!.getDashedDate()}",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                                 Text(
-                                                  (_
-                                                          .seasonsInfo[index]
-                                                          ?.tvSeasonAccountStates
-                                                          .episodeRatings[i]
-                                                          .rated
-                                                          .toString() as String) +
-                                                      "/10",
+                                                  "Vote average: ${_.seasonsInfo[seasonIndex]!.details.episodes[episodeIndex].voteAverage.toStringAsFixed(1)}",
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                      trailing: _
+                                                  .seasonsInfo[seasonIndex]
+                                                  ?.tvSeasonAccountStates
+                                                  .episodeRatings[episodeIndex]
+                                                  .rated ==
+                                              null
+                                          ? ElevatedButton(
+                                              onPressed: () => _.rateEpisode(
+                                                episodeIndex: episodeIndex,
+                                                seasonIndex: seasonIndex,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.star_rounded,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : ElevatedButton(
+                                              onPressed: () {},
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.star_rounded,
+                                                    color: Colors.yellow,
+                                                  ),
+                                                  Text(
+                                                    (_
+                                                            .seasonsInfo[
+                                                                seasonIndex]
+                                                            ?.tvSeasonAccountStates
+                                                            .episodeRatings[
+                                                                episodeIndex]
+                                                            .rated
+                                                            .toString() as String) +
+                                                        "/10",
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                    ),
                                   );
                                 },
                               ),

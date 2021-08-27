@@ -31,7 +31,10 @@ class TvSeasonsController extends GetxController {
           await TMDBApiService.getAggregatedTvSeasonInfo(
         id: Get.find<TvDetailController>(tag: tag).tvShow!.id,
         sessionID: Get.find<TvDetailController>(tag: tag).sessionID,
-        seasonNumber: seasonIndex + 1,
+        seasonNumber: Get.find<TvDetailController>(tag: tag)
+            .tvShow!
+            .seasons[seasonIndex]
+            .seasonNumber as int,
       );
       if (result != null) {
         late TvSeasonDetails? tempDetails;
@@ -74,25 +77,25 @@ class TvSeasonsController extends GetxController {
     );
   }
 
-  void rateEpisode(
-      {required int seasonNumber,
-      required int seasonIndex,
-      required int episodeNumber}) {
+  void rateEpisode({
+    required int seasonIndex,
+    required int episodeIndex,
+  }) {
     RxDouble rating = seasonsInfo[seasonIndex]!
                 .tvSeasonAccountStates
-                .episodeRatings[episodeNumber]
+                .episodeRatings[episodeIndex]
                 .rated ==
             null
         ? 0.0.obs
         : (seasonsInfo[seasonIndex]!
                 .tvSeasonAccountStates
-                .episodeRatings[episodeNumber]
+                .episodeRatings[episodeIndex]
                 .rated as double)
             .obs;
 
     Get.defaultDialog(
       title:
-          "How'd you rate: ${seasonsInfo[seasonIndex]!.details.name} S${seasonNumber.addLeadingZeros(2)}E${episodeNumber.addLeadingZeros(2)}?",
+          "How'd you rate: ${seasonsInfo[seasonIndex]!.details.name}, Episode ${(episodeIndex + 1)}?",
       content: Obx(
         () => Column(
           children: [
@@ -118,8 +121,8 @@ class TvSeasonsController extends GetxController {
       onConfirm: () {
         print("yeah!");
         rate(
-          seasonNumber: seasonNumber,
-          episodeNumber: episodeNumber,
+          seasonNumber: seasonsInfo[seasonIndex]!.details.seasonNumber,
+          episodeNumber: episodeIndex + 1,
           rating: rating.value,
           seasonIndex: seasonIndex,
         );
@@ -141,7 +144,7 @@ class TvSeasonsController extends GetxController {
       id: Get.find<TvDetailController>(tag: tag).tvShow!.id,
       rating: rating,
       mediaName:
-          "${seasonsInfo[seasonIndex]!.details.name} S${seasonNumber.addLeadingZeros(2)}E${episodeNumber.addLeadingZeros(2)}?",
+          "${seasonsInfo[seasonIndex]!.details.name}, Episode ${episodeNumber.addLeadingZeros(2)}?",
       sessionID: Get.find<TvDetailController>(tag: tag).sessionID,
     );
     if (result)

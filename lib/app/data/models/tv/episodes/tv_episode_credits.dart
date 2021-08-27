@@ -21,6 +21,9 @@ class TvEpisodeCredit {
   List<PosterListviewObject> getPosterListviewObjectsFromCrew() =>
       crew.map((person) => person.getPosterListViewObject()).toList();
 
+  List<PosterListviewObject> getPosterListviewObjectsFromGuestStars() =>
+      guestStars.map((person) => person.getPosterListViewObject()).toList();
+
   factory TvEpisodeCredit.fromJson(Map<String, dynamic> json) =>
       TvEpisodeCredit(
         cast: List<Cast>.from(json["cast"].map((x) => Cast.fromJson(x))),
@@ -173,5 +176,15 @@ class TvGuestStar {
         creditId: json["credit_id"],
         order: json["order"] == null ? null : json["order"],
         characterName: json["character_name"],
+      );
+
+  PosterListviewObject getPosterListViewObject() => PosterListviewObject(
+        id: id,
+        mediaType: MediaType.person,
+        title: name,
+        subtitle: characterName,
+        imagePath: profilePath == null || profilePath == ""
+            ? null
+            : ImageUrl.getProfileImageUrl(url: profilePath as String),
       );
 }
