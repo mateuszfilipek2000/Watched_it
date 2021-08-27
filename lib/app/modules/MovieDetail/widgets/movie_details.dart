@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_overview_controller.dart';
-import 'package:watched_it_getx/app/modules/MovieDetail/widgets/posterlistview.dart';
+import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
+import 'package:watched_it_getx/app/shared_widgets/poster_listview/posterlistview.dart';
 
 //TODO REPLACE POSTER LISTVIEW WITH ONE FROM THIS PAGE WHEN IT'S FINISHED
 //TODO ADD WATCH PROVIDERS
@@ -72,7 +74,23 @@ class MovieDetails extends StatelessWidget {
                 : PosterListView(
                     listTitle: "Cast",
                     height: 300.0,
-                    objects: controller.minimalMediaFromCast(),
+                    objects: controller
+                        .minimalMediaFromCast()
+                        .map(
+                          (element) => PosterListviewObject(
+                            id: element.id,
+                            mediaType: element.mediaType,
+                            title: element.title,
+                            subtitle: element.subtitle,
+                            imagePath: element.posterPath == null ||
+                                    element.posterPath == ""
+                                ? null
+                                : ImageUrl.getPosterImageUrl(
+                                    url: element.posterPath as String,
+                                  ),
+                          ),
+                        )
+                        .toList(),
                   ),
           ),
         ),
@@ -84,7 +102,23 @@ class MovieDetails extends StatelessWidget {
                 : PosterListView(
                     listTitle: "Crew",
                     height: 300.0,
-                    objects: controller.minimalMediaFromCrew(),
+                    objects: controller
+                        .minimalMediaFromCrew()
+                        .map(
+                          (element) => PosterListviewObject(
+                            id: element.id,
+                            mediaType: element.mediaType,
+                            title: element.title,
+                            subtitle: element.subtitle,
+                            imagePath: element.posterPath == null ||
+                                    element.posterPath == ""
+                                ? null
+                                : ImageUrl.getPosterImageUrl(
+                                    url: element.posterPath as String,
+                                  ),
+                          ),
+                        )
+                        .toList(),
                   ),
           ),
         ),

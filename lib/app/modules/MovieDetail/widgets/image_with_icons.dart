@@ -56,7 +56,7 @@ class ImageWithIcons extends StatelessWidget {
             bottom: 0,
             right: 0,
             child: GestureDetector(
-              onTap: () => onIconTap,
+              onTap: () => onIconTap(),
               child: Container(
                 width: 40.0,
                 height: 40.0,
@@ -89,7 +89,7 @@ class ImageWithIcons extends StatelessWidget {
             top: 0,
             right: 0,
             child: GestureDetector(
-              onTap: () => onBookmarkTap,
+              onTap: () => onBookmarkTap(),
               child: Container(
                 width: 40.0,
                 height: 40.0,

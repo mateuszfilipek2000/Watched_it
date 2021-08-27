@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 
+//TODO FIX PROBLEM WITH DATES?
 class SearchPageController extends GetxController {
   RxString searchInputHint = "".obs;
   TextEditingController searchFieldController = TextEditingController();
@@ -38,7 +39,7 @@ class SearchPageController extends GetxController {
     List<MinimalMedia>? results =
         await TMDBApiService.getSearchResults(query: query);
     if (results != null) {
-      print("Query executed succesfully");
+      //print("Query executed succesfully");
       searchResults.clear();
       for (MinimalMedia media in results) this.searchResults.add(media);
       update();

@@ -51,17 +51,6 @@ class SwipeableWidgetView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      // for (var i = 0; i < controller.children.length; i++)
-                      //   Container(
-                      //     width: 10,
-                      //     height: 10,
-                      //     decoration: BoxDecoration(
-                      //       shape: BoxShape.circle,
-                      //       color: i == controller.activeIndex.value
-                      //           ? Colors.blue
-                      //           : Colors.grey,
-                      //     ),
-                      //   )
                       Container(
                         margin: EdgeInsets.all(5.0),
                         padding: EdgeInsets.all(5.0),

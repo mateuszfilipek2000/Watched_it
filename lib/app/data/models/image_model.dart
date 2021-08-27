@@ -22,6 +22,10 @@ class ImageUrl {
 
   static String getGravatarUrl({required String hash, String size = "300"}) =>
       "${_gravatarPath}${hash}?s=${size}";
+
+  static String getStillImageUrl(
+          {StillSizes size = StillSizes.w92, required String url}) =>
+      "${baseImagePath}${describeEnum(size)}${url}";
 }
 
 enum BackdropSizes {
@@ -57,5 +61,13 @@ enum ProfileSizes {
   w342,
   w500,
   w780,
+  original,
+}
+
+enum StillSizes {
+  w92,
+  w185,
+  w300,
+  h632,
   original,
 }

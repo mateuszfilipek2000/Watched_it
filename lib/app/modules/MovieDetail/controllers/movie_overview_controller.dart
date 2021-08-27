@@ -55,7 +55,7 @@ class MovieOverviewController extends GetxController {
 
   void getAccountStates() async {
     accountStates.value = await TMDBApiService.getAccountStates(
-        sessionID: sessionID, movieID: minimalMedia.value.id);
+        sessionID: sessionID, mediaID: minimalMedia.value.id);
 
     if (accountStates.value != null) {
       if (accountStates.value?.rated != null) {
@@ -93,7 +93,7 @@ class MovieOverviewController extends GetxController {
     if (status == true) {
       accountStates.value = await TMDBApiService.getAccountStates(
         sessionID: sessionID,
-        movieID: minimalMedia.value.id,
+        mediaID: minimalMedia.value.id,
       );
     }
   }
@@ -109,7 +109,7 @@ class MovieOverviewController extends GetxController {
     if (status == true) {
       accountStates.value = await TMDBApiService.getAccountStates(
         sessionID: sessionID,
-        movieID: minimalMedia.value.id,
+        mediaID: minimalMedia.value.id,
       );
     }
   }

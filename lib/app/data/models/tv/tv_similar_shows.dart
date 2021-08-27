@@ -1,3 +1,5 @@
+import 'package:watched_it_getx/app/data/models/similar_media.dart';
+
 class SimilarTvShows {
   SimilarTvShows({
     required this.page,
@@ -7,63 +9,76 @@ class SimilarTvShows {
   });
 
   final int page;
-  final List<Result> results;
+  final List<SimilarTv> results;
   final int totalPages;
   final int totalResults;
 
   factory SimilarTvShows.fromJson(Map<String, dynamic> json) => SimilarTvShows(
         page: json["page"],
-        results:
-            List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
+        results: List<SimilarTv>.from(
+            json["results"].map((x) => SimilarTv.fromJson(x))),
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
       );
 }
 
-class Result {
-  Result({
-    this.backdropPath,
-    required this.firstAirDate,
-    required this.genreIds,
-    required this.id,
-    required this.originalLanguage,
-    required this.originalName,
-    required this.overview,
+class SimilarTv extends SimilarMedia {
+  SimilarTv({
     required this.originCountry,
-    this.posterPath,
-    required this.popularity,
-    required this.name,
-    required this.voteAverage,
-    required this.voteCount,
-  });
+    String? backdropPath,
+    required List<int> genreIds,
+    required int id,
+    required String originalLanguage,
+    required String originalTitle,
+    required String overview,
+    required DateTime releaseDate,
+    String? posterPath,
+    required double popularity,
+    required String title,
+    required double voteAverage,
+    required int voteCount,
+  }) : super(
+          id: id,
+          backdropPath: backdropPath,
+          genreIds: genreIds,
+          originalLanguage: originalLanguage,
+          originalTitle: originalTitle,
+          releaseDate: releaseDate,
+          overview: overview,
+          posterPath: posterPath,
+          popularity: popularity,
+          title: title,
+          voteAverage: voteAverage,
+          voteCount: voteCount,
+        );
 
-  final String? backdropPath;
-  final DateTime firstAirDate;
-  final List<int> genreIds;
-  final int id;
-  final String originalLanguage;
-  final String originalName;
-  final String overview;
+  //final String? backdropPath;
+  //final DateTime releaseDate;
+  //final List<int> genreIds;
+  //final int id;
+  //final String originalLanguage;
+  //final String originalTitle;
+  //final String overview;
   final List<String> originCountry;
-  final String? posterPath;
-  final double popularity;
-  final String name;
-  final double voteAverage;
-  final int voteCount;
+  //final String? posterPath;
+  //final double popularity;
+  //final String title;
+  //final double voteAverage;
+  //final int voteCount;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory SimilarTv.fromJson(Map<String, dynamic> json) => SimilarTv(
         backdropPath: json["backdrop_path"],
-        firstAirDate: DateTime.parse(json["first_air_date"]),
+        releaseDate: DateTime.parse(json["first_air_date"]),
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
         originalLanguage: json["original_language"],
-        originalName: json["original_name"],
+        originalTitle: json["original_name"],
         overview: json["overview"],
         originCountry:
             List<String>.from(json["origin_country"].map((x) => x.toString())),
         posterPath: json["poster_path"],
         popularity: json["popularity"].toDouble(),
-        name: json["name"],
+        title: json["name"],
         voteAverage: json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
       );

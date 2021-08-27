@@ -248,7 +248,8 @@ class Season {
   final int? seasonNumber;
 
   factory Season.fromJson(Map<String, dynamic> json) => Season(
-        airDate: DateTime.parse(json["air_date"]),
+        airDate:
+            json["air_date"] == null ? null : DateTime.parse(json["air_date"]),
         episodeCount: json["episode_count"],
         id: json["id"],
         name: json["name"],

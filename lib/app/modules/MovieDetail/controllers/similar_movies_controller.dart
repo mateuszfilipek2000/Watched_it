@@ -116,7 +116,7 @@ class SimilarMoviesController extends GetxController
   void getAccountStates() async {
     accountStates.value = await TMDBApiService.getAccountStates(
       sessionID: Get.find<UserController>().sessionID.value,
-      movieID:
+      mediaID:
           recommendations.value?.results[currentCarouselItem.value].id as int,
     );
   }

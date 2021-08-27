@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 
 MediaImages mediaImagesFromJson(String str) =>
@@ -30,6 +31,20 @@ class MediaImages {
       results.add(
         ImageUrl.getBackdropImageUrl(url: backdrop.filePath),
       );
+    return results;
+  }
+
+  List<Image> getBackdropImages({
+    BackdropSizes size = BackdropSizes.w780,
+  }) {
+    List<Image> results = [];
+    for (Backdrop backdrop in backdrops) {
+      Image result = Image.network(
+        ImageUrl.getBackdropImageUrl(url: backdrop.filePath, size: size),
+        key: UniqueKey(),
+      );
+      results.add(result);
+    }
     return results;
   }
 }

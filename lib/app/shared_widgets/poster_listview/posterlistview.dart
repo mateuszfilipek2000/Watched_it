@@ -1,54 +1,46 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
+import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 
 class PosterListView extends StatelessWidget {
   const PosterListView({
     Key? key,
     required this.height,
+    this.width = double.infinity,
     required this.objects,
     required this.listTitle,
   }) : super(key: key);
 
   final double height;
-  final List<MinimalMedia> objects;
+  final double width;
+  final List<PosterListviewObject> objects;
   final String listTitle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: this.height,
-      width: double.infinity,
+      width: this.width,
       child: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  flex: 10,
-                  child: Container(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        listTitle,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                listTitle,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
                 ),
-              ],
+              ),
             ),
           ),
           Expanded(
-            flex: 8,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: objects.length,
@@ -56,23 +48,30 @@ class PosterListView extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     print("tapped ${objects[index].title}");
-                    Get.to(
-                      () => MovieDetailView(),
-                      arguments: objects[index],
-                      fullscreenDialog: true,
-                      //id: objects[index].id,
+                    // Get.to(
+                    //   () => MovieDetailView(),
+                    //   arguments: objects[index],
+                    //   fullscreenDialog: true,
+                    //   //id: objects[index].id,
+                    //   preventDuplicates: false,
+                    // );
+                    Get.toNamed(
+                      "/MediaDetails/${describeEnum(objects[index].mediaType)}",
                       preventDuplicates: false,
+                      arguments: MinimalMedia(
+                        id: objects[index].id,
+                        mediaType: objects[index].mediaType,
+                        title: objects[index].title,
+                        posterPath: objects[index].imagePath,
+                      ),
                     );
                   },
                   child: PosterListViewItem(
                     title: objects[index].title,
-                    subtitle: objects[index].subtitle as String,
-                    imagePath: objects[index].posterPath == null
+                    subtitle: objects[index].subtitle,
+                    imagePath: objects[index].imagePath == null
                         ? null
-                        : ImageUrl.getProfileImageUrl(
-                            url: objects[index].posterPath as String,
-                            size: ProfileSizes.w342,
-                          ),
+                        : objects[index].imagePath as String,
                   ),
                 );
               },
@@ -88,12 +87,12 @@ class PosterListViewItem extends StatelessWidget {
   const PosterListViewItem({
     Key? key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.imagePath,
   }) : super(key: key);
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final String? imagePath;
 
   @override
@@ -166,7 +165,7 @@ class PosterListViewItem extends StatelessWidget {
                         horizontal: 5.0,
                       ),
                       child: Text(
-                        subtitle,
+                        subtitle == null ? "" : subtitle as String,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(

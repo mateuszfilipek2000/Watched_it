@@ -1,6 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
+import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
+import 'package:watched_it_getx/app/modules/TvDetail/views/tv_overview_view.dart';
+import 'package:watched_it_getx/app/modules/TvDetail/views/tv_seasons_view.dart';
+import 'package:watched_it_getx/app/shared_widgets/similar_media_view/similar_media_view.dart';
 import '../controllers/tv_detail_controller.dart';
 
 class TvDetailView extends StatelessWidget {
@@ -10,9 +16,9 @@ class TvDetailView extends StatelessWidget {
       create: (context) => Get.arguments.id,
       child: GetBuilder<TvDetailController>(
         init: TvDetailController(),
-        tag: Get.arguments.id.toString(),
+        tag: "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
         builder: (controller) => DefaultTabController(
-          length: controller.tabs.length,
+          length: 4,
           child: SafeArea(
             child: Scaffold(
               // floatingActionButton: FloatingActionButton(
@@ -35,12 +41,50 @@ class TvDetailView extends StatelessWidget {
                   indicatorColor: Colors.blue,
                   labelColor: Colors.blue,
                   unselectedLabelColor: Colors.grey,
-                  tabs: controller.tabs,
+                  tabs: [
+                    Tab(
+                      text: "Overview",
+                    ),
+                    Tab(
+                      text: "Episodes",
+                    ),
+                    Tab(
+                      text: "More",
+                    ),
+                    Tab(
+                      text: "Reviews",
+                    ),
+                  ],
                 ),
               ),
               body: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
-                children: controller.pages,
+                children: [
+                  TvOverviewView(
+                    tag: "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
+                  ),
+                  TvSeasonView(
+                    tag: "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
+                  ),
+                  Obx(
+                    () {
+                      if (controller.isReady.value == false)
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      else
+                        return SimilarMediaView(
+                          accountID: controller.user?.id as int,
+                          recommendations: controller
+                              .recommendedTvShows?.results as List<SimilarTv>,
+                          similar: controller.similarTvShows?.results
+                              as List<SimilarTv>,
+                          contentType: MediaType.tv,
+                        );
+                    },
+                  ),
+                  Text("4"),
+                ],
               ),
             ),
           ),

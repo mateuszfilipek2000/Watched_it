@@ -14,6 +14,13 @@ import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
+import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_account_states.dart';
+import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_credits.dart';
+import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_details.dart';
+import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_images.dart';
+import 'package:watched_it_getx/app/data/models/tv/seasons/tv_season_account_states.dart';
+import 'package:watched_it_getx/app/data/models/tv/seasons/tv_season_aggregated_credits.dart';
+import 'package:watched_it_getx/app/data/models/tv/seasons/tv_season_details.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_aggregated_credits.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_details_model.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
@@ -371,7 +378,7 @@ class TMDBApiService {
       dynamic body = jsonDecode(response.body)['results'];
       for (dynamic i in body) {
         if (i['media_type'] == 'movie') {
-          print(i);
+          //print(i);
           results.add(
             MinimalMedia(
               mediaType: MediaType.movie,
@@ -415,10 +422,12 @@ class TMDBApiService {
   }
 
   static Future<AccountStates?> getAccountStates(
-      {required String sessionID, required int movieID}) async {
+      {required String sessionID,
+      required int mediaID,
+      MediaType mediaType = MediaType.movie}) async {
     http.Response response = await client.get(
       Uri.parse(
-          "https://api.themoviedb.org/3/movie/$movieID/account_states?api_key=$apiKeyV3&session_id=$sessionID"),
+          "https://api.themoviedb.org/3/${describeEnum(mediaType)}/$mediaID/account_states?api_key=$apiKeyV3&session_id=$sessionID"),
     );
 
     if (response.statusCode == 200)
@@ -733,6 +742,129 @@ class TMDBApiService {
       print(response.statusCode.toString() + " " + response.body.toString());
       print(
           "https://api.themoviedb.org/3/tv/$id?api_key=$apiKeyV3&language=$lang&append_to_response=account_states,aggregate_credits,keywords,reviews,similar,recommendations");
+      return null;
+    }
+  }
+
+  /*
+  if the request is succesfull the returned value is: {
+    "TvSeasonDetails": TvSeasonDetails
+    "TvSeasonAccountStates": TvSeasonAccountStates
+    "TvSeasonAggregatedCredits": TvSeasonAggregatedCredits
+  }
+  */
+  static Future<Map<String, dynamic>?> getAggregatedTvSeasonInfo({
+    required int id,
+    required String sessionID,
+    required int seasonNumber,
+    String lang = "en-US",
+  }) async {
+    http.Response response = await http.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/tv/$id/season/$seasonNumber?api_key=$apiKeyV3&session_id=$sessionID&language=$lang&append_to_response=account_states,aggregate_credits"),
+    );
+
+    if (response.statusCode == 200) {
+      return <String, dynamic>{
+        "TvSeasonDetails": TvSeasonDetails.fromJson(json.decode(response.body)),
+        "TvSeasonAccountStates": TvSeasonAccountStates.fromJson(
+            json.decode(response.body)["account_states"]),
+        "TvSeasonAggregatedCredits": TvSeasonAggregatedCredits.fromJson(
+            json.decode(response.body)["aggregate_credits"]),
+      };
+    } else {
+      print("couldnt get tv season information");
+      print(response.statusCode.toString() + " " + response.body.toString());
+      print(
+          "https://api.themoviedb.org/3/tv/$id/season/$seasonNumber?api_key=$apiKeyV3&session_id=$sessionID&language=$lang&append_to_response=account_states,aggregate_credits");
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getAggregatedTvEpisode({
+    required int id,
+    required String sessionID,
+    required int seasonNumber,
+    required int episodeNumber,
+    String lang = "en-US",
+  }) async {
+    http.Response response = await http.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/tv/$id/season/$seasonNumber/episode/$episodeNumber?api_key=$apiKeyV3&session_id=$sessionID&language=$lang&append_to_response=account_states,credits,images"),
+    );
+
+    if (response.statusCode == 200) {
+      return <String, dynamic>{
+        "TvEpisodeDetails":
+            TvEpisodeDetails.fromJson(json.decode(response.body)),
+        "TvEpisodeCredits":
+            TvEpisodeCredit.fromJson(json.decode(response.body)["credits"]),
+        "TvEpisodeAccountStates": TvEpisodeAccountStates.fromJson(
+            json.decode(response.body)["account_states"]),
+        "TvEpisodeImages":
+            TvEpisodeImages.fromJson(json.decode(response.body)["images"]),
+      };
+    } else {
+      print("couldnt get tv episode information");
+      print(response.statusCode.toString() + " " + response.body.toString());
+
+      return null;
+    }
+  }
+
+  static Future<bool> rateTvEpisode({
+    required double rating,
+    required int id,
+    required int seasonNumber,
+    required int episodeNumber,
+    required String mediaName,
+    required String sessionID,
+  }) async {
+    http.Response response = await client.post(
+        Uri.parse(
+          "https://api.themoviedb.org/3/tv/$id/season/$seasonNumber/episode/$episodeNumber/rating?api_key=$apiKeyV3&session_id=$sessionID",
+        ),
+        headers: {
+          "Content-type": "application/json",
+          "charset": "utf-8",
+        },
+        body: json.encode({
+          "value": rating,
+        }));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("succesfully revied tv episode");
+      Get.snackbar("Review", "Succesfully reviewed $mediaName");
+      return true;
+    } else {
+      print(response.statusCode);
+      print(response.body);
+      print(
+        "https://api.themoviedb.org/3/tv/$id/season/$seasonNumber/episode/$episodeNumber/rating?api_key=$apiKeyV3&session_id=$sessionID",
+      );
+      print("unable to review");
+      Get.snackbar("Review", "Oops, something went wrong");
+      return false;
+    }
+  }
+
+  static Future<TvSeasonAccountStates?> getTvSeasonAccountStates(
+      {required String id,
+      required int seasonNumber,
+      required String sessionID,
+      String lang = "en-US"}) async {
+    http.Response response = await client.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/tv/$id/season/$seasonNumber/account_states?api_key=$apiKeyV3&language=$lang&session_id=$sessionID",
+      ),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201)
+      return TvSeasonAccountStates.fromJson(json.decode(response.body));
+    else {
+      print(response.statusCode);
+      print(response.body);
+
       return null;
     }
   }

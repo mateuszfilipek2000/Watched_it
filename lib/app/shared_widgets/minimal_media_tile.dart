@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
@@ -17,10 +18,16 @@ class MinimalMediaTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return RawMaterialButton(
       onPressed: () {
-        Get.to(
-          () => MediaPosterView(),
+        // Get.to(
+        //   () => MediaPosterView(),
+        //   arguments: media,
+        //   fullscreenDialog: true,
+        // );
+
+        Get.toNamed(
+          "/MediaDetails/${describeEnum(media.mediaType)}",
+          preventDuplicates: false,
           arguments: media,
-          fullscreenDialog: true,
         );
       },
       child: Container(
