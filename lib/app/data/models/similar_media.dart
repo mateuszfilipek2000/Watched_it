@@ -19,7 +19,7 @@ abstract class SimilarMedia {
   final int id;
   final String originalLanguage;
   final String originalTitle;
-  final DateTime releaseDate;
+  final DateTime? releaseDate;
   final String overview;
   final String? posterPath;
   final double popularity;
@@ -27,7 +27,7 @@ abstract class SimilarMedia {
   final double voteAverage;
   final int voteCount;
 
-  String getDashedDate() {
-    return "${releaseDate.year}-${releaseDate.month}-${releaseDate.day}";
-  }
+  // String getDashedDate() {
+  //   return "${releaseDate.year}-${releaseDate.month}-${releaseDate.day}";
+  // }
 }

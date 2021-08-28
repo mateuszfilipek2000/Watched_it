@@ -13,14 +13,19 @@ class SimilarMediaView extends StatelessWidget {
   const SimilarMediaView({
     Key? key,
     required this.accountID,
-    required this.recommendations,
-    required this.similar,
+    // required this.recommendations,
+    // required this.similar,
+    required this.data,
     required this.contentType,
-  }) : super(key: key);
+  })  : assert(data.length >= 1),
+        super(key: key);
 
   final int accountID;
-  final List<SimilarMedia> recommendations;
-  final List<SimilarMedia> similar;
+  // final List<SimilarMedia> recommendations;
+  // final List<SimilarMedia> similar;
+
+  ///key - sorting method, value - objects that belongs to this sorting method
+  final Map<String, List<SimilarMedia>> data;
   final MediaType contentType;
 
   @override
@@ -28,8 +33,7 @@ class SimilarMediaView extends StatelessWidget {
     return GetX<SimilarMediaController>(
       init: SimilarMediaController(
         tag: context.read<int>().toString(),
-        recommendations: this.recommendations,
-        similar: this.similar,
+        data: this.data,
         contentType: this.contentType,
         accountID: this.accountID,
       ),
@@ -77,11 +81,11 @@ class SimilarMediaView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        for (var i = 0; i < _.sortingOption.length; i++)
+                        for (var i = 0; i < _.sortingOptions.length; i++)
                           TextButton(
                             onPressed: () => _.changeSortingOption(i),
                             child: Text(
-                              _.sortingOption[i],
+                              _.sortingOptions[i],
                               style: TextStyle(
                                 color: _.selectedSortingOption.value == i
                                     ? Colors.black
