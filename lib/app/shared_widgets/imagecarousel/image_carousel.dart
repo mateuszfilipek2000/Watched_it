@@ -80,6 +80,8 @@ class SingleCarouselItem extends StatelessWidget {
         //zero is start, 1 is finish
         double heightFactor =
             -(1 - controller.minimumChildScale) * fraction + 1;
+
+        if (heightFactor < 0) heightFactor = 0;
         return FractionallySizedBox(
           heightFactor: heightFactor,
           child: imageURL == null

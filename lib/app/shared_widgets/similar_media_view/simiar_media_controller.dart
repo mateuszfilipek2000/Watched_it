@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
@@ -23,16 +24,26 @@ class SimilarMediaController extends GetxController
   final List<SimilarMedia> similar;
   final MediaType contentType;
 
+  PageController carouselController = PageController(
+    initialPage: 0,
+    viewportFraction: 0.5,
+  );
+
   RxInt currentPage = 1.obs;
   RxList<String?> results = RxList([]);
   RxInt currentCarouselItem = 0.obs;
   Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
 
-  List<String> sortingOption = ["Similar", "Recommended"];
+  List<String> sortingOption = ["Recommended", "Similar"];
   RxInt selectedSortingOption = 0.obs;
+
+  RxString title = "".obs;
+  RxString releaseDate = "".obs;
 
   @override
   void onInit() {
+    title.value = getTitle();
+    releaseDate.value = getReleaseDate();
     getPosterUrls();
 
     super.onInit();
@@ -41,6 +52,7 @@ class SimilarMediaController extends GetxController
   @override
   void onClose() {
     //print("closing similar movies");
+    carouselController.dispose();
     super.onClose();
   }
 
@@ -91,7 +103,8 @@ class SimilarMediaController extends GetxController
 
   void handlePageChange(int index) async {
     currentCarouselItem.value = index;
-    getAccountStates();
+    title.value = getTitle();
+    releaseDate.value = getReleaseDate();
   }
 
   void changeFavourite() async {
@@ -147,7 +160,13 @@ class SimilarMediaController extends GetxController
     if (i != selectedSortingOption.value) {
       selectedSortingOption.value = i;
       results.clear();
-      currentCarouselItem.value = 0;
+      //currentCarouselItem.value = 0;
+      handlePageChange(0);
+      carouselController.animateToPage(
+        0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
       getPosterUrls();
     }
   }

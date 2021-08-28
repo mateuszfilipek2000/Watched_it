@@ -10,13 +10,13 @@ import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/shared_widgets/similar_media_view/simiar_media_controller.dart';
 
 class SimilarMediaView extends StatelessWidget {
-  const SimilarMediaView(
-      {Key? key,
-      required this.accountID,
-      required this.recommendations,
-      required this.similar,
-      required this.contentType})
-      : super(key: key);
+  const SimilarMediaView({
+    Key? key,
+    required this.accountID,
+    required this.recommendations,
+    required this.similar,
+    required this.contentType,
+  }) : super(key: key);
 
   final int accountID;
   final List<SimilarMedia> recommendations;
@@ -145,7 +145,10 @@ class SimilarMediaView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GetBuilder<ImageCarouselController>(
-                    init: ImageCarouselController(0.5, 0.6),
+                    init: ImageCarouselController(
+                      pageController: _.carouselController,
+                      minimumChildScale: 0.6,
+                    ),
                     tag:
                         "smallCarouselController-${context.read<int>().toString()}",
                     builder: (controller) {
@@ -172,22 +175,24 @@ class SimilarMediaView extends StatelessWidget {
                       ),
                       //height: 100.0,
                       width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.fitWidth,
-                            child: Text(
-                              _.getTitle(),
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 30.0),
+                      child: Obx(
+                        () => Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                _.title.value,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 30.0),
+                              ),
                             ),
-                          ),
-                          Text(
-                            _.getReleaseDate(),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+                            Text(
+                              _.releaseDate.value,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -37,7 +37,7 @@ class MovieDetailController extends GetxController {
       ];
       pages.value = [
         MovieOverviewView(),
-        SimilarMoviesView(),
+        //SimilarMoviesView(),
         MediaReviewView(),
       ];
     } else if (minimalMedia.value.mediaType == MediaType.tv) {

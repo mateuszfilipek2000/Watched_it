@@ -9,6 +9,7 @@ import 'package:watched_it_getx/app/shared_widgets/poster_listview/posterlistvie
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/swipeable_image_view_f.dart';
 import 'package:watched_it_getx/app/modules/TvDetail/controllers/tv_detail_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:watched_it_getx/app/shared_widgets/searchable_text_button_list.dart';
 
 class TvOverviewView extends StatelessWidget {
   TvOverviewView({
@@ -140,13 +141,70 @@ class TvOverviewView extends StatelessWidget {
               ),
             ),
           ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0, top: 20.0),
+                child: Text(
+                  "Overview:",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Obx(
+                () {
+                  if (controller.isReady.value == false) {
+                    return Container();
+                  } else
+                    return Text(
+                      controller.tvShow!.overview,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15.0,
+                        //fontWeight: FontWeight.w500,
+                      ),
+                      //overflow: TextOverflow.ellipsis,
+                      //maxLines: 5,
+                    );
+                },
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0, top: 20.0),
+                child: Text(
+                  "Genres:",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Obx(
+                () {
+                  if (controller.isReady.value == false) {
+                    return Container();
+                  } else
+                    return SearchableTextButtonList(
+                        names: controller.tvShow!.genres
+                            .map((e) => e.name)
+                            .toList());
+                },
+              ),
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 20.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: 20.0,
-                ),
                 Obx(
                   () {
                     if (controller.aggregatedCredits.value == null) {
@@ -221,6 +279,36 @@ class TvOverviewView extends StatelessWidget {
                       );
                     }
                   },
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0, top: 20.0),
+                      child: Text(
+                        "Keywords:",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () {
+                        if (controller.isReady.value == false) {
+                          return Container();
+                        } else
+                          return SearchableTextButtonList(
+                              names: controller.keywords!.keywords
+                                  .map((e) => e.name)
+                                  .toList());
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20.0,
                 ),
               ],
             ),

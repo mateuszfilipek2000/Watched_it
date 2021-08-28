@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ImageCarouselController extends GetxController {
-  ImageCarouselController(viewportFraction, this.minimumChildScale)
-      : pageController =
-            PageController(initialPage: 0, viewportFraction: viewportFraction);
+  // ImageCarouselController(viewportFraction, this.minimumChildScale)
+  //     : pageController =
+  //           PageController(initialPage: 0, viewportFraction: viewportFraction);
+
+  ImageCarouselController({
+    required this.pageController,
+    required this.minimumChildScale,
+  });
 
   RxInt activeChildIndex = 0.obs;
   RxDouble pageValue = 0.0.obs;
@@ -26,8 +31,8 @@ class ImageCarouselController extends GetxController {
 
   @override
   void onClose() {
-    print("disposing carousel controller");
-    pageController.dispose();
+    // print("disposing carousel controller");
+    // pageController.dispose();
     super.onClose();
   }
 }
