@@ -9,6 +9,7 @@ import 'package:watched_it_getx/app/data/models/similar_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
+//TODO FIX STRING TYPE CAST ON NULL, SOME MEDIA DO NOT HAVE TITLES AND/OR RELEASE DATES
 class SimilarMediaController extends GetxController
     with SingleGetTickerProviderMixin {
   SimilarMediaController({
