@@ -27,6 +27,7 @@ import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/models/videos.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
+import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
@@ -361,7 +362,7 @@ class TMDBApiService {
     }
   }
 
-  static Future<List<MinimalMedia>?> getSearchResults({
+  static Future<List<PosterListviewObject>?> getSearchResults({
     required String query,
     int page = 1,
     String language = "en_US",
@@ -373,43 +374,58 @@ class TMDBApiService {
       ),
     );
 
-    List<MinimalMedia> results = [];
+    List<PosterListviewObject> results = [];
     if (response.statusCode == 200) {
       dynamic body = jsonDecode(response.body)['results'];
       for (dynamic i in body) {
         if (i['media_type'] == 'movie') {
           //print(i);
           results.add(
-            MinimalMedia(
+            PosterListviewObject(
               mediaType: MediaType.movie,
               id: i['id'],
               title: i['title'],
-              posterPath: i?['poster_path'],
-              date: i['release_date'] != null && i['release_date'] != ""
-                  ? DateTime.parse(i['release_date'])
+              imagePath: i['poster_path'] == null
+                  ? null
+                  : ImageUrl.getPosterImageUrl(
+                      url: i!['poster_path'],
+                      size: PosterSizes.w154,
+                    ),
+              subtitle: i['release_date'] != null && i['release_date'] != ""
+                  ? i!['release_date']
                   : null,
-              backdropPath: i?['backdrop_path'],
             ),
           );
         } else if (i['media_type'] == 'tv')
           results.add(
-            MinimalMedia(
+            PosterListviewObject(
               mediaType: MediaType.tv,
               id: i['id'],
               title: i['name'],
-              posterPath: i?['poster_path'],
-              date: i['first_air_date'] != null
-                  ? DateTime.parse(i['first_air_date'])
-                  : null,
-              backdropPath: i?['backdrop_path'],
+              imagePath: i['poster_path'] == null
+                  ? null
+                  : ImageUrl.getPosterImageUrl(
+                      url: i!['poster_path'],
+                      size: PosterSizes.w154,
+                    ),
+              subtitle:
+                  i['first_air_date'] != null ? i!['first_air_date'] : null,
             ),
           );
         else if (i['media_type'] == 'person')
-          results.add(MinimalMedia(
+          results.add(
+            PosterListviewObject(
               mediaType: MediaType.person,
               id: i['id'],
               title: i['name'],
-              posterPath: i?['profile_path']));
+              imagePath: i['profile_path'] == null
+                  ? null
+                  : ImageUrl.getProfileImageUrl(
+                      url: i!['profile_path'],
+                      size: ProfileSizes.w185,
+                    ),
+            ),
+          );
       }
 
       return results;

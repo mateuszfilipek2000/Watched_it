@@ -57,9 +57,30 @@ class SearchPageView extends StatelessWidget {
                     itemCount: _.searchResults.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding: EdgeInsets.all(5),
-                        child: MinimalMediaTile(
-                          media: _.searchResults[index],
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: ListTile(
+                          onTap: () =>
+                              _.navigateToMediaDetail(searchResultIndex: index),
+                          leading: _.searchResults[index].imagePath == null
+                              ? null
+                              : Image.network(
+                                  _.searchResults[index].imagePath as String),
+                          title: Text(
+                            _.searchResults[index].title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          subtitle: _.searchResults[index].subtitle == null
+                              ? null
+                              : Text(
+                                  _.searchResults[index].subtitle as String,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    //fontSize: 20.0,
+                                  ),
+                                ),
                         ),
                       );
                     },
