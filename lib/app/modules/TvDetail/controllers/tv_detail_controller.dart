@@ -6,6 +6,7 @@ import 'package:watched_it_getx/app/data/models/keywords.dart';
 import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
+import 'package:watched_it_getx/app/data/models/similar_media.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_aggregated_credits.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_details_model.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
@@ -14,6 +15,7 @@ import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/fractionally_coloured_star.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 
+//TODO FIX RECOMMENDED AND SIMILAR CAN BE EMPTY DO NOT PASS THEM TO SIMILARMEDIAVIEW
 class TvDetailController extends GetxController {
   late AppUser? user;
   late String sessionID;
@@ -56,35 +58,27 @@ class TvDetailController extends GetxController {
     Map<String, dynamic>? result = await TMDBApiService.getAggregatedTv(
         id: this.minimalMedia.value.id, sessionID: this.sessionID);
 
-    int i = 0;
     if (result != null) {
       if (result["Details"] != null) {
         this.tvShow = result["Details"];
-        print(i++);
       }
       if (result["AccountStates"] != null) {
         this.accountStates.value = result["AccountStates"];
-        print(i++);
       }
       if (result["AggregateCredits"] != null) {
         this.aggregatedCredits.value = result["AggregateCredits"];
-        print(i++);
       }
       if (result["Keywords"] != null) {
         this.keywords = result["Keywords"];
-        print(i++);
       }
       if (result["Reviews"] != null) {
         this.reviews = result["Reviews"];
-        print(i++);
       }
       if (result["SimilarTvShows"] != null) {
         this.similarTvShows = result["SimilarTvShows"];
-        print(i++);
       }
       if (result["Recommendations"] != null) {
         this.recommendedTvShows = result["Recommendations"];
-        print(i++);
       }
       isReady.value = true;
     }
@@ -141,5 +135,15 @@ class TvDetailController extends GetxController {
     }
     return rating;
     //return rating.reversed.toList();
+  }
+
+  //check if recommended and similar tv shows are provided, if any of them is not provided or empty, then it is not returned
+  Map<String, List<SimilarMedia>> getSortingOptionsWithData() {
+    final Map<String, List<SimilarMedia>> results = {};
+    if (recommendedTvShows!.results.length != 0)
+      results["Recommended"] = recommendedTvShows!.results;
+    if (similarTvShows!.results.length != 0)
+      results["Similar"] = similarTvShows!.results;
+    return results;
   }
 }

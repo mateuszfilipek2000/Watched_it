@@ -72,7 +72,8 @@ class SimilarMediaView extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    //color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                     borderRadius:
                         BorderRadius.only(bottomLeft: Radius.circular(15)),
                   ),
@@ -88,7 +89,7 @@ class SimilarMediaView extends StatelessWidget {
                               _.sortingOptions[i],
                               style: TextStyle(
                                 color: _.selectedSortingOption.value == i
-                                    ? Colors.black
+                                    ? Colors.blue
                                     : Colors.grey,
                               ),
                             ),
@@ -103,7 +104,8 @@ class SimilarMediaView extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    //color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                     borderRadius:
                         BorderRadius.only(bottomRight: Radius.circular(15)),
                   ),
@@ -187,13 +189,17 @@ class SimilarMediaView extends StatelessWidget {
                               fit: BoxFit.fitWidth,
                               child: Text(
                                 _.title.value,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 30.0),
+                                // style: TextStyle(
+                                //   color: Colors.white,
+                                //   fontSize: 30.0,
+                                // ),
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                             ),
                             Text(
                               _.releaseDate.value,
-                              style: TextStyle(color: Colors.white),
+                              //style: TextStyle(color: Colors.white),
+                              style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ],
                         ),

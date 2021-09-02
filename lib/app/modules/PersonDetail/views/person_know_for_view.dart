@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PersonKnowForView extends StatelessWidget {
-  const PersonKnowForView({Key? key, required this.tag}) : super(key: key);
-
-  final String tag;
+  const PersonKnowForView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

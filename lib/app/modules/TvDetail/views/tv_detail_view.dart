@@ -75,12 +75,7 @@ class TvDetailView extends StatelessWidget {
                       else
                         return SimilarMediaView(
                           accountID: controller.user?.id as int,
-                          data: {
-                            "Recommendations": controller
-                                .recommendedTvShows?.results as List<SimilarTv>,
-                            "Similar": controller.similarTvShows?.results
-                                as List<SimilarTv>,
-                          },
+                          data: controller.getSortingOptionsWithData(),
                           contentType: MediaType.tv,
                         );
                     },

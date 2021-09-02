@@ -12,6 +12,10 @@ import 'package:watched_it_getx/app/data/models/lists_model.dart';
 import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
+import 'package:watched_it_getx/app/data/models/people/person_details.dart';
+import 'package:watched_it_getx/app/data/models/people/person_images.dart';
+import 'package:watched_it_getx/app/data/models/people/person_movie_credits.dart';
+import 'package:watched_it_getx/app/data/models/people/person_tv_credits.dart';
 import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_account_states.dart';
@@ -880,6 +884,34 @@ class TMDBApiService {
     else {
       print(response.statusCode);
       print(response.body);
+
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getAggregatedPerson({
+    required int id,
+    String lang = "en-US",
+  }) async {
+    http.Response response = await http.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/person/$id?api_key=$apiKeyV3&language=$lang&append_to_response=images,movie_credits,tv_credits",
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return <String, dynamic>{
+        "PersonDetails": PersonDetails.fromJson(json.decode(response.body)),
+        "PersonImages":
+            PersonImages.fromJson(json.decode(response.body)["images"]),
+        "PersonMovieCredits": PersonMovieCredits.fromJson(
+            json.decode(response.body)["movie_credits"]),
+        "PersonTvCredits":
+            PersonTvCredits.fromJson(json.decode(response.body)["tv_credits"]),
+      };
+    } else {
+      print("couldnt get person information");
+      print(response.statusCode.toString() + " " + response.body.toString());
 
       return null;
     }

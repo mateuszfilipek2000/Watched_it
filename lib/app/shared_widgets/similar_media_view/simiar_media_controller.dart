@@ -51,8 +51,9 @@ class SimilarMediaController extends GetxController
     data.forEach((key, value) {
       sortingOptions.add(key);
     });
-    title.value = getTitle();
-    releaseDate.value = getReleaseDate();
+    // title.value = getTitle();
+    // releaseDate.value = getReleaseDate();
+    handlePageChange(0);
     getPosterUrls();
 
     super.onInit();
@@ -79,7 +80,7 @@ class SimilarMediaController extends GetxController
         );
       }
     }
-    getAccountStates();
+    //getAccountStates();
   }
 
   String getReleaseDate() {
@@ -93,20 +94,6 @@ class SimilarMediaController extends GetxController
               currentCarouselItem.value]
           .releaseDate!
           .getDashedDate();
-
-    // if (selectedSortingOption.value == 0) {
-    //   if (recommendations[currentCarouselItem.value].releaseDate == null)
-    //     return "No release date available";
-    //   else
-    //     return recommendations[currentCarouselItem.value]
-    //         .releaseDate!
-    //         .getDashedDate();
-    // } else {
-    //   if (similar[currentCarouselItem.value].releaseDate == null)
-    //     return "No release date available";
-    //   else
-    //     return similar[currentCarouselItem.value].releaseDate!.getDashedDate();
-    // }
   }
 
   String getTitle() {
@@ -124,6 +111,7 @@ class SimilarMediaController extends GetxController
     currentCarouselItem.value = index;
     title.value = getTitle();
     releaseDate.value = getReleaseDate();
+    getAccountStates();
   }
 
   void changeFavourite() async {

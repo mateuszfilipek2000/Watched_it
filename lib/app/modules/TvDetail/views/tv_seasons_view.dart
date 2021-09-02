@@ -197,6 +197,9 @@ class TvSeasonView extends StatelessWidget {
                                                             .rated
                                                             .toString() as String) +
                                                         "/10",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .button,
                                                   ),
                                                 ],
                                               ),
