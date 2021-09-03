@@ -5,7 +5,7 @@ abstract class SimilarMedia {
     required this.id,
     required this.originalLanguage,
     required this.originalTitle,
-    required this.releaseDate,
+    this.releaseDate,
     required this.overview,
     this.posterPath,
     required this.popularity,

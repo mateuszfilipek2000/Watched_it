@@ -34,7 +34,7 @@ class PersonImagesView extends StatelessWidget {
                   ImageUrl.getProfileImageUrl(
                     url: personDetailController
                         .personImages.profiles[index].filePath,
-                    size: ProfileSizes.w500,
+                    size: ProfileSizes.w780,
                   ),
                 ),
                 onLongPress: () {
@@ -43,7 +43,7 @@ class PersonImagesView extends StatelessWidget {
                     ImageUrl.getProfileImageUrl(
                       url: personDetailController
                           .personImages.profiles[index].filePath,
-                      size: ProfileSizes.w185,
+                      size: ProfileSizes.w500,
                     ),
                   );
                 },
@@ -54,7 +54,7 @@ class PersonImagesView extends StatelessWidget {
                   ImageUrl.getProfileImageUrl(
                     url: personDetailController
                         .personImages.profiles[index].filePath,
-                    size: ProfileSizes.w185,
+                    size: ProfileSizes.w500,
                   ),
                   fit: BoxFit.cover,
                 ),

@@ -7,6 +7,8 @@ import 'package:watched_it_getx/app/modules/PersonDetail/controllers/person_deta
 import 'package:watched_it_getx/app/modules/PersonDetail/views/person_images_view.dart';
 import 'package:watched_it_getx/app/modules/PersonDetail/views/person_know_for_view.dart';
 import 'package:watched_it_getx/app/modules/PersonDetail/views/person_overview_view.dart';
+import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/similar_media_view/similar_media_view.dart';
 
 class PersonDetailView extends StatelessWidget {
   @override
@@ -54,7 +56,11 @@ class PersonDetailView extends StatelessWidget {
                         physics: NeverScrollableScrollPhysics(),
                         children: [
                           PersonOverviewView(),
-                          PersonKnowForView(),
+                          SimilarMediaView(
+                            data: controller.getCreditsData(),
+                            accountID: Get.find<UserController>().user.id,
+                            contentType: [MediaType.movie, MediaType.tv],
+                          ),
                           PersonImagesView(),
                         ],
                       ),

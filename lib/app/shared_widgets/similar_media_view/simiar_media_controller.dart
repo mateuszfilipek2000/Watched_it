@@ -9,26 +9,26 @@ import 'package:watched_it_getx/app/data/models/similar_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 import 'package:watched_it_getx/app/data/extensions/date_helpers.dart';
+import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 
-//TODO FIX STRING TYPE CAST ON NULL, SOME MEDIA DO NOT HAVE TITLES AND/OR RELEASE DATES
 class SimilarMediaController extends GetxController
     with SingleGetTickerProviderMixin {
   SimilarMediaController({
     required this.tag,
-    //required this.recommendations,
-    //required this.similar,
     required this.data,
     required this.contentType,
     required this.accountID,
-  });
+  })  : assert(contentType.length > 0),
+        selectedContentType = contentType[0];
   //key - sorting method, value - objects that belong to this sorting method
-  final Map<String, List<SimilarMedia>> data;
+  final Map<String, List<PosterListviewObject>> data;
 
   final int accountID;
   final String tag;
-  //final List<SimilarMedia> recommendations;
-  //final List<SimilarMedia> similar;
-  final MediaType contentType;
+  late MediaType selectedContentType;
+  final List<MediaType> contentType;
+
+  RxBool viewAsList = false.obs;
 
   PageController carouselController = PageController(
     initialPage: 0,
@@ -38,13 +38,15 @@ class SimilarMediaController extends GetxController
   RxInt currentPage = 1.obs;
   RxList<String?> results = RxList([]);
   RxInt currentCarouselItem = 0.obs;
-  Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
+  //Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
+
+  RxMap<int, AccountStates?> _accountStates = RxMap<int, AccountStates?>({});
 
   List<String> sortingOptions = [];
   RxInt selectedSortingOption = 0.obs;
 
   RxString title = "".obs;
-  RxString releaseDate = "".obs;
+  RxString subtitle = "".obs;
 
   @override
   void onInit() {
@@ -67,33 +69,40 @@ class SimilarMediaController extends GetxController
   }
 
   void getPosterUrls() async {
-    for (SimilarMedia media in data[sortingOptions[selectedSortingOption.value]]
-        as List<SimilarMedia>) {
-      if (media.posterPath == null) {
+    for (PosterListviewObject media
+        in data[sortingOptions[selectedSortingOption.value]]
+            as List<PosterListviewObject>) {
+      if (media.imagePath == null) {
         results.add(null);
       } else {
         results.add(
-          ImageUrl.getPosterImageUrl(
-            url: media.posterPath as String,
-            size: PosterSizes.w342,
-          ),
+          media.imagePath,
         );
       }
     }
     //getAccountStates();
   }
 
-  String getReleaseDate() {
+  String getSubtitle() {
+    // if (data[sortingOptions[selectedSortingOption.value]]![
+    //             currentCarouselItem.value]
+    //         .releaseDate ==
+    //     null) {
+    //   return "No release date available";
+    // } else
+    //   return data[sortingOptions[selectedSortingOption.value]]![
+    //           currentCarouselItem.value]
+    //       .releaseDate!
+    //       .getDashedDate();
     if (data[sortingOptions[selectedSortingOption.value]]![
                 currentCarouselItem.value]
-            .releaseDate ==
+            .subtitle ==
         null) {
-      return "No release date available";
+      return "";
     } else
       return data[sortingOptions[selectedSortingOption.value]]![
               currentCarouselItem.value]
-          .releaseDate!
-          .getDashedDate();
+          .subtitle!;
   }
 
   String getTitle() {
@@ -110,14 +119,19 @@ class SimilarMediaController extends GetxController
   void handlePageChange(int index) async {
     currentCarouselItem.value = index;
     title.value = getTitle();
-    releaseDate.value = getReleaseDate();
+    subtitle.value = getSubtitle();
     getAccountStates();
   }
 
-  void changeFavourite() async {
-    int contentID = data[sortingOptions[selectedSortingOption.value]]![
-            currentCarouselItem.value]
-        .id;
+  void changeFavourite({int? index}) async {
+    late int contentID;
+    if (index != null) {
+      contentID = data[sortingOptions[selectedSortingOption.value]]![index].id;
+    } else {
+      contentID = data[sortingOptions[selectedSortingOption.value]]![
+              currentCarouselItem.value]
+          .id;
+    }
 
     // if (selectedSortingOption.value == 0)
     //   contentID = recommendations[currentCarouselItem.value].id;
@@ -127,7 +141,7 @@ class SimilarMediaController extends GetxController
     bool status = await TMDBApiService.markAsFavourite(
       accountID: accountID,
       contentID: contentID,
-      mediaType: contentType,
+      mediaType: selectedContentType,
       sessionID: Get.find<UserController>().sessionID.value,
     );
     if (status == true) {
@@ -135,15 +149,19 @@ class SimilarMediaController extends GetxController
     }
   }
 
-  void changeWatchlist() async {
-    int contentID = data[sortingOptions[selectedSortingOption.value]]![
-            currentCarouselItem.value]
-        .id;
-
+  void changeWatchlist({int? index}) async {
+    late int contentID;
+    if (index != null) {
+      contentID = data[sortingOptions[selectedSortingOption.value]]![index].id;
+    } else {
+      contentID = data[sortingOptions[selectedSortingOption.value]]![
+              currentCarouselItem.value]
+          .id;
+    }
     bool status = await TMDBApiService.addToWatchlist(
       accountID: accountID,
       contentID: contentID,
-      mediaType: contentType,
+      mediaType: selectedContentType,
       sessionID: Get.find<UserController>().sessionID.value,
     );
     if (status == true) {
@@ -151,23 +169,43 @@ class SimilarMediaController extends GetxController
     }
   }
 
-  void getAccountStates() async {
-    int contentID = data[sortingOptions[selectedSortingOption.value]]![
-            currentCarouselItem.value]
-        .id;
+  void getAccountStates({int? index}) async {
+    late int contentID;
+    if (index != null) {
+      contentID = data[sortingOptions[selectedSortingOption.value]]![index].id;
+    } else {
+      contentID = data[sortingOptions[selectedSortingOption.value]]![
+              currentCarouselItem.value]
+          .id;
+    }
 
-    accountStates.value = await TMDBApiService.getAccountStates(
-      sessionID: Get.find<UserController>().sessionID.value,
-      mediaID: contentID,
-      mediaType: contentType,
-    );
+    // accountStates.value = await TMDBApiService.getAccountStates(
+    //   sessionID: Get.find<UserController>().sessionID.value,
+    //   mediaID: contentID,
+    //   mediaType: selectedContentType,
+    // );
+    if (index != null) {
+      _accountStates[index] = await TMDBApiService.getAccountStates(
+        sessionID: Get.find<UserController>().sessionID.value,
+        mediaID: contentID,
+        mediaType: selectedContentType,
+      );
+    } else
+      _accountStates[currentCarouselItem.value] =
+          await TMDBApiService.getAccountStates(
+        sessionID: Get.find<UserController>().sessionID.value,
+        mediaID: contentID,
+        mediaType: selectedContentType,
+      );
+    update();
   }
 
   void changeSortingOption(int i) async {
     if (i != selectedSortingOption.value) {
+      if (contentType.length > 1) selectedContentType = contentType[i];
+
       selectedSortingOption.value = i;
       results.clear();
-      //currentCarouselItem.value = 0;
       handlePageChange(0);
       carouselController.animateToPage(
         0,
@@ -188,17 +226,36 @@ class SimilarMediaController extends GetxController
     String? contentPosterPath =
         data[sortingOptions[selectedSortingOption.value]]![
                 currentCarouselItem.value]
-            .posterPath;
+            .imagePath;
 
     Get.toNamed(
-      "/MediaDetails/${describeEnum(contentType)}",
+      "/MediaDetails/${describeEnum(selectedContentType)}",
       preventDuplicates: false,
       arguments: MinimalMedia(
         id: contentID,
-        mediaType: contentType,
+        mediaType: selectedContentType,
         title: contentTitle,
         posterPath: contentPosterPath,
       ),
     );
+  }
+
+  List<PosterListviewObject> get currentItems {
+    return data[sortingOptions[selectedSortingOption.value]]!;
+  }
+
+  void changeViewOption() {
+    if (viewAsList == true) {
+      getPosterUrls();
+      handlePageChange(0);
+    }
+    viewAsList.value = !viewAsList.value;
+  }
+
+  AccountStates? accountStates({int? index}) {
+    if (index != null)
+      return _accountStates[index];
+    else
+      return _accountStates[currentCarouselItem.value];
   }
 }

@@ -76,7 +76,7 @@ class TvDetailView extends StatelessWidget {
                         return SimilarMediaView(
                           accountID: controller.user?.id as int,
                           data: controller.getSortingOptionsWithData(),
-                          contentType: MediaType.tv,
+                          contentType: [MediaType.tv],
                         );
                     },
                   ),

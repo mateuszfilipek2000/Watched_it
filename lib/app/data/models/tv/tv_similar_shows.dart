@@ -31,7 +31,7 @@ class SimilarTv extends SimilarMedia {
     required String originalLanguage,
     required String originalTitle,
     required String overview,
-    required DateTime releaseDate,
+    DateTime? releaseDate,
     String? posterPath,
     required double popularity,
     required String title,
@@ -68,7 +68,10 @@ class SimilarTv extends SimilarMedia {
 
   factory SimilarTv.fromJson(Map<String, dynamic> json) => SimilarTv(
         backdropPath: json["backdrop_path"],
-        releaseDate: DateTime.parse(json["first_air_date"]),
+        releaseDate:
+            json["first_air_date"] == null || json["first_air_date"] == ""
+                ? null
+                : DateTime.parse(json["first_air_date"]),
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
         originalLanguage: json["original_language"],

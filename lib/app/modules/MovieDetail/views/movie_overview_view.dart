@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/movie_model.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_overview_controller.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/controllers/swipeable_image_view_f_controller.dart';
@@ -54,7 +55,12 @@ class MovieOverviewView extends StatelessWidget {
                         children: [
                           Obx(
                             () => ImageWithIcons(
-                              minimalMedia: controller.minimalMedia.value,
+                              imagePath: controller.movie.value?.posterPath ==
+                                      null
+                                  ? null
+                                  : ImageUrl.getPosterImageUrl(
+                                      url: controller.movie.value!.posterPath,
+                                    ),
                               onBookmarkTap: controller.addToWatchlist,
                               onIconTap: controller.addToFavourites,
                               topIconInactive: Icons.bookmark_add_rounded,

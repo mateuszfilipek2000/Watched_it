@@ -28,7 +28,7 @@ class PersonDetails {
   final String? placeOfBirth;
   final String? profilePath;
   final bool adult;
-  final String imdbId;
+  final String? imdbId;
   final String? homepage;
 
   factory PersonDetails.fromJson(Map<String, dynamic> json) => PersonDetails(

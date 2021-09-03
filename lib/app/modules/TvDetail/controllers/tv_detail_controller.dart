@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
@@ -14,6 +13,8 @@ import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/fractionally_coloured_star.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
+import 'package:watched_it_getx/app/data/extensions/date_helpers.dart';
 
 //TODO FIX RECOMMENDED AND SIMILAR CAN BE EMPTY DO NOT PASS THEM TO SIMILARMEDIAVIEW
 class TvDetailController extends GetxController {
@@ -138,12 +139,28 @@ class TvDetailController extends GetxController {
   }
 
   //check if recommended and similar tv shows are provided, if any of them is not provided or empty, then it is not returned
-  Map<String, List<SimilarMedia>> getSortingOptionsWithData() {
-    final Map<String, List<SimilarMedia>> results = {};
+  Map<String, List<PosterListviewObject>> getSortingOptionsWithData() {
+    final Map<String, List<PosterListviewObject>> results = {};
     if (recommendedTvShows!.results.length != 0)
-      results["Recommended"] = recommendedTvShows!.results;
+      results["Recommended"] = recommendedTvShows!.results
+          .map((e) => PosterListviewObject(
+              id: e.id,
+              title: e.title,
+              mediaType: MediaType.tv,
+              subtitle: e.releaseDate == null
+                  ? null
+                  : e.releaseDate!.getDashedDate()))
+          .toList();
     if (similarTvShows!.results.length != 0)
-      results["Similar"] = similarTvShows!.results;
+      results["Similar"] = similarTvShows!.results
+          .map((e) => PosterListviewObject(
+              id: e.id,
+              title: e.title,
+              mediaType: MediaType.tv,
+              subtitle: e.releaseDate == null
+                  ? null
+                  : e.releaseDate!.getDashedDate()))
+          .toList();
     return results;
   }
 }

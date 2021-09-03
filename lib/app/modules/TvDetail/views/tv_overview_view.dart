@@ -67,7 +67,11 @@ class TvOverviewView extends StatelessWidget {
                       children: [
                         Obx(
                           () => ImageWithIcons(
-                            minimalMedia: controller.minimalMedia.value,
+                            imagePath: controller.tvShow?.posterPath == null
+                                ? null
+                                : ImageUrl.getPosterImageUrl(
+                                    url: controller.tvShow!.posterPath,
+                                  ),
                             onBookmarkTap: controller.addToWatchlist,
                             onIconTap: controller.addToFavourites,
                             topIconInactive: Icons.bookmark_add_rounded,

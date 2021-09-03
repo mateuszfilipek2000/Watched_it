@@ -5,7 +5,7 @@ import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 class ImageWithIcons extends StatelessWidget {
   const ImageWithIcons({
     Key? key,
-    required this.minimalMedia,
+    required this.imagePath,
     required this.onBookmarkTap,
     required this.onIconTap,
     required this.topIconInactive,
@@ -16,7 +16,7 @@ class ImageWithIcons extends StatelessWidget {
     this.isBottomActive,
   }) : super(key: key);
 
-  final MinimalMedia minimalMedia;
+  final String? imagePath;
   final Function onBookmarkTap;
   final Function onIconTap;
   final IconData topIconInactive;
@@ -38,16 +38,13 @@ class ImageWithIcons extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(30),
                 ),
-                child: minimalMedia.posterPath == null
+                child: imagePath == null
                     ? Image.asset(
                         'assets/images/no_image_placeholder.png',
                         fit: BoxFit.fill,
                       )
                     : Image.network(
-                        ImageUrl.getPosterImageUrl(
-                          url: minimalMedia.posterPath as String,
-                          size: PosterSizes.w342,
-                        ),
+                        imagePath!,
                         fit: BoxFit.fill,
                       )),
           ),
