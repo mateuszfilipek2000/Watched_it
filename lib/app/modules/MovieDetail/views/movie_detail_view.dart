@@ -1,74 +1,85 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_detail_controller.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
+import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/media_review_view.dart';
+import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_overview_view.dart';
+import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/similar_media_view/similar_media_view.dart';
+import '../controllers/movie_detail_controller.dart';
 
 class MovieDetailView extends StatelessWidget {
-  const MovieDetailView({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Provider<int>(
-      create: (context) => Get.arguments.id,
+    return Provider<String>(
+      create: (context) =>
+          "${describeEnum(MediaType.movie)}-${Get.arguments.id}",
       child: GetBuilder<MovieDetailController>(
         init: MovieDetailController(),
-        tag: Get.arguments.id.toString(),
-        builder: (controller) => Obx(
-          () => DefaultTabController(
-            length: controller.tabs.length,
-            child: controller.tabs.length == 0
-                ? Center(child: CircularProgressIndicator())
-                : SafeArea(
-                    child: Scaffold(
-                      // floatingActionButton: FloatingActionButton(
-                      //   onPressed: controller.openMediaRatingDialog,
-                      //   child: Icon(
-                      //     Icons.star,
-                      //   ),
-                      // ),
-                      backgroundColor: Color(0xFF1c1d25),
-                      bottomNavigationBar: Material(
-                        color: Color(0xFF151515),
-                        child: TabBar(
-                          indicator: UnderlineTabIndicator(
-                            borderSide: BorderSide(
-                              color: Colors.blue,
-                              width: 3.0,
-                            ),
-                            insets: EdgeInsets.only(bottom: 45),
-                          ),
-                          indicatorColor: Colors.blue,
-                          labelColor: Colors.blue,
-                          unselectedLabelColor: Colors.grey,
-                          tabs: controller.tabs,
-                          // tabs: [
-                          //   Tab(
-                          //     text: "Overview",
-                          //   ),
-                          //   Tab(
-                          //     text: "Overview",
-                          //   ),
-                          //   Tab(
-                          //     text: "Similar",
-                          //   ),
-                          //   Tab(
-                          //     text: "Reviews",
-                          //   ),
-                          // ],
-                        ),
-                      ),
-                      body: TabBarView(
-                        physics: NeverScrollableScrollPhysics(),
-                        children: controller.pages,
-                        // children: [
-                        //   MovieOverviewView(),
-                        //   Text("2"),
-                        //   SimilarMoviesView(),
-                        //   MediaReviewScreen(),
-                        // ],
-                      ),
-                    ),
+        tag: "${describeEnum(MediaType.movie)}-${Get.arguments.id}",
+        builder: (controller) => DefaultTabController(
+          length: 4,
+          child: SafeArea(
+            child: Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: controller.rateMovie,
+                child: Icon(
+                  Icons.star,
+                ),
+              ),
+              bottomNavigationBar: TabBar(
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(
+                    color: Colors.blue,
+                    width: 3.0,
                   ),
+                  insets: EdgeInsets.only(bottom: 45),
+                ),
+                indicatorColor: Colors.blue,
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    text: "Overview",
+                  ),
+                  Tab(
+                    text: "Images",
+                  ),
+                  Tab(
+                    text: "Similar",
+                  ),
+                  Tab(
+                    text: "Reviews",
+                  ),
+                ],
+              ),
+              body: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  MovieOverviewView(),
+                  Text("Images"),
+                  controller.isReady == false
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : SimilarMediaView(
+                          accountID: Get.find<UserController>().user.id,
+                          data: controller.getSortingOptionsWithData(),
+                          contentType: [MediaType.movie],
+                        ),
+                  controller.isReady == false
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : MediaReviewView(
+                          fetchReviews: controller.fetchReviews,
+                          id: Get.arguments.id,
+                        ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

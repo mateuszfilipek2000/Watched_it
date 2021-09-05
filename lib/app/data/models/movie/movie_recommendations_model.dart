@@ -1,13 +1,13 @@
-class Recommendations {
-  Recommendations({
+class MovieRecommendations {
+  MovieRecommendations({
     required this.page,
     required this.results,
     required this.totalPages,
     required this.totalResults,
   });
 
-  factory Recommendations.fromJson(Map<String, dynamic> json) =>
-      Recommendations(
+  factory MovieRecommendations.fromJson(Map<String, dynamic> json) =>
+      MovieRecommendations(
         page: json["page"],
         results:
             List<Result>.from(json["results"].map((x) => Result.fromJson(x))),

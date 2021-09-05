@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
 import 'package:watched_it_getx/app/modules/TvDetail/views/tv_overview_view.dart';
+import 'package:watched_it_getx/app/modules/TvDetail/views/tv_reviews_view.dart';
 import 'package:watched_it_getx/app/modules/TvDetail/views/tv_seasons_view.dart';
 import 'package:watched_it_getx/app/shared_widgets/similar_media_view/similar_media_view.dart';
 import '../controllers/tv_detail_controller.dart';
@@ -12,8 +13,8 @@ import '../controllers/tv_detail_controller.dart';
 class TvDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<int>(
-      create: (context) => Get.arguments.id,
+    return Provider<String>(
+      create: (context) => "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
       child: GetBuilder<TvDetailController>(
         init: TvDetailController(),
         tag: "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
@@ -27,45 +28,37 @@ class TvDetailView extends StatelessWidget {
               //     Icons.star,
               //   ),
               // ),
-              backgroundColor: Color(0xFF1c1d25),
-              bottomNavigationBar: Material(
-                color: Color(0xFF151515),
-                child: TabBar(
-                  indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(
-                      color: Colors.blue,
-                      width: 3.0,
-                    ),
-                    insets: EdgeInsets.only(bottom: 45),
+              bottomNavigationBar: TabBar(
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(
+                    color: Colors.blue,
+                    width: 3.0,
                   ),
-                  indicatorColor: Colors.blue,
-                  labelColor: Colors.blue,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: [
-                    Tab(
-                      text: "Overview",
-                    ),
-                    Tab(
-                      text: "Episodes",
-                    ),
-                    Tab(
-                      text: "More",
-                    ),
-                    Tab(
-                      text: "Reviews",
-                    ),
-                  ],
+                  insets: EdgeInsets.only(bottom: 45),
                 ),
+                indicatorColor: Colors.blue,
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    text: "Overview",
+                  ),
+                  Tab(
+                    text: "Episodes",
+                  ),
+                  Tab(
+                    text: "More",
+                  ),
+                  Tab(
+                    text: "Reviews",
+                  ),
+                ],
               ),
               body: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  TvOverviewView(
-                    tag: "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
-                  ),
-                  TvSeasonView(
-                    tag: "${describeEnum(MediaType.tv)}-${Get.arguments.id}",
-                  ),
+                  TvOverviewView(),
+                  TvSeasonView(),
                   Obx(
                     () {
                       if (controller.isReady.value == false)
@@ -80,7 +73,7 @@ class TvDetailView extends StatelessWidget {
                         );
                     },
                   ),
-                  Text("4"),
+                  TvReviewsView(),
                 ],
               ),
             ),

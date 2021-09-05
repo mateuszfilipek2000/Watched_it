@@ -6,10 +6,8 @@ import 'dart:convert';
 
 import 'package:watched_it_getx/app/data/models/media_model.dart';
 
-Movie movieFromJson(String str) => Movie.fromJson(json.decode(str));
-
-class Movie extends Media {
-  Movie({
+class MovieDetails extends Media {
+  MovieDetails({
     required this.adult,
     required backdropPath,
     this.belongsToCollection,
@@ -64,7 +62,7 @@ class Movie extends Media {
   String title;
   bool video;
 
-  factory Movie.fromJson(Map<String, dynamic> json) => Movie(
+  factory MovieDetails.fromJson(Map<String, dynamic> json) => MovieDetails(
         adult: json["adult"],
         backdropPath: json["backdrop_path"],
         belongsToCollection: json["belongs_to_collection"],

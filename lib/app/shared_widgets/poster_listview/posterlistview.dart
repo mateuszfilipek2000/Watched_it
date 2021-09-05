@@ -11,13 +11,13 @@ class PosterListView extends StatelessWidget {
     required this.height,
     this.width = double.infinity,
     required this.objects,
-    required this.listTitle,
+    this.listTitle,
   }) : super(key: key);
 
   final double height;
   final double width;
   final List<PosterListviewObject> objects;
-  final String listTitle;
+  final String? listTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +26,22 @@ class PosterListView extends StatelessWidget {
       width: this.width,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                listTitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
+          listTitle == null
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      listTitle!,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,

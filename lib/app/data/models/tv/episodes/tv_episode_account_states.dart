@@ -11,6 +11,6 @@ class TvEpisodeAccountStates {
         id: json["id"],
         rated: json["rated"] == null || json["rated"] == false
             ? null
-            : json["rated"],
+            : json["rated"]["value"],
       );
 }

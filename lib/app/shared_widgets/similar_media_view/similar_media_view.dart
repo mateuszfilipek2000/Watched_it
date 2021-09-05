@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
-import 'package:watched_it_getx/app/data/models/similar_media.dart';
+import 'package:watched_it_getx/app/data/models/movie/similar_media.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel_controller.dart';
 import 'package:provider/provider.dart';

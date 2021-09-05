@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
+import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/keywords.dart';
 import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
-import 'package:watched_it_getx/app/data/models/similar_media.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_aggregated_credits.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_details_model.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
@@ -16,7 +16,6 @@ import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_contr
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 import 'package:watched_it_getx/app/data/extensions/date_helpers.dart';
 
-//TODO FIX RECOMMENDED AND SIMILAR CAN BE EMPTY DO NOT PASS THEM TO SIMILARMEDIAVIEW
 class TvDetailController extends GetxController {
   late AppUser? user;
   late String sessionID;
@@ -25,7 +24,7 @@ class TvDetailController extends GetxController {
   TvDetails? tvShow = null;
   Rx<AccountStates?> accountStates = Rx<AccountStates?>(null);
   Rx<TvAggregatedCredits?> aggregatedCredits = Rx<TvAggregatedCredits?>(null);
-  KeyWords? keywords = null;
+  Keywords? keywords = null;
   Reviews? reviews = null;
   SimilarTvShows? similarTvShows = null;
   SimilarTvShows? recommendedTvShows = null;
@@ -37,9 +36,10 @@ class TvDetailController extends GetxController {
 
   @override
   void onInit() async {
-    user = await TMDBApiService.getUserDetails(
-      Get.find<UserController>().sessionID.value,
-    );
+    // user = await TMDBApiService.getUserDetails(
+    //   Get.find<UserController>().sessionID.value,
+    // );
+    user = await Get.find<UserController>().user;
     sessionID = await Get.find<UserController>().sessionID.value;
     retrieveData();
     images.value = await TMDBApiService.getMediaImages(
@@ -51,7 +51,6 @@ class TvDetailController extends GetxController {
 
   @override
   void onClose() {
-    // TODO: implement onClose
     super.onClose();
   }
 
@@ -86,7 +85,6 @@ class TvDetailController extends GetxController {
   }
 
   void addToFavourites() async {
-    print("adding to fav");
     bool status = await TMDBApiService.markAsFavourite(
       accountID: user?.id as int,
       contentID: minimalMedia.value.id,
@@ -143,23 +141,33 @@ class TvDetailController extends GetxController {
     final Map<String, List<PosterListviewObject>> results = {};
     if (recommendedTvShows!.results.length != 0)
       results["Recommended"] = recommendedTvShows!.results
-          .map((e) => PosterListviewObject(
+          .map(
+            (e) => PosterListviewObject(
               id: e.id,
               title: e.title,
               mediaType: MediaType.tv,
-              subtitle: e.releaseDate == null
+              subtitle:
+                  e.releaseDate == null ? null : e.releaseDate!.getDashedDate(),
+              imagePath: e.posterPath == null
                   ? null
-                  : e.releaseDate!.getDashedDate()))
+                  : ImageUrl.getPosterImageUrl(url: e.posterPath!),
+            ),
+          )
           .toList();
     if (similarTvShows!.results.length != 0)
       results["Similar"] = similarTvShows!.results
-          .map((e) => PosterListviewObject(
+          .map(
+            (e) => PosterListviewObject(
               id: e.id,
               title: e.title,
               mediaType: MediaType.tv,
-              subtitle: e.releaseDate == null
+              subtitle:
+                  e.releaseDate == null ? null : e.releaseDate!.getDashedDate(),
+              imagePath: e.posterPath == null
                   ? null
-                  : e.releaseDate!.getDashedDate()))
+                  : ImageUrl.getPosterImageUrl(url: e.posterPath!),
+            ),
+          )
           .toList();
     return results;
   }

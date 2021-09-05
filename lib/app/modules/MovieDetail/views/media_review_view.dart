@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/controllers/media_review_controller.dart';
 import 'package:provider/provider.dart';
 
 class MediaReviewView extends StatelessWidget {
-  const MediaReviewView({Key? key}) : super(key: key);
+  const MediaReviewView({
+    Key? key,
+    required this.fetchReviews,
+    required this.id,
+  }) : super(key: key);
+
+  final Future<Reviews?> Function(int) fetchReviews;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
     return GetX<MediaReviewController>(
-      init: MediaReviewController(tag: context.read<int>().toString()),
-      tag: context.read<int>().toString(),
+      init: MediaReviewController(id: id, fetchReviews: fetchReviews),
+      tag: context.read<String>(),
       builder: (_) {
         return _.reviews.value == null
             ? Center(
@@ -25,7 +33,7 @@ class MediaReviewView extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.black38,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(
                           25,
                         ),
@@ -37,9 +45,7 @@ class MediaReviewView extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   _.listOfReviews[index].author,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                                  style: Theme.of(context).textTheme.headline6,
                                 ),
                               ),
                               Expanded(
@@ -48,9 +54,8 @@ class MediaReviewView extends StatelessWidget {
                                   child: Text(
                                     _.listOfReviews[index].createdAt
                                         .getDashedDate(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                 ),
                               ),
@@ -60,9 +65,7 @@ class MediaReviewView extends StatelessWidget {
                             padding: EdgeInsets.only(top: 10),
                             child: Text(
                               _.listOfReviews[index].content,
-                              style: TextStyle(
-                                color: Colors.white54,
-                              ),
+                              style: Theme.of(context).textTheme.caption,
                             ),
                           ),
                         ],

@@ -5,18 +5,19 @@ import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_optio
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/enums/time_window.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
-import 'package:watched_it_getx/app/data/models/credits_model.dart';
+import 'package:watched_it_getx/app/data/models/movie/movie_credits_model.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/keywords.dart';
 import 'package:watched_it_getx/app/data/models/lists_model.dart';
 import 'package:watched_it_getx/app/data/models/media_images.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/data/models/movie_model.dart';
+import 'package:watched_it_getx/app/data/models/movie/movie_images.dart';
+import 'package:watched_it_getx/app/data/models/movie/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/people/person_details.dart';
 import 'package:watched_it_getx/app/data/models/people/person_images.dart';
 import 'package:watched_it_getx/app/data/models/people/person_movie_credits.dart';
 import 'package:watched_it_getx/app/data/models/people/person_tv_credits.dart';
-import 'package:watched_it_getx/app/data/models/recommendations_model.dart';
+import 'package:watched_it_getx/app/data/models/movie/movie_recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_account_states.dart';
 import 'package:watched_it_getx/app/data/models/tv/episodes/tv_episode_credits.dart';
@@ -157,7 +158,7 @@ class TMDBApiService {
       return null;
   }
 
-  static Future<Movie?> getMovieDetails(int id) async {
+  static Future<MovieDetails?> getMovieDetails(int id) async {
     http.Response response = await client.get(
       Uri.parse(
         "https://api.themoviedb.org/3/movie/$id?api_key=$apiKeyV3&language=en-US",
@@ -165,7 +166,7 @@ class TMDBApiService {
     );
 
     if (response.statusCode == 200)
-      return movieFromJson(response.body);
+      return MovieDetails.fromJson(json.decode(response.body));
     else
       return null;
   }
@@ -458,28 +459,28 @@ class TMDBApiService {
     }
   }
 
-  static Future<Credits?> getCredits({required int movieID}) async {
+  static Future<MovieCredits?> getCredits({required int movieID}) async {
     http.Response response = await client.get(
       Uri.parse(
           "https://api.themoviedb.org/3/movie/$movieID/credits?api_key=$apiKeyV3&language=en-US"),
     );
 
     if (response.statusCode == 200)
-      return Credits.fromJson(json.decode(response.body));
+      return MovieCredits.fromJson(json.decode(response.body));
     else {
       print("unable to get movie credits");
       return null;
     }
   }
 
-  static Future<KeyWords?> getKeywords({required int id}) async {
+  static Future<Keywords?> getKeywords({required int id}) async {
     http.Response response = await client.get(
       Uri.parse(
           "https://api.themoviedb.org/3/movie/$id/keywords?api_key=$apiKeyV3"),
     );
 
     if (response.statusCode == 200)
-      return KeyWords.fromJson(json.decode(response.body));
+      return Keywords.fromJson(json.decode(response.body));
     else {
       print("unable to get keywords");
       return null;
@@ -500,7 +501,7 @@ class TMDBApiService {
     }
   }
 
-  static Future<Recommendations?> getRecommendations(
+  static Future<MovieRecommendations?> getRecommendations(
       {required int id, int page = 1, String language = "en_US"}) async {
     http.Response response = await client.get(
       Uri.parse(
@@ -508,7 +509,7 @@ class TMDBApiService {
       ),
     );
     if (response.statusCode == 200)
-      return Recommendations.fromJson(json.decode(response.body));
+      return MovieRecommendations.fromJson(json.decode(response.body));
     else {
       print(response.statusCode);
       print(response.body);
@@ -517,7 +518,7 @@ class TMDBApiService {
     }
   }
 
-  static Future<Recommendations?> getSimilar(
+  static Future<MovieRecommendations?> getSimilar(
       {required int id, int page = 1, String language = "en_US"}) async {
     http.Response response = await client.get(
       Uri.parse(
@@ -525,7 +526,7 @@ class TMDBApiService {
       ),
     );
     if (response.statusCode == 200)
-      return Recommendations.fromJson(json.decode(response.body));
+      return MovieRecommendations.fromJson(json.decode(response.body));
     else {
       print(response.statusCode);
       print(response.body);
@@ -723,7 +724,7 @@ class TMDBApiService {
 
   //TODO ATTRIBUTE JUSTWATCH
   //TODO IMAGES ARE NOT RETRIEVED WHEN LANGUAGE IS SET???
-  /*if a request is succesfull then this function returns map
+  /*if a request is successful then this function returns map
   "Details": TvDetails,
   "AccountStates": AccountStates,
   "AggregateCredits": TvAggregatedCredits,
@@ -750,7 +751,7 @@ class TMDBApiService {
         "AggregateCredits": TvAggregatedCredits.fromJson(
             json.decode(response.body)["aggregate_credits"]),
         "Keywords":
-            KeyWords.fromAggregatedJson(json.decode(response.body)["keywords"]),
+            Keywords.fromAggregatedJson(json.decode(response.body)["keywords"]),
         "Reviews": Reviews.fromJson(json.decode(response.body)["reviews"]),
         "SimilarTvShows":
             SimilarTvShows.fromJson(json.decode(response.body)["similar"]),
@@ -914,6 +915,78 @@ class TMDBApiService {
       print(response.statusCode.toString() + " " + response.body.toString());
 
       return null;
+    }
+  }
+
+  ///the returned value (if not null) should look like that
+  ///key - returned value type
+  ///{
+  /// "MovieDetails": MovieDetails
+  /// "AccountStates": AccountStates
+  /// "MovieCredits": MovieCredits
+  /// "Keywords": KeyWords
+  /// "MovieRecommendations": MovieRecommendations
+  /// "MovieSimilar": MovieRecommendations
+  /// "Reviews": Reviews
+  ///}
+  ///
+  static Future<Map<String, dynamic>?> getAggregatedMovie({
+    required int id,
+    required String sessionID,
+    String lang = "en-US",
+  }) async {
+    http.Response response = await http.get(
+      Uri.parse(
+        "https://api.themoviedb.org/3/movie/$id?api_key=$apiKeyV3&session_id=$sessionID&language=$lang&append_to_response=account_states,credits,keywords,recommendations,similar,reviews",
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return <String, dynamic>{
+        "MovieDetails": MovieDetails.fromJson(
+          json.decode(response.body),
+        ),
+        "AccountStates": AccountStates.fromJson(
+          json.decode(response.body)["account_states"],
+        ),
+        "MovieCredits": MovieCredits.fromJson(
+          json.decode(response.body)["credits"],
+        ),
+        "Keywords": Keywords.fromJson(
+          json.decode(response.body)["keywords"],
+        ),
+        "MovieRecommendations": MovieRecommendations.fromJson(
+          json.decode(response.body)["recommendations"],
+        ),
+        "MovieSimilar": MovieRecommendations.fromJson(
+          json.decode(response.body)["similar"],
+        ),
+        "Reviews": Reviews.fromJson(
+          json.decode(response.body)["reviews"],
+        ),
+      };
+    } else {
+      print("couldnt get movie information");
+      print(response.statusCode.toString() + " " + response.body.toString());
+
+      return null;
+    }
+  }
+
+  static Future<MovieImages?> getMovieImages({
+    required int id,
+    String lang = "en-US",
+  }) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/3/movie/$id/images?api_key=$apiKeyV3"),
+    );
+    if (response.statusCode == 200)
+      return MovieImages.fromJson(json.decode(response.body));
+    else {
+      print(response.statusCode);
+      print(response.body);
+      print("Couldn't retrieve movie images");
     }
   }
 }

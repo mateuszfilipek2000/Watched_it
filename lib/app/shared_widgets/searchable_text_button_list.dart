@@ -48,17 +48,18 @@ class SearchTextButton extends StatelessWidget {
       height: height,
       child: OutlinedButton(
         onPressed: () => onPressed,
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.black38),
-        ),
+        // style: ButtonStyle(
+        //   backgroundColor: MaterialStateProperty.all<Color>(Colors.black38),
+        // ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.0),
           child: Center(
             child: Text(
               this.text,
-              style: TextStyle(
-                color: Colors.white,
-              ),
+              // style: TextStyle(
+              //   color: Colors.white,
+              // ),
+              style: Theme.of(context).textTheme.button,
             ),
           ),
         ),

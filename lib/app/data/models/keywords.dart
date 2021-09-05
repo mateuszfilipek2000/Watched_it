@@ -1,14 +1,14 @@
-class KeyWords {
-  KeyWords({
+class Keywords {
+  Keywords({
     this.id,
     required this.keywords,
   });
-  factory KeyWords.fromJson(Map<String, dynamic> json) => KeyWords(
+  factory Keywords.fromJson(Map<String, dynamic> json) => Keywords(
         id: json["id"],
         keywords: List<KeyWord>.from(
             json["keywords"].map((i) => KeyWord.fromJson(i))),
       );
-  factory KeyWords.fromAggregatedJson(Map<String, dynamic> json) => KeyWords(
+  factory Keywords.fromAggregatedJson(Map<String, dynamic> json) => Keywords(
         id: json["id"],
         keywords:
             List<KeyWord>.from(json["results"].map((i) => KeyWord.fromJson(i))),

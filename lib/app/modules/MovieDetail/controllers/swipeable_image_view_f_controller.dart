@@ -4,17 +4,19 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class SwipeableWidgetViewController extends GetxController {
   SwipeableWidgetViewController({
-    required this.children,
+    required this.urls,
   });
 
-  final List<Widget> children;
+  final List<String> urls;
   RxInt activeIndex = 0.obs;
   bool swipedLeft = false;
 
-  Widget getActiveChild() => children[activeIndex.value];
+  String getActiveUrl() {
+    return urls[activeIndex.value];
+  }
 
   void next() {
-    if (activeIndex.value + 1 < children.length)
+    if (activeIndex.value + 1 < urls.length)
       activeIndex.value += 1;
     else
       activeIndex.value = 0;
@@ -26,7 +28,7 @@ class SwipeableWidgetViewController extends GetxController {
     if (activeIndex.value - 1 >= 0)
       activeIndex.value -= 1;
     else
-      activeIndex.value = children.length - 1;
+      activeIndex.value = urls.length - 1;
     update();
   }
 

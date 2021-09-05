@@ -1,4 +1,4 @@
-import 'package:watched_it_getx/app/data/models/similar_media.dart';
+import 'package:watched_it_getx/app/data/models/movie/similar_media.dart';
 
 class SimilarMovies {
   SimilarMovies({

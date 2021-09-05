@@ -1,20 +1,20 @@
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 
-class Credits {
-  Credits({
+class MovieCredits {
+  MovieCredits({
     required this.id,
     required this.cast,
     required this.crew,
   });
 
-  factory Credits.fromJson(Map<String, dynamic> json) => Credits(
+  factory MovieCredits.fromJson(Map<String, dynamic> json) => MovieCredits(
         id: json["id"],
         cast: List<Cast>.from(json["cast"].map((i) => Cast.fromJson(i))),
         crew: List<Crew>.from(json["crew"].map((i) => Crew.fromJson(i))),
       );
 
-  final int id;
+  final int? id;
   final List<Cast> cast;
   final List<Crew> crew;
 }

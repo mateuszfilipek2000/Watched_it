@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
-import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/data/models/similar_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
-import 'package:watched_it_getx/app/data/extensions/date_helpers.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 
 class SimilarMediaController extends GetxController
@@ -205,14 +202,16 @@ class SimilarMediaController extends GetxController
       if (contentType.length > 1) selectedContentType = contentType[i];
 
       selectedSortingOption.value = i;
-      results.clear();
-      handlePageChange(0);
-      carouselController.animateToPage(
-        0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-      getPosterUrls();
+      if (viewAsList.value == false) {
+        results.clear();
+        handlePageChange(0);
+        carouselController.animateToPage(
+          0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+        getPosterUrls();
+      }
     }
   }
 
@@ -246,7 +245,7 @@ class SimilarMediaController extends GetxController
 
   void changeViewOption() {
     if (viewAsList == true) {
-      getPosterUrls();
+      //getPosterUrls();
       handlePageChange(0);
     }
     viewAsList.value = !viewAsList.value;
