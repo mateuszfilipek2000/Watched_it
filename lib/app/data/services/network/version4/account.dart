@@ -41,14 +41,17 @@ class AccountV4 with QueryBuilder {
     int page = 1,
   }) async {
     Map<String, dynamic>? result = await QueryBuilder.executeQuery(
-        ResourceType.account, "$accountID/tv/recommendations",
-        queryParameters: {
-          "page": page.toString(),
-          "sort_by": discoverMovieSortingOptionsValues[sortingOption],
-        },
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        });
+      ResourceType.account,
+      "$accountID/tv/recommendations",
+      queryParameters: {
+        "page": page.toString(),
+        "sort_by": discoverTvSortingOptionsValues[sortingOption],
+      },
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+      apiVersion: apiVersion,
+    );
 
     if (result != null) return SimilarTvShows.fromJson(result);
 

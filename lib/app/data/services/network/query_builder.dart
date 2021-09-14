@@ -55,11 +55,11 @@ mixin QueryBuilder {
           response = await http.post(
             queryUri,
             headers: _headers,
-            body: body,
+            body: body == null ? null : json.encode(body),
           );
           break;
       }
-      print(response.body);
+      //print(response.body);
       return json.decode(response.body);
     } catch (error) {
       print(error);

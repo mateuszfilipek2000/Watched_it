@@ -996,6 +996,7 @@ class TMDBApiService {
     }
   }
 
+  @Deprecated('use method from AccountV4 class instead')
   static Future<MovieRecommendations?> getPersonalMovieRecommendations({
     required DiscoverMovieSortingOptions sortingOption,
     //required String accessToken,
@@ -1023,6 +1024,7 @@ class TMDBApiService {
     return null;
   }
 
+  @Deprecated('use method from AccountV4 class instead')
   static Future<SimilarTvShows?> getPersonalTvRecommendations({
     required DiscoverTvSortingOptions sortingOption,
     //required String accessToken,
@@ -1040,7 +1042,7 @@ class TMDBApiService {
             "Bearer " + Get.find<UserService>().accessToken,
       },
     );
-    if (response.statusCode == 200)
+    if (response.statusCode == 200 || response.statusCode == 201)
       return SimilarTvShows.fromJson(json.decode(response.body));
     else {
       print(response.statusCode);

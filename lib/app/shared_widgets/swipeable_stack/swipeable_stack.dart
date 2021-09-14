@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:watched_it_getx/app/shared_widgets/swipeable_stack/swipe_directions.dart';
 import 'dart:math' as Math;
 
+import 'package:watched_it_getx/app/shared_widgets/swipeable_stack/swipeable_stack_working_modes.dart';
+
 List<String> networkImages = [
   "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f3simt2nobpDrv44MoRQSFpuyJa.jpg",
   "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vsPbevLCHxoPBqHQVNZI4UgB117.jpg",
@@ -21,6 +23,9 @@ class SwipeableStack extends StatefulWidget {
     required this.onSwipe,
     required this.deviceSize,
     required this.children,
+    required this.onCardChange,
+    this.startingIndex = 0,
+    this.workingMode = SwipeableStackWorkingMode.horizontalWithTop,
   }) : super(key: key);
 
   final double height;
@@ -28,6 +33,9 @@ class SwipeableStack extends StatefulWidget {
   final void Function(SwipeDirection dir) onSwipe;
   final Size deviceSize;
   final List<Widget> children;
+  final void Function(int index) onCardChange;
+  final int startingIndex;
+  final SwipeableStackWorkingMode workingMode;
 
   @override
   _SwipeableStackState createState() => _SwipeableStackState();
@@ -55,11 +63,18 @@ class _SwipeableStackState extends State<SwipeableStack>
   double horizontalDragValue = 0.0;
   // Offset globalHitOffset = Offset(0, 0);
 
-  int foregroundCardIndex = 0;
+  late int foregroundCardIndex = widget.startingIndex;
   //List<Widget> objects = networkImages;
 
   @override
+  void didUpdateWidget(covariant SwipeableStack oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    foregroundCardIndex = widget.startingIndex;
+  }
+
+  @override
   void initState() {
+    //foregroundCardIndex = widget.startingIndex;
     positionController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -115,30 +130,73 @@ class _SwipeableStackState extends State<SwipeableStack>
         onPanEnd: (_) {
           if (!positionController.isAnimating && isDragged) {
             //checking if widget was dragged enough to be counted as swipe
-            if (globalPosition.dy <= widget.deviceSize.height * 0.2) {
-              widget.onSwipe(SwipeDirection.Top);
-              AnimateCard(SwipeDirection.Top);
-              print("top action");
-            } else if (globalPosition.dy >= widget.deviceSize.height * 0.8) {
-              widget.onSwipe(SwipeDirection.Bottom);
-              AnimateCard(SwipeDirection.Bottom);
-              print("bottom action");
-            } else if (globalPosition.dx <= widget.deviceSize.width * 0.2) {
-              widget.onSwipe(SwipeDirection.Left);
-              AnimateCard(SwipeDirection.Left);
-              print("left action");
-            } else if (globalPosition.dx >= widget.deviceSize.width * 0.8) {
-              widget.onSwipe(SwipeDirection.Right);
-              AnimateCard(SwipeDirection.Right);
-              print("right action");
-            } else
-              setState(() {
-                positionTween.begin = _foregroundCardOffset;
-                positionTween.end = Offset(0, 0);
-                rotationTween.begin = _foregroundCardAngle;
-                rotationTween.end = 0;
-                positionController.forward();
-              });
+            switch (widget.workingMode) {
+              case SwipeableStackWorkingMode.horizontalWithTop:
+                if (globalPosition.dy <= widget.deviceSize.height * 0.2) {
+                  widget.onSwipe(SwipeDirection.Top);
+                  AnimateCard(SwipeDirection.Top);
+                  print("top action");
+                } else if (globalPosition.dx <= widget.deviceSize.width * 0.2) {
+                  widget.onSwipe(SwipeDirection.Left);
+                  AnimateCard(SwipeDirection.Left);
+                  print("left action");
+                } else if (globalPosition.dx >= widget.deviceSize.width * 0.8) {
+                  widget.onSwipe(SwipeDirection.Right);
+                  AnimateCard(SwipeDirection.Right);
+                  print("right action");
+                } else
+                  setState(() {
+                    positionTween.begin = _foregroundCardOffset;
+                    positionTween.end = Offset(0, 0);
+                    rotationTween.begin = _foregroundCardAngle;
+                    rotationTween.end = 0;
+                    positionController.forward();
+                  });
+                break;
+              case SwipeableStackWorkingMode.horizontal:
+                if (globalPosition.dx <= widget.deviceSize.width * 0.2) {
+                  widget.onSwipe(SwipeDirection.Left);
+                  AnimateCard(SwipeDirection.Left);
+                  print("left action");
+                } else if (globalPosition.dx >= widget.deviceSize.width * 0.8) {
+                  widget.onSwipe(SwipeDirection.Right);
+                  AnimateCard(SwipeDirection.Right);
+                  print("right action");
+                } else
+                  setState(() {
+                    positionTween.begin = _foregroundCardOffset;
+                    positionTween.end = Offset(0, 0);
+                    rotationTween.begin = _foregroundCardAngle;
+                    rotationTween.end = 0;
+                    positionController.forward();
+                  });
+                break;
+            }
+
+            // if (globalPosition.dy <= widget.deviceSize.height * 0.2) {
+            //   widget.onSwipe(SwipeDirection.Top);
+            //   AnimateCard(SwipeDirection.Top);
+            //   print("top action");
+            // } else if (globalPosition.dy >= widget.deviceSize.height * 0.8) {
+            //   widget.onSwipe(SwipeDirection.Bottom);
+            //   AnimateCard(SwipeDirection.Bottom);
+            //   print("bottom action");
+            // } else if (globalPosition.dx <= widget.deviceSize.width * 0.2) {
+            //   widget.onSwipe(SwipeDirection.Left);
+            //   AnimateCard(SwipeDirection.Left);
+            //   print("left action");
+            // } else if (globalPosition.dx >= widget.deviceSize.width * 0.8) {
+            //   widget.onSwipe(SwipeDirection.Right);
+            //   AnimateCard(SwipeDirection.Right);
+            //   print("right action");
+            // } else
+            //   setState(() {
+            //     positionTween.begin = _foregroundCardOffset;
+            //     positionTween.end = Offset(0, 0);
+            //     rotationTween.begin = _foregroundCardAngle;
+            //     rotationTween.end = 0;
+            //     positionController.forward();
+            //   });
             isDragged = false;
           }
         },
@@ -152,6 +210,7 @@ class _SwipeableStackState extends State<SwipeableStack>
               child: FittedBox(
                 child: widget.children[foregroundCardIndex],
                 fit: BoxFit.cover,
+                clipBehavior: Clip.hardEdge,
               ),
             ),
           ),
@@ -168,6 +227,7 @@ class _SwipeableStackState extends State<SwipeableStack>
           child: FittedBox(
             child: widget.children[foregroundCardIndex + 1],
             fit: BoxFit.cover,
+            clipBehavior: Clip.hardEdge,
           ),
         ),
       );
@@ -221,6 +281,7 @@ class _SwipeableStackState extends State<SwipeableStack>
     }
     //positionController.forward();
 
+    widget.onCardChange(foregroundCardIndex + 1);
     await positionController.forward().whenComplete(
       () {
         resetAnimations();

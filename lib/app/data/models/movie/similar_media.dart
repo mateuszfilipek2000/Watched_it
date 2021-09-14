@@ -22,9 +22,9 @@ abstract class SimilarMedia {
   final DateTime? releaseDate;
   final String overview;
   final String? posterPath;
-  final double popularity;
+  final double? popularity;
   final String title;
-  final double voteAverage;
+  final double? voteAverage;
   final int voteCount;
 
   // String getDashedDate() {

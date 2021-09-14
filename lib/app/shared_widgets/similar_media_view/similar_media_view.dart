@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
-import 'package:watched_it_getx/app/data/models/movie/similar_media.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel.dart';
 import 'package:watched_it_getx/app/shared_widgets/imagecarousel/image_carousel_controller.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +19,6 @@ class SimilarMediaView extends StatelessWidget {
         super(key: key);
 
   final int accountID;
-  // final List<SimilarMedia> recommendations;
-  // final List<SimilarMedia> similar;
 
   ///key - sorting method, value - objects that belongs to this sorting method
   final Map<String, List<PosterListviewObject>> data;

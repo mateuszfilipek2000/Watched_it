@@ -1,0 +1,4 @@
+enum SwipeableStackWorkingMode {
+  horizontal,
+  horizontalWithTop,
+}

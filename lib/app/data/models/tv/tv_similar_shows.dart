@@ -33,9 +33,9 @@ class SimilarTv extends SimilarMedia {
     required String overview,
     DateTime? releaseDate,
     String? posterPath,
-    required double popularity,
+    required double? popularity,
     required String title,
-    required double voteAverage,
+    required double? voteAverage,
     required int voteCount,
   }) : super(
           id: id,
@@ -80,9 +80,12 @@ class SimilarTv extends SimilarMedia {
         originCountry:
             List<String>.from(json["origin_country"].map((x) => x.toString())),
         posterPath: json["poster_path"],
-        popularity: json["popularity"].toDouble(),
+        popularity:
+            json["popularity"] == null ? null : json["popularity"].toDouble(),
         title: json["name"],
-        voteAverage: json["vote_average"].toDouble(),
+        voteAverage: json["vote_average"] == null
+            ? null
+            : json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
       );
 }
