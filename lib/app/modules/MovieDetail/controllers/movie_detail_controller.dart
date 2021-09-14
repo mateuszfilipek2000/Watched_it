@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
@@ -10,8 +9,9 @@ import 'package:watched_it_getx/app/data/models/movie/movie_model.dart';
 import 'package:watched_it_getx/app/data/models/movie/movie_recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/reviews.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
+import 'package:watched_it_getx/app/data/services/user_service.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/fractionally_coloured_star.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/media_images_view/media_images_view_controller.dart';
 import 'package:watched_it_getx/app/shared_widgets/media_rating.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 import 'package:watched_it_getx/app/data/extensions/date_helpers.dart';
@@ -20,7 +20,7 @@ class MovieDetailController extends GetxController {
   late MovieDetails movieDetails;
   late Rx<AccountStates> accountStates;
   late MovieCredits movieCredits;
-  late MovieImages? movieImages;
+  MovieImages? movieImages;
   late Keywords movieKeywords;
   late MovieRecommendations movieRecommendations;
   late MovieRecommendations movieSimilar;
@@ -37,7 +37,7 @@ class MovieDetailController extends GetxController {
   void prepareMovieDetailsPage() async {
     Map<String, dynamic>? results = await TMDBApiService.getAggregatedMovie(
       id: Get.arguments.id,
-      sessionID: Get.find<UserController>().sessionID.value,
+      sessionID: Get.find<UserService>().sessionID,
     );
 
     movieImages = await TMDBApiService.getMovieImages(
@@ -75,15 +75,15 @@ class MovieDetailController extends GetxController {
 
   void addToFavourites() async {
     bool status = await TMDBApiService.markAsFavourite(
-      accountID: Get.find<UserController>().user.id,
+      accountID: Get.find<UserService>().user.id,
       contentID: movieDetails.id,
       mediaType: MediaType.movie,
-      sessionID: Get.find<UserController>().sessionID.value,
+      sessionID: Get.find<UserService>().sessionID,
       isFavourite: !(accountStates.value.favourite),
     );
     if (status == true) {
       AccountStates? temp = await TMDBApiService.getAccountStates(
-        sessionID: Get.find<UserController>().sessionID.value,
+        sessionID: Get.find<UserService>().sessionID,
         mediaID: movieDetails.id,
         mediaType: MediaType.movie,
       );
@@ -94,15 +94,15 @@ class MovieDetailController extends GetxController {
 
   void addToWatchlist() async {
     bool status = await TMDBApiService.addToWatchlist(
-      accountID: Get.find<UserController>().user.id,
+      accountID: Get.find<UserService>().user.id,
       contentID: movieDetails.id,
       mediaType: MediaType.movie,
-      sessionID: Get.find<UserController>().sessionID.value,
+      sessionID: Get.find<UserService>().sessionID,
       add: !(accountStates.value.favourite),
     );
     if (status == true) {
       AccountStates? temp = await TMDBApiService.getAccountStates(
-        sessionID: Get.find<UserController>().sessionID.value,
+        sessionID: Get.find<UserService>().sessionID,
         mediaID: movieDetails.id,
         mediaType: MediaType.movie,
       );
@@ -136,7 +136,8 @@ class MovieDetailController extends GetxController {
               id: e.id,
               title: e.title,
               mediaType: MediaType.tv,
-              subtitle: e.releaseDate.getDashedDate(),
+              subtitle:
+                  e.releaseDate == null ? null : e.releaseDate!.getDashedDate(),
               imagePath: e.posterPath == null
                   ? null
                   : ImageUrl.getPosterImageUrl(url: e.posterPath!),
@@ -150,7 +151,8 @@ class MovieDetailController extends GetxController {
               id: e.id,
               title: e.title,
               mediaType: MediaType.tv,
-              subtitle: e.releaseDate.getDashedDate(),
+              subtitle:
+                  e.releaseDate == null ? null : e.releaseDate!.getDashedDate(),
               imagePath: e.posterPath == null
                   ? null
                   : ImageUrl.getPosterImageUrl(url: e.posterPath!),
@@ -172,12 +174,12 @@ class MovieDetailController extends GetxController {
           rating: rating,
           mediaType: MediaType.movie,
           mediaName: movieDetails.title,
-          sessionID: Get.find<UserController>().sessionID.value,
+          sessionID: Get.find<UserService>().sessionID,
         );
 
         if (success) {
           AccountStates? temp = await TMDBApiService.getAccountStates(
-            sessionID: Get.find<UserController>().sessionID.value,
+            sessionID: Get.find<UserService>().sessionID,
             mediaID: movieDetails.id,
             mediaType: MediaType.movie,
           );
@@ -185,5 +187,36 @@ class MovieDetailController extends GetxController {
         }
       }
     }
+  }
+
+  List<MediaImageObject> getAllImages() {
+    List<MediaImageObject> results = [];
+    if (movieImages != null) {
+      for (MovieImage image in movieImages!.backdrops) {
+        if (image.filePath != "")
+          results.add(MediaImageObject(
+              lowResUrl: ImageUrl.getBackdropImageUrl(
+                  url: image.filePath, size: BackdropSizes.w300),
+              highResUrl: ImageUrl.getBackdropImageUrl(
+                  url: image.filePath, size: BackdropSizes.w780),
+              aspectRatio: image.aspectRatio));
+      }
+      for (MovieImage image in movieImages!.posters) {
+        if (image.filePath != "")
+          results.add(
+            MediaImageObject(
+              lowResUrl: ImageUrl.getPosterImageUrl(
+                  url: image.filePath, size: PosterSizes.w500),
+              highResUrl: ImageUrl.getPosterImageUrl(
+                url: image.filePath,
+                size: PosterSizes.w780,
+              ),
+              aspectRatio: image.aspectRatio,
+            ),
+          );
+      }
+    }
+    results.shuffle();
+    return results;
   }
 }

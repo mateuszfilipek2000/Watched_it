@@ -6,7 +6,7 @@ class Section extends StatelessWidget {
     required this.child,
     this.isFirst = false,
     this.sectionTitle,
-    this.width,
+    this.width = double.infinity,
   }) : super(key: key);
 
   final bool isFirst;
@@ -20,7 +20,6 @@ class Section extends StatelessWidget {
           ? const EdgeInsets.symmetric(vertical: 10.0)
           : const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(8.0),
-      //todo change colour
       color: Theme.of(context).colorScheme.surface,
       width: this.width,
       child: Column(
@@ -31,7 +30,7 @@ class Section extends StatelessWidget {
               : Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
-                    sectionTitle as String,
+                    sectionTitle!,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),

@@ -5,7 +5,7 @@ import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/data/services/user_service.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 
 class SimilarMediaController extends GetxController
@@ -139,7 +139,7 @@ class SimilarMediaController extends GetxController
       accountID: accountID,
       contentID: contentID,
       mediaType: selectedContentType,
-      sessionID: Get.find<UserController>().sessionID.value,
+      sessionID: Get.find<UserService>().sessionID,
     );
     if (status == true) {
       getAccountStates();
@@ -159,7 +159,7 @@ class SimilarMediaController extends GetxController
       accountID: accountID,
       contentID: contentID,
       mediaType: selectedContentType,
-      sessionID: Get.find<UserController>().sessionID.value,
+      sessionID: Get.find<UserService>().sessionID,
     );
     if (status == true) {
       getAccountStates();
@@ -183,14 +183,14 @@ class SimilarMediaController extends GetxController
     // );
     if (index != null) {
       _accountStates[index] = await TMDBApiService.getAccountStates(
-        sessionID: Get.find<UserController>().sessionID.value,
+        sessionID: Get.find<UserService>().sessionID,
         mediaID: contentID,
         mediaType: selectedContentType,
       );
     } else
       _accountStates[currentCarouselItem.value] =
           await TMDBApiService.getAccountStates(
-        sessionID: Get.find<UserController>().sessionID.value,
+        sessionID: Get.find<UserService>().sessionID,
         mediaID: contentID,
         mediaType: selectedContentType,
       );

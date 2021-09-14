@@ -158,21 +158,25 @@ class PosterListViewItem extends StatelessWidget {
                           title,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: TextStyle(fontSize: 15.0, color: Colors.white),
+                          // style: TextStyle(
+                          //   fontSize: 15.0,
+                          //   color: Colors.white,
+                          // ),
+                          style: Theme.of(context).textTheme.subtitle2,
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 5.0,
+                        horizontal: 10.0,
                       ),
-                      child: Text(
-                        subtitle == null ? "" : subtitle as String,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Colors.white30,
-                          fontSize: 10,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          subtitle == null ? "" : subtitle as String,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.caption,
                         ),
                       ),
                     ),

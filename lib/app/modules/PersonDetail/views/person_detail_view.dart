@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
+import 'package:watched_it_getx/app/data/services/user_service.dart';
 import 'package:watched_it_getx/app/modules/PersonDetail/controllers/person_detail_controller.dart';
 import 'package:watched_it_getx/app/modules/PersonDetail/views/person_images_view.dart';
-import 'package:watched_it_getx/app/modules/PersonDetail/views/person_know_for_view.dart';
 import 'package:watched_it_getx/app/modules/PersonDetail/views/person_overview_view.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
 import 'package:watched_it_getx/app/shared_widgets/similar_media_view/similar_media_view.dart';
 
 class PersonDetailView extends StatelessWidget {
@@ -58,7 +57,7 @@ class PersonDetailView extends StatelessWidget {
                           PersonOverviewView(),
                           SimilarMediaView(
                             data: controller.getCreditsData(),
-                            accountID: Get.find<UserController>().user.id,
+                            accountID: Get.find<UserService>().user.id,
                             contentType: [MediaType.movie, MediaType.tv],
                           ),
                           PersonImagesView(),

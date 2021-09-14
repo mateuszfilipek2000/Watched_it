@@ -3,7 +3,7 @@ import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_optio
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/data/services/user_service.dart';
 
 class MinimalMediaListViewController extends GetxController {
   //-----------------------------------------------------------
@@ -69,7 +69,7 @@ class MinimalMediaListViewController extends GetxController {
     List<MinimalMedia>? media = await minimalMediaRetrievalFuture(
       selectedMediaType,
       selectedSortingMethod,
-      Get.find<UserController>().sessionID.value,
+      Get.find<UserService>().sessionID,
       user.id.toString(),
     );
 

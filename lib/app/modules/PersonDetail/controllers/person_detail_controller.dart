@@ -173,7 +173,7 @@ class PersonDetailController extends GetxController {
                 id: e.id,
                 title: e.name,
                 subtitle: e.job,
-                mediaType: MediaType.movie,
+                mediaType: MediaType.tv,
                 imagePath: e.posterPath == null
                     ? null
                     : ImageUrl.getPosterImageUrl(

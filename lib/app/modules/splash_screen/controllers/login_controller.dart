@@ -1,18 +1,18 @@
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
-class LoginController extends GetxController with SingleGetTickerProviderMixin {
-  //TODO: Implement OnController
+// class LoginController extends GetxController with SingleGetTickerProviderMixin {
+//   //TODO: Implement OnController
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+//   @override
+//   void onInit() {
+//     super.onInit();
+//   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+//   @override
+//   void onReady() {
+//     super.onReady();
+//   }
 
-  @override
-  void onClose() {}
-}
+//   @override
+//   void onClose() {}
+// }

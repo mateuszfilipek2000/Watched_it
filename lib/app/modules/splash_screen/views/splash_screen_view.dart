@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 
 import '../controllers/splash_screen_controller.dart';
 
@@ -12,42 +13,29 @@ class SplashScreenView extends GetView<SplashScreenController> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          FutureBuilder(
-            future: controller.mostPopularMoviePosterURL,
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return Container(
-                    color: Colors.black,
-                  );
-                case ConnectionState.done:
-                  controller.fadeController.forward();
-                  return FadeTransition(
-                    opacity: controller.fadeController
-                        .drive(CurveTween(curve: Curves.easeIn)),
+          Obx(
+            () => controller.mostPopularMoviePosterURL.value == ""
+                ? Container()
+                : Opacity(
+                    opacity: controller.opacity.value,
                     child: Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(
-                            snapshot.data.toString(),
+                            controller.mostPopularMoviePosterURL.value,
                           ),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  );
-                default:
-                  return Container();
-              }
-            },
+                  ),
           ),
           Center(
-            child: RawMaterialButton(
+            child: ElevatedButton(
               onPressed: () => controller.login(),
-              child: Container(
-                width: 50.0,
-                height: 50.0,
-                color: Colors.red,
+              child: Text(
+                "Login",
+                style: Theme.of(context).textTheme.headline5,
               ),
             ),
           ),

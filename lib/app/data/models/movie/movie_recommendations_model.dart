@@ -47,12 +47,17 @@ class Result {
         originalLanguage: json["original_language"],
         originalTitle: json["original_title"],
         overview: json["overview"],
-        releaseDate: DateTime.parse(json["release_date"]),
+        releaseDate: json["release_date"] == null || json["release_date"] == ""
+            ? null
+            : DateTime.parse(json["release_date"]),
         posterPath: json["poster_path"],
-        popularity: json["popularity"].toDouble(),
+        popularity:
+            json["popularity"] == null ? null : json["popularity"].toDouble(),
         title: json["title"],
         video: json["video"],
-        voteAverage: json["vote_average"],
+        voteAverage: json["vote_average"] == null
+            ? null
+            : json["vote_average"].toDouble(),
         voteCount: json["vote_count"],
       );
 
@@ -63,11 +68,11 @@ class Result {
   final String originalLanguage;
   final String originalTitle;
   final String overview;
-  final DateTime releaseDate;
+  final DateTime? releaseDate;
   final String? posterPath;
-  final double popularity;
+  final double? popularity;
   final String title;
   final bool video;
-  final double voteAverage;
-  final int voteCount;
+  final double? voteAverage;
+  final int? voteCount;
 }

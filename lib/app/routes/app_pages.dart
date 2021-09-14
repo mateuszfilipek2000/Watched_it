@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import 'package:watched_it_getx/app/modules/DiscoverView/views/discover_view_view.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/bindings/main_page_view_binding.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/views/main_page_view_view.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/views/media_poster_view.dart';
@@ -79,6 +80,10 @@ class AppPages {
     GetPage(
       name: _Paths.PERSON_DETAIL,
       page: () => PersonDetailView(),
+    ),
+    GetPage(
+      name: _Paths.DISCOVER_VIEW,
+      page: () => DiscoverViewView(),
     ),
   ];
 }

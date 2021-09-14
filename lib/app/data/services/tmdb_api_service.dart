@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:watched_it_getx/app/data/api_keys.dart';
 import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_options.dart';
+import 'package:watched_it_getx/app/data/enums/discover_sorting_options.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/enums/time_window.dart';
 import 'package:watched_it_getx/app/data/models/account_states.dart';
@@ -31,6 +34,7 @@ import 'package:watched_it_getx/app/data/models/tv/tv_details_model.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
 import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/models/videos.dart';
+import 'package:watched_it_getx/app/data/services/user_service.dart';
 import 'package:watched_it_getx/app/routes/app_pages.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -43,7 +47,9 @@ import 'package:flutter/foundation.dart';
 class TMDBApiService {
   static http.Client client = http.Client();
 
-  //TODO REFACTOR THIS FUNCTION
+  @Deprecated(
+    'Use authenticateUser from UserAuthentication class instead',
+  )
   static Future<bool> authenticateUser({bool rewriteExisting = false}) async {
     final storage = new FlutterSecureStorage();
     var sessionID = await storage.read(key: "session_id");
@@ -988,5 +994,59 @@ class TMDBApiService {
       print(response.body);
       print("Couldn't retrieve movie images");
     }
+  }
+
+  static Future<MovieRecommendations?> getPersonalMovieRecommendations({
+    required DiscoverMovieSortingOptions sortingOption,
+    //required String accessToken,
+    required String accountID,
+    int page = 1,
+  }) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/4/account/$accountID/movie/recommendations?api_key=$apiReadAccessTokenV4&page=$page&sort_by=${discoverMovieSortingOptionsValues[sortingOption]}"),
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        "Authorization": 'Bearer ${Get.find<UserService>().accessToken}',
+      },
+      //body: json.encode({}),
+    );
+    if (response.statusCode == 200)
+      return MovieRecommendations.fromJson(json.decode(response.body));
+    else {
+      print(
+          "https://api.themoviedb.org/4/account/$accountID/movie/recommendations?api_key=$apiReadAccessTokenV4&page=$page&sort_by=${discoverMovieSortingOptionsValues[sortingOption]}");
+      print(response.statusCode);
+      print(response.body);
+      print("Couldn't retrieve movie recommendations");
+    }
+    return null;
+  }
+
+  static Future<SimilarTvShows?> getPersonalTvRecommendations({
+    required DiscoverTvSortingOptions sortingOption,
+    //required String accessToken,
+    required String accountID,
+    int page = 1,
+  }) async {
+    http.Response response = await client.get(
+      Uri.parse(
+          "https://api.themoviedb.org/4/account/$accountID/tv/recommendations?page=$page&sort_by=${discoverTvSortingOptionsValues[sortingOption]}"),
+      // headers: {
+      //   HttpHeaders.authorizationHeader: "Bearer " + accessToken,
+      // }
+      headers: {
+        HttpHeaders.authorizationHeader:
+            "Bearer " + Get.find<UserService>().accessToken,
+      },
+    );
+    if (response.statusCode == 200)
+      return SimilarTvShows.fromJson(json.decode(response.body));
+    else {
+      print(response.statusCode);
+      print(response.body);
+      print("Couldn't retrieve tv recommendations");
+    }
+    return null;
   }
 }

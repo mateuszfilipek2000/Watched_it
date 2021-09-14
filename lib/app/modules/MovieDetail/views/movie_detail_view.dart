@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
-import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
+import 'package:watched_it_getx/app/data/services/user_service.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/views/media_review_view.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_overview_view.dart';
-import 'package:watched_it_getx/app/modules/splash_screen/controllers/user_controller_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/loading_placeholders/media_details_images_placeholder.dart';
+import 'package:watched_it_getx/app/shared_widgets/loading_placeholders/media_details_overview_placeholder.dart';
+import 'package:watched_it_getx/app/shared_widgets/loading_placeholders/media_details_reviews_placeholder.dart';
+import 'package:watched_it_getx/app/shared_widgets/media_images_view/media_images_view.dart';
 import 'package:watched_it_getx/app/shared_widgets/similar_media_view/similar_media_view.dart';
 import '../controllers/movie_detail_controller.dart';
 
@@ -58,20 +61,28 @@ class MovieDetailView extends StatelessWidget {
               body: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  MovieOverviewView(),
-                  Text("Images"),
+                  controller.isReady == false
+                      ? MediaDetailsOverviewPlaceholder()
+                      : MovieOverviewView(),
+                  controller.movieImages == null
+                      ? MediaDetailsImageViewPlaceholder()
+                      : MediaImagesView(
+                          tag:
+                              "${describeEnum(MediaType.movie)}-${Get.arguments.id}",
+                          images: controller.getAllImages(),
+                        ),
                   controller.isReady == false
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
                       : SimilarMediaView(
-                          accountID: Get.find<UserController>().user.id,
+                          accountID: Get.find<UserService>().user.id,
                           data: controller.getSortingOptionsWithData(),
                           contentType: [MediaType.movie],
                         ),
                   controller.isReady == false
                       ? Center(
-                          child: CircularProgressIndicator(),
+                          child: MediaDetailsReviewsViewPlaceholder(),
                         )
                       : MediaReviewView(
                           fetchReviews: controller.fetchReviews,

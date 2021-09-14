@@ -56,8 +56,8 @@ class TvDetails extends Media {
   final DateTime firstAirDate;
   final bool inProduction;
   final List<String> languages;
-  final DateTime lastAirDate;
-  final LastEpisodeToAir lastEpisodeToAir;
+  final DateTime? lastAirDate;
+  final LastEpisodeToAir? lastEpisodeToAir;
   final String name;
   final dynamic nextEpisodeToAir;
   final List<Network> networks;
@@ -79,9 +79,14 @@ class TvDetails extends Media {
         id: json["id"],
         inProduction: json["in_production"],
         languages: List<String>.from(json["languages"].map((x) => x)),
-        lastAirDate: DateTime.parse(json["last_air_date"]),
-        lastEpisodeToAir:
-            LastEpisodeToAir.fromJson(json["last_episode_to_air"]),
+        lastAirDate:
+            json["last_air_date"] == null || json["last_air_date"] == ""
+                ? null
+                : DateTime.parse(json["last_air_date"]),
+        lastEpisodeToAir: json["last_episode_to_air"] == null ||
+                json["last_episode_to_air"] == ""
+            ? null
+            : LastEpisodeToAir.fromJson(json["last_episode_to_air"]),
         name: json["name"],
         nextEpisodeToAir: json["next_episode_to_air"],
         networks: List<Network>.from(

@@ -13,6 +13,7 @@ abstract class Routes {
   static const MEDIA_DETAIL = _Paths.MEDIA_DETAIL;
   static const TV_DETAIL = _Paths.TV_DETAIL;
   static const PERSON_DETAIL = _Paths.PERSON_DETAIL;
+  static const DISCOVER_VIEW = _Paths.DISCOVER_VIEW;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const MEDIA_DETAIL = '/media-detail';
   static const TV_DETAIL = '/tv-detail';
   static const PERSON_DETAIL = '/person-detail';
+  static const DISCOVER_VIEW = '/discover-view';
 }
