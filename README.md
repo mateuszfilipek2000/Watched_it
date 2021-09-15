@@ -22,7 +22,7 @@ sqflite,
 
 ## Screenshots
 
-![Home Page](./screenshots/home_page.png =200x)
+![Home Page](./screenshots/home_page.png width="200")
 ![Search](./screenshots/search.png =200x)
 ![Movie Overview](./screenshots/movie_overview.png =200x)
 ![Person Overview](./screenshots/person_overview.png =200x)
