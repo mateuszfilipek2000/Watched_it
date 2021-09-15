@@ -22,22 +22,22 @@ sqflite,
 
 ## Screenshots
 
-![Home Page](./screenshots/home_page.png)
-![Search](./screenshots/search.png)
-![Movie Overview](./screenshots/movie_overview.png)
-![Person Overview](./screenshots/person_overview.png)
-![Tv Season Ratings](./screenshots/tv_season_rating.png)
-![Similar Movies](./screenshots/Similar_movies.png)
-![Similar Movies Alternative](./screenshots/Similar_list.png)
-![Images View](./screenshots/Images_view.png)
-![Settings](./screenshots/settings.png)
-![About](./screenshots/about.png)
+![Home Page](./screenshots/home_page.png =200x)
+![Search](./screenshots/search.png =200x)
+![Movie Overview](./screenshots/movie_overview.png =200x)
+![Person Overview](./screenshots/person_overview.png =200x)
+![Tv Season Ratings](./screenshots/tv_season_rating.png =200x)
+![Similar Movies](./screenshots/Similar_movies.png =200x)
+![Similar Movies Alternative](./screenshots/Similar_list.png =200x)
+![Images View](./screenshots/Images_view.png =200x)
+![Settings](./screenshots/settings.png =200x)
+![About](./screenshots/about.png =200x)
 
 ## Videos
 
-![Adding to favourites](./screenshots/adding_to_favourites.gif)
-![Discover View](./screenshots/discover_view.gif)
-![Image Show](./screenshots/image_show.gif)
-![Searching](./screenshots/search.gif)
+![Adding to favourites](./screenshots/adding_to_favourites.gif =200x)
+![Discover View](./screenshots/discover_view.gif =200x)
+![Image Show](./screenshots/image_show.gif =200x)
+![Searching](./screenshots/search.gif =200x)
 
 # Watched_it
