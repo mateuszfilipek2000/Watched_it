@@ -5,7 +5,6 @@ import 'package:watched_it_getx/app/modules/About/views/about_view.dart';
 import 'package:watched_it_getx/app/modules/DiscoverView/views/discover_view_view.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/bindings/main_page_view_binding.dart';
 import 'package:watched_it_getx/app/modules/MainPageView/views/main_page_view_view.dart';
-import 'package:watched_it_getx/app/modules/MovieDetail/views/media_poster_view.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/views/movie_detail_view.dart';
 import 'package:watched_it_getx/app/modules/PersonDetail/views/person_detail_view.dart';
 import 'package:watched_it_getx/app/modules/SearchPage/bindings/search_page_binding.dart';
@@ -52,10 +51,7 @@ class AppPages {
       page: () => SearchPageView(),
       binding: SearchPageBinding(),
     ),
-    GetPage(
-      name: _Paths.MEDIA_DETAIL,
-      page: () => MediaPosterView(),
-    ),
+
     // GetPage(
     //   name: _Paths.TV_DETAIL,
     //   page: () => TvDetailView(),

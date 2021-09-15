@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:watched_it_getx/app/shared_widgets/minimal_media_tile.dart';
 
 import '../controllers/search_page_controller.dart';
 
