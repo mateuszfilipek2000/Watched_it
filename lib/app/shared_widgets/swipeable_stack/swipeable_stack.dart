@@ -4,17 +4,6 @@ import 'dart:math' as Math;
 
 import 'package:watched_it_getx/app/shared_widgets/swipeable_stack/swipeable_stack_working_modes.dart';
 
-List<String> networkImages = [
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f3simt2nobpDrv44MoRQSFpuyJa.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vsPbevLCHxoPBqHQVNZI4UgB117.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f3simt2nobpDrv44MoRQSFpuyJa.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vsPbevLCHxoPBqHQVNZI4UgB117.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f3simt2nobpDrv44MoRQSFpuyJa.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vsPbevLCHxoPBqHQVNZI4UgB117.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/f3simt2nobpDrv44MoRQSFpuyJa.jpg",
-  "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vsPbevLCHxoPBqHQVNZI4UgB117.jpg",
-];
-
 class SwipeableStack extends StatefulWidget {
   const SwipeableStack({
     Key? key,
