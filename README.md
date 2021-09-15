@@ -22,22 +22,22 @@ sqflite,
 
 ## Screenshots
 
-![Home Page](./screenshots/home_page.png width="200")
-![Search](./screenshots/search.png =200x)
-![Movie Overview](./screenshots/movie_overview.png =200x)
-![Person Overview](./screenshots/person_overview.png =200x)
-![Tv Season Ratings](./screenshots/tv_season_rating.png =200x)
-![Similar Movies](./screenshots/Similar_movies.png =200x)
-![Similar Movies Alternative](./screenshots/Similar_list.png =200x)
-![Images View](./screenshots/Images_view.png =200x)
-![Settings](./screenshots/settings.png =200x)
-![About](./screenshots/about.png =200x)
+<img src="./screenshots/home_page.png" width="200">
+<img src="./screenshots/search.png" width="200">
+<img src="./screenshots/movie_overview.png" width="200">
+<img src="./screenshots/person_overview.png" width="200">
+<img src="./screenshots/tv_season_rating.png" width="200">
+<img src="./screenshots/Similar_movies.png" width="200">
+<img src="./screenshots/Similar_list.png" width="200">
+<img src="./screenshots/Images_view.png" width="200">
+<img src="./screenshots/settings.png" width="200">
+<img src="./screenshots/about.png" width="200">
 
 ## Videos
 
-![Adding to favourites](./screenshots/adding_to_favourites.gif =200x)
-![Discover View](./screenshots/discover_view.gif =200x)
-![Image Show](./screenshots/image_show.gif =200x)
-![Searching](./screenshots/search.gif =200x)
+<img src="./screenshots/adding_to_favourites.gif" width="200">
+<img src="./screenshots/discover_view.gif" width="200">
+<img src="./screenshots/image_show.gif" width="200">
+<img src="./screenshots/search.gif" width="200">
 
 # Watched_it
