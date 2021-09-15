@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:watched_it_getx/app/shared_widgets/media_images_view/media_images_view_controller.dart';
 
 class MediaImagesView extends StatelessWidget {

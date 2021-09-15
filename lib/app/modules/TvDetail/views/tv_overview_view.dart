@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/data/models/minimal_media.dart';
-import 'package:watched_it_getx/app/modules/MovieDetail/controllers/swipeable_image_view_f_controller.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/image_with_icons.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/posterlistview.dart';
@@ -31,6 +30,8 @@ class TvOverviewView extends StatelessWidget {
           children: [
             Obx(
               () => Section(
+                fullHeight: false,
+                fullWidth: true,
                 child: AnimatedContainer(
                   height: controller.images.value == null ? 200 : 300,
                   duration: Duration(milliseconds: 200),
@@ -48,8 +49,12 @@ class TvOverviewView extends StatelessWidget {
                                   navigationIndicatorAlignment:
                                       Alignment.topRight,
                                   urls: controller.images.value!.backdrops
-                                      .map((e) => ImageUrl.getBackdropImageUrl(
-                                          url: e.filePath))
+                                      .map(
+                                        (e) => ImageUrl.getBackdropImageUrl(
+                                          url: e.filePath,
+                                          size: BackdropSizes.w780,
+                                        ),
+                                      )
                                       .toList(),
                                 ),
                               )
@@ -91,7 +96,7 @@ class TvOverviewView extends StatelessWidget {
                             ),
                             Expanded(
                               child: Obx(
-                                () => !(controller.isReady.value)
+                                () => (controller.isLoading.value)
                                     ? Container()
                                     : Padding(
                                         padding: EdgeInsets.symmetric(
@@ -164,7 +169,7 @@ class TvOverviewView extends StatelessWidget {
               sectionTitle: "Overview",
               child: Obx(
                 () {
-                  if (controller.isReady.value == false) {
+                  if (controller.isLoading.value) {
                     return Container();
                   } else
                     return Text(
@@ -184,7 +189,7 @@ class TvOverviewView extends StatelessWidget {
               sectionTitle: "Genres",
               child: Obx(
                 () {
-                  if (controller.isReady.value == false) {
+                  if (controller.isLoading.value) {
                     return Container();
                   } else
                     return SearchableTextButtonList(
@@ -276,7 +281,7 @@ class TvOverviewView extends StatelessWidget {
               sectionTitle: "Keywords",
               child: Obx(
                 () {
-                  if (controller.isReady.value == false) {
+                  if (controller.isLoading.value) {
                     return Container();
                   } else
                     return SearchableTextButtonList(

@@ -4,7 +4,6 @@ import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/controllers/movie_detail_controller.dart';
 import 'package:provider/provider.dart';
-import 'package:watched_it_getx/app/modules/MovieDetail/controllers/swipeable_image_view_f_controller.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/image_with_icons.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/swipeable_image_view_f.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
@@ -18,8 +17,6 @@ class MovieOverviewView extends StatelessWidget {
     //required String tag,
   }) : super(key: key);
 
-  //final TvDetailController controller;
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MovieDetailController>(
@@ -32,6 +29,8 @@ class MovieOverviewView extends StatelessWidget {
           child: Column(
             children: [
               Section(
+                fullWidth: true,
+                fullHeight: false,
                 child: AnimatedContainer(
                   height: controller.movieImages == null ? 200 : 300,
                   duration: Duration(milliseconds: 200),
@@ -115,7 +114,7 @@ class MovieOverviewView extends StatelessWidget {
                                         "${controller.movieDetails.voteAverage}/10",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .subtitle1,
                                       ),
                                     ),
                                   ],

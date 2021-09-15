@@ -62,6 +62,7 @@ class DiscoverViewView extends StatelessWidget {
                 onCardChange: controller.changeStackObjectIndex,
                 startingIndex: controller.currentStackObjectIndex,
                 children: controller.objects,
+                onCardTap: controller.getToMediaDetailsPage,
               );
             },
           ),

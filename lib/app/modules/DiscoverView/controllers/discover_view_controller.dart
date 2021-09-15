@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:watched_it_getx/app/data/enums/discover_sorting_options.dart';
 import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/image_model.dart';
+import 'package:watched_it_getx/app/data/models/minimal_media.dart';
 import 'package:watched_it_getx/app/data/models/movie/movie_recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
 import 'package:watched_it_getx/app/data/services/network/version3/account.dart';
@@ -203,5 +205,29 @@ class DiscoverViewController extends GetxController {
     } else {
       print("skipping");
     }
+  }
+
+  void getToMediaDetailsPage(int i) {
+    Get.toNamed(
+      "/MediaDetails/${describeEnum(selectedMediaType)}",
+      preventDuplicates: false,
+      arguments: MinimalMedia(
+          id: selectedMediaType.value == MediaType.movie
+              ? movieRecommendations[i].id
+              : tvRecommendations[i].id,
+          mediaType: selectedMediaType.value,
+          title: selectedMediaType.value == MediaType.movie
+              ? movieRecommendations[i].title
+              : tvRecommendations[i].title,
+          posterPath: selectedMediaType.value == MediaType.movie
+              ? movieRecommendations[i].posterPath == null
+                  ? null
+                  : ImageUrl.getPosterImageUrl(
+                      url: movieRecommendations[i].posterPath!)
+              : tvRecommendations[i].posterPath == null
+                  ? null
+                  : ImageUrl.getPosterImageUrl(
+                      url: tvRecommendations[i].posterPath!)),
+    );
   }
 }

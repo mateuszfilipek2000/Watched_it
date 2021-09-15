@@ -13,6 +13,8 @@ import 'package:watched_it_getx/app/data/models/user_model.dart';
 import 'package:watched_it_getx/app/data/services/tmdb_api_service.dart';
 import 'package:watched_it_getx/app/data/services/user_service.dart';
 import 'package:watched_it_getx/app/modules/MovieDetail/widgets/fractionally_coloured_star.dart';
+import 'package:watched_it_getx/app/shared_widgets/media_images_view/media_images_view_controller.dart';
+import 'package:watched_it_getx/app/shared_widgets/media_rating.dart';
 import 'package:watched_it_getx/app/shared_widgets/poster_listview/poster_listview_object.dart';
 import 'package:watched_it_getx/app/data/extensions/date_helpers.dart';
 
@@ -30,7 +32,7 @@ class TvDetailController extends GetxController {
   SimilarTvShows? recommendedTvShows = null;
   //WatchProviders? watchProviders;
 
-  RxBool isReady = false.obs;
+  RxBool isLoading = true.obs;
 
   Rx<MediaImages?> images = Rx<MediaImages?>(null);
 
@@ -42,10 +44,6 @@ class TvDetailController extends GetxController {
     user = await Get.find<UserService>().user;
     sessionID = await Get.find<UserService>().sessionID;
     retrieveData();
-    images.value = await TMDBApiService.getMediaImages(
-      mediaID: minimalMedia.value.id.toString(),
-      mediaType: MediaType.tv,
-    );
     super.onInit();
   }
 
@@ -55,6 +53,7 @@ class TvDetailController extends GetxController {
   }
 
   void retrieveData() async {
+    isLoading.value = true;
     Map<String, dynamic>? result = await TMDBApiService.getAggregatedTv(
         id: this.minimalMedia.value.id, sessionID: this.sessionID);
 
@@ -80,7 +79,13 @@ class TvDetailController extends GetxController {
       if (result["Recommendations"] != null) {
         this.recommendedTvShows = result["Recommendations"];
       }
-      isReady.value = true;
+
+      images.value = await TMDBApiService.getMediaImages(
+        mediaID: minimalMedia.value.id.toString(),
+        mediaType: MediaType.tv,
+      );
+
+      isLoading.value = false;
     }
   }
 
@@ -169,6 +174,75 @@ class TvDetailController extends GetxController {
             ),
           )
           .toList();
+    return results;
+  }
+
+  void rateTv() async {
+    if (isLoading == false) {
+      double? rating = await openMediaRatingDialog(
+        title: tvShow!.name,
+        rating: accountStates.value?.rated,
+      );
+      if (rating != null) {
+        bool success = await rate(
+          id: tvShow!.id,
+          rating: rating,
+          mediaType: MediaType.tv,
+          mediaName: tvShow!.name,
+          sessionID: Get.find<UserService>().sessionID,
+        );
+
+        if (success) {
+          AccountStates? temp = await TMDBApiService.getAccountStates(
+            sessionID: Get.find<UserService>().sessionID,
+            mediaID: tvShow!.id,
+            mediaType: MediaType.tv,
+          );
+          if (temp != null) accountStates.value = temp;
+        }
+      }
+    }
+  }
+
+  List<MediaImageObject> getAllImages() {
+    List<MediaImageObject> results = [];
+    if (images.value != null) {
+      images.value!.backdrops.forEach(
+        (element) {
+          results.add(
+            MediaImageObject(
+              lowResUrl: ImageUrl.getBackdropImageUrl(
+                url: element.filePath,
+                size: BackdropSizes.w300,
+              ),
+              highResUrl: ImageUrl.getBackdropImageUrl(
+                url: element.filePath,
+                size: BackdropSizes.w780,
+              ),
+              aspectRatio: element.aspectRatio,
+            ),
+          );
+        },
+      );
+      images.value!.posters.forEach(
+        (element) {
+          results.add(
+            MediaImageObject(
+              lowResUrl: ImageUrl.getPosterImageUrl(
+                url: element.filePath,
+                size: PosterSizes.w500,
+              ),
+              highResUrl: ImageUrl.getPosterImageUrl(
+                url: element.filePath,
+                size: PosterSizes.w780,
+              ),
+              aspectRatio: element.aspectRatio,
+            ),
+          );
+        },
+      );
+    }
+    results.shuffle();
     return results;
   }
 }

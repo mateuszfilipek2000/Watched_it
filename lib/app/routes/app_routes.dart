@@ -14,6 +14,8 @@ abstract class Routes {
   static const TV_DETAIL = _Paths.TV_DETAIL;
   static const PERSON_DETAIL = _Paths.PERSON_DETAIL;
   static const DISCOVER_VIEW = _Paths.DISCOVER_VIEW;
+  static const SETTINGS = _Paths.SETTINGS;
+  static const ABOUT = _Paths.ABOUT;
 }
 
 abstract class _Paths {
@@ -27,4 +29,6 @@ abstract class _Paths {
   static const TV_DETAIL = '/tv-detail';
   static const PERSON_DETAIL = '/person-detail';
   static const DISCOVER_VIEW = '/discover-view';
+  static const SETTINGS = '/settings';
+  static const ABOUT = '/about';
 }

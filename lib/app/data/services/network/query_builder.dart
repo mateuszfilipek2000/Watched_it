@@ -60,7 +60,8 @@ mixin QueryBuilder {
           break;
       }
       //print(response.body);
-      return json.decode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201)
+        return json.decode(response.body);
     } catch (error) {
       print(error);
     }

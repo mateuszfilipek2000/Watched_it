@@ -245,6 +245,7 @@ class TMDBApiService {
               mediaType: mediaType,
               id: i['id'],
               title: i['name'],
+              subtitle: i["known_for_department"],
               posterPath: i?['profile_path']));
       }
       if (numberOfResults != null && numberOfResults < results.length)

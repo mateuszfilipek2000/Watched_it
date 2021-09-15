@@ -29,7 +29,7 @@ class TvSeasonView extends StatelessWidget {
         builder: (_) {
           return Obx(
             () {
-              if (tvDetailController.isReady.value == false)
+              if (tvDetailController.isLoading.value)
                 return Center(
                   child: CircularProgressIndicator(),
                 );

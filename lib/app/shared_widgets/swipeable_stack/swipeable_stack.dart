@@ -24,6 +24,7 @@ class SwipeableStack extends StatefulWidget {
     required this.deviceSize,
     required this.children,
     required this.onCardChange,
+    required this.onCardTap,
     this.startingIndex = 0,
     this.workingMode = SwipeableStackWorkingMode.horizontalWithTop,
   }) : super(key: key);
@@ -36,6 +37,7 @@ class SwipeableStack extends StatefulWidget {
   final void Function(int index) onCardChange;
   final int startingIndex;
   final SwipeableStackWorkingMode workingMode;
+  final void Function(int) onCardTap;
 
   @override
   _SwipeableStackState createState() => _SwipeableStackState();
@@ -98,6 +100,7 @@ class _SwipeableStackState extends State<SwipeableStack>
   }
 
   Widget _foregroundCard() => GestureDetector(
+        onTap: () => widget.onCardTap(foregroundCardIndex),
         onPanStart: (DragStartDetails details) {
           if (!positionController.isAnimating && !isDragged) {
             isDragged = true;

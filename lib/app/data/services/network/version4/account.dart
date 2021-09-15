@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
+import 'package:watched_it_getx/app/data/enums/available_watchlist_sorting_options.dart';
 import 'package:watched_it_getx/app/data/enums/discover_sorting_options.dart';
+import 'package:watched_it_getx/app/data/enums/media_type.dart';
 import 'package:watched_it_getx/app/data/models/movie/movie_recommendations_model.dart';
 import 'package:watched_it_getx/app/data/models/tv/tv_similar_shows.dart';
 import 'package:watched_it_getx/app/data/services/network/enums/api_versions.dart';
@@ -57,4 +60,46 @@ class AccountV4 with QueryBuilder {
 
     return null;
   }
+
+  static Future<Map<String, dynamic>?> getWatchlist({
+    required String accessToken,
+    required String accountID,
+    required MediaType mediaType,
+    AvailableWatchListSortingOptions sortingOption =
+        AvailableWatchListSortingOptions.CreatedAtDesc,
+    int page = 1,
+  }) async =>
+      await QueryBuilder.executeQuery(
+        ResourceType.account,
+        "$accountID/${describeEnum(mediaType)}/watchlist",
+        queryParameters: {
+          "page": page.toString(),
+          "sort_by": sortingOptionValues[sortingOption],
+        },
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+        apiVersion: apiVersion,
+      );
+
+  static Future<Map<String, dynamic>?> getFavourites({
+    required String accessToken,
+    required String accountID,
+    required MediaType mediaType,
+    AvailableWatchListSortingOptions sortingOption =
+        AvailableWatchListSortingOptions.CreatedAtDesc,
+    int page = 1,
+  }) async =>
+      await QueryBuilder.executeQuery(
+        ResourceType.account,
+        "$accountID/${describeEnum(mediaType)}/favorites",
+        queryParameters: {
+          "page": page.toString(),
+          "sort_by": sortingOptionValues[sortingOption],
+        },
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+        apiVersion: apiVersion,
+      );
 }

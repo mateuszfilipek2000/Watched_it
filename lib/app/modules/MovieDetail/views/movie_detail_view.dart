@@ -27,6 +27,7 @@ class MovieDetailView extends StatelessWidget {
           child: SafeArea(
             child: Scaffold(
               floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.blue,
                 onPressed: controller.rateMovie,
                 child: Icon(
                   Icons.star,

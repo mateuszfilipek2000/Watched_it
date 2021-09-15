@@ -192,15 +192,6 @@ class SimilarMediaView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        TextButton(
-                          onPressed: () => _.changeViewOption(),
-                          child: Text(
-                            "Change View",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
                         for (var i = 0; i < _.sortingOptions.length; i++)
                           TextButton(
                             onPressed: () => _.changeSortingOption(i),
@@ -214,6 +205,31 @@ class SimilarMediaView extends StatelessWidget {
                             ),
                           ),
                       ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      //color: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.only(
+                          bottomRight: const Radius.circular(15),
+                          topRight: const Radius.circular(15)),
+                    ),
+                    child: TextButton(
+                      onPressed: () => _.changeViewOption(),
+                      child: Text(
+                        "Change View",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ),

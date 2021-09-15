@@ -107,7 +107,9 @@ class PosterListViewItem extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFF151515),
+          //color: Color(0xFF151515),
+          color: Theme.of(context).primaryColor,
+          //color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: AspectRatio(
